@@ -1,0 +1,1436 @@
+{
+  "meta": {
+    "schemaVersion": "1.0",
+    "title": "Java Reference",
+    "subtitle": "Foundations to Expert · Java 25 LTS",
+    "renderNote": "Canonical source. HTML and PDF are generated FROM this file. Edit here, regenerate both. Never edit the outputs directly.",
+    "typeVocabulary": {
+      "concept": "A mechanism or idea — how something works and why.",
+      "syntax": "A concrete form, keyword, or tool invocation."
+    },
+    "provenance": {
+      "verified": "Every entry is drawn from the learner's actual completed lessons (through Lesson 1.3) and its outputs verified against a real JDK 21."
+    }
+  },
+  "topicAreas": [
+    {
+      "id": "runtime",
+      "name": "Language & Runtime",
+      "glance": "Java source is compiled once by javac into platform-neutral bytecode, then run on any machine by the java launcher and its JVM. The JVM — not the compiler — produces the final machine code, and it runs any .class file, so other JVM languages share the same runtime. This area also covers the everyday toolchain: the edit-compile-run loop, javap, comments, the class/file-name rule, and how OpenJDK becomes an installable distribution like Temurin.",
+      "entries": [
+        {
+          "term": "How Java runs",
+          "aliases": [
+            "compile",
+            "compilation",
+            "run",
+            "execution model",
+            "write once run anywhere",
+            "wora"
+          ],
+          "type": "concept",
+          "essence": "Java source is compiled to platform-neutral bytecode, which the JVM then executes at run time — so the same compiled program runs on any machine with a JVM.",
+          "detail": [
+            {
+              "label": "Pipeline",
+              "chain": [
+                {
+                  "name": "Foo.java",
+                  "role": "source"
+                },
+                {
+                  "name": "javac",
+                  "role": "compiler"
+                },
+                {
+                  "name": "Foo.class",
+                  "role": "bytecode"
+                },
+                {
+                  "name": "java / JVM",
+                  "role": "runtime"
+                },
+                {
+                  "name": "native code",
+                  "role": "CPU"
+                }
+              ]
+            },
+            {
+              "label": "Mechanism",
+              "body": "javac turns Foo.java into Foo.class (bytecode, not machine code). java starts the JVM, which loads that bytecode and — via JIT compilation and interpretation — turns it into native machine code as the program runs."
+            },
+            {
+              "label": "Why",
+              "body": "The bytecode layer is the portability seam: compile once, and any operating system with a JVM can run the result. That is the whole 'write once, run anywhere' claim, made concrete."
+            },
+            {
+              "label": "Example",
+              "code": "javac Hello.java   # source  -> Hello.class (bytecode)\njava Hello         # JVM loads bytecode -> runs it"
+            }
+          ],
+          "source": {
+            "label": "JLS SE 25",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"
+          },
+          "related": [
+            "javac",
+            "java",
+            "bytecode",
+            "JDK vs JRE vs JVM"
+          ]
+        },
+        {
+          "term": "javac",
+          "aliases": [
+            "compiler",
+            "compile command"
+          ],
+          "type": "syntax",
+          "essence": "The compiler. It reads a .java source file and produces a .class bytecode file.",
+          "detail": [
+            {
+              "label": "Form",
+              "body": "javac takes the full file name, extension included."
+            },
+            {
+              "label": "Example",
+              "code": "javac Hello.java   # requires the .java extension\n# produces: Hello.class"
+            }
+          ],
+          "source": {
+            "label": "JLS SE 25",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"
+          },
+          "related": [
+            "java",
+            "How Java runs",
+            "bytecode"
+          ]
+        },
+        {
+          "term": "java",
+          "aliases": [
+            "launcher",
+            "run command",
+            "jvm launcher"
+          ],
+          "type": "syntax",
+          "essence": "The launcher. It starts the JVM on a compiled class and runs its main method.",
+          "detail": [
+            {
+              "label": "Form",
+              "body": "java takes the class NAME only — no .java, no .class extension."
+            },
+            {
+              "label": "Mechanism",
+              "body": "The final step from bytecode to native machine code happens HERE, inside the JVM — not in javac. javac stops at bytecode."
+            },
+            {
+              "label": "Example",
+              "code": "java Hello   # bare class name, NO extension\n# NOT: java Hello.class  (wrong)"
+            }
+          ],
+          "source": {
+            "label": "JLS SE 25",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"
+          },
+          "related": [
+            "javac",
+            "How Java runs",
+            "main method"
+          ]
+        },
+        {
+          "term": "JDK vs JRE vs JVM",
+          "aliases": [
+            "jdk",
+            "jre",
+            "jvm",
+            "java development kit",
+            "runtime environment",
+            "virtual machine"
+          ],
+          "type": "concept",
+          "essence": "Three nested layers: the JDK builds programs, the JRE runs them, and the JVM inside it actually executes the bytecode.",
+          "detail": [
+            {
+              "label": "The three layers",
+              "facts": [
+                [
+                  "JDK",
+                  "JRE + developer tools (javac, javap, jar). What you install to WRITE Java."
+                ],
+                [
+                  "JRE",
+                  "JVM + the standard class libraries. Enough to RUN a finished program."
+                ],
+                [
+                  "JVM",
+                  "the engine inside that actually executes the bytecode."
+                ]
+              ]
+            },
+            {
+              "label": "Nesting",
+              "chain": [
+                {
+                  "name": "JDK",
+                  "role": "build"
+                },
+                {
+                  "name": "JRE",
+                  "role": "run"
+                },
+                {
+                  "name": "JVM",
+                  "role": "execute"
+                }
+              ]
+            },
+            {
+              "label": "Use when",
+              "body": "You need the JDK to write and compile Java. A machine that only runs finished Java programs needs just the runtime."
+            }
+          ],
+          "source": {
+            "label": "JLS SE 25",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"
+          },
+          "related": [
+            "How Java runs",
+            "javac",
+            "java"
+          ]
+        },
+        {
+          "term": "bytecode",
+          "aliases": [
+            "class file",
+            ".class",
+            "intermediate representation",
+            "javap",
+            "mnemonics"
+          ],
+          "type": "concept",
+          "essence": "Platform-neutral instructions stored in .class files — the JVM's 'machine code', not the CPU's.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "javac emits bytecode: a compact, CPU-independent instruction set the JVM understands. The JVM translates it to real machine instructions at run time via interpretation and JIT compilation. It is the JVM's instruction set, not any physical processor's."
+            },
+            {
+              "label": "Two forms",
+              "facts": [
+                [
+                  "mnemonics",
+                  "human-readable ops printed by javap -c (getstatic, invokevirtual, ldc)."
+                ],
+                [
+                  "raw bytes",
+                  "the numeric encoding of those ops stored in the .class file."
+                ]
+              ]
+            },
+            {
+              "label": "Why it matters",
+              "body": "Because the JVM runs any valid .class file, not Java specifically, other languages that compile to bytecode — Kotlin, Scala, Clojure, Groovy — run on the same JVM unchanged. Bytecode, not the Java language, is the portability seam."
+            }
+          ],
+          "source": {
+            "label": "JLS SE 25",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"
+          },
+          "related": [
+            "How Java runs",
+            "javac",
+            "JDK vs JRE vs JVM"
+          ]
+        },
+        {
+          "term": "main method",
+          "aliases": [
+            "entry point",
+            "public static void main",
+            "String[] args",
+            "psvm"
+          ],
+          "type": "syntax",
+          "essence": "The fixed method signature the JVM calls to start a program — public static void main(String[] args).",
+          "detail": [
+            {
+              "label": "Form",
+              "code": "public class Hello {\n    public static void main(String[] args) {\n        System.out.println(\"Hello\");\n    }\n}"
+            },
+            {
+              "label": "Each keyword",
+              "facts": [
+                [
+                  "public",
+                  "the JVM must be able to call it from outside the class"
+                ],
+                [
+                  "static",
+                  "it runs without first creating an object of the class"
+                ],
+                [
+                  "void",
+                  "it returns nothing to the JVM"
+                ],
+                [
+                  "main",
+                  "the exact name the JVM looks for as the entry point"
+                ],
+                [
+                  "String[] args",
+                  "command-line arguments, passed in as an array of strings"
+                ]
+              ]
+            },
+            {
+              "label": "Note",
+              "body": "Java 25 adds a simplified entry point (an instance main, no class or args boilerplate) as a preview. This course writes the classic signature above — it is the stable, universal form and what the OCP exam tests."
+            }
+          ],
+          "source": {
+            "label": "JLS SE 25",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"
+          },
+          "related": [
+            "java",
+            "How Java runs",
+            "class declaration"
+          ]
+        },
+        {
+          "term": "edit-compile-run loop",
+          "aliases": [
+            "recompile",
+            "stale class",
+            "rebuild",
+            "edit compile run"
+          ],
+          "type": "concept",
+          "essence": "After editing a .java file you must re-run javac before java, or the JVM keeps running the previous compiled version.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "java executes the .class file, never the .java source. Editing the source does not change the .class until javac rebuilds it. Skip the recompile and you silently run stale bytecode."
+            },
+            {
+              "label": "Use when",
+              "body": "Every code change: save, javac, then java. If a change seems to have no effect, an un-rerun javac is the first thing to check."
+            },
+            {
+              "label": "Example",
+              "code": "# edit Hello.java, then ALWAYS:\njavac Hello.java   # rebuild the .class\njava Hello         # now runs the new version"
+            }
+          ],
+          "source": {
+            "label": "JLS SE 25",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"
+          },
+          "related": [
+            "javac",
+            "java",
+            "bytecode"
+          ]
+        },
+        {
+          "term": "javap",
+          "aliases": [
+            "disassemble",
+            "bytecode viewer",
+            "class disassembler"
+          ],
+          "type": "syntax",
+          "essence": "The disassembler — prints the bytecode instructions inside a compiled .class file in readable form.",
+          "detail": [
+            {
+              "label": "Form",
+              "body": "javap -c takes a class name and prints its methods as bytecode mnemonics. It reads the compiled class, not the source."
+            },
+            {
+              "label": "Use when",
+              "body": "Confirming what the compiler actually produced — seeing that source became bytecode, and what those instructions are."
+            },
+            {
+              "label": "Example",
+              "code": "javap -c Hello   # prints Hello.class bytecode\n# e.g. getstatic, ldc, invokevirtual, return"
+            }
+          ],
+          "source": {
+            "label": "JDK 25 Tool Specs",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/specs/man/index.html"
+          },
+          "related": [
+            "bytecode",
+            "javac"
+          ]
+        },
+        {
+          "term": "comments",
+          "aliases": [
+            "//",
+            "/* */",
+            "/** */",
+            "javadoc comment",
+            "line comment",
+            "block comment"
+          ],
+          "type": "syntax",
+          "essence": "Notes ignored by the compiler — line comments with //, block comments with /* */, and Javadoc with /** */.",
+          "detail": [
+            {
+              "label": "Form",
+              "columns": [
+                "Syntax",
+                "Spans",
+                "Purpose"
+              ],
+              "rows": [
+                [
+                  "// text",
+                  "to end of line",
+                  "a quick inline note"
+                ],
+                [
+                  "/* text */",
+                  "one or more lines",
+                  "a longer block note"
+                ],
+                [
+                  "/** text */",
+                  "one or more lines",
+                  "Javadoc — documents the class/method that follows"
+                ]
+              ]
+            },
+            {
+              "label": "Note",
+              "body": "All three are stripped before compilation and have no effect on the running program. Javadoc /** */ is additionally read by the javadoc tool to generate API docs."
+            }
+          ],
+          "source": {
+            "label": "JLS §3.7",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html"
+          },
+          "related": [
+            "main method",
+            "class declaration"
+          ]
+        },
+        {
+          "term": "class declaration",
+          "aliases": [
+            "public class",
+            "class",
+            "file name must match",
+            "top-level class"
+          ],
+          "type": "syntax",
+          "essence": "public class Name { ... } — and a public class must live in a file named exactly Name.java.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "A source file's public class must share the file's name, character for character. Hello.java must declare public class Hello; a mismatch is a compile error."
+            },
+            {
+              "label": "Form",
+              "code": "// file: Hello.java\npublic class Hello {\n    // fields and methods\n}"
+            },
+            {
+              "label": "Note",
+              "body": "The name is case-sensitive: Hello and hello are different. This is why javac takes the file name (Hello.java) but java takes the class name (Hello)."
+            }
+          ],
+          "source": {
+            "label": "JLS §7.6",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html"
+          },
+          "related": [
+            "main method",
+            "javac",
+            "java"
+          ]
+        },
+        {
+          "term": "JDK distributions",
+          "aliases": [
+            "OpenJDK",
+            "Temurin",
+            "Adoptium",
+            "Oracle JDK",
+            "which JDK",
+            "x64"
+          ],
+          "type": "concept",
+          "essence": "OpenJDK is the open-source reference codebase; vendors build it into installable distributions such as Eclipse Temurin (from Adoptium).",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "OpenJDK is the shared source. Multiple vendors compile it into ready-to-install JDKs that pass the same compatibility tests, so they behave identically for standard Java. They differ in packaging, support terms, and update cadence, not language behavior."
+            },
+            {
+              "label": "Use when",
+              "body": "Choosing what to install: a free, well-supported build like Temurin (Adoptium) is a standard choice. This course uses Temurin JDK 25 LTS (x64 = the 64-bit build)."
+            },
+            {
+              "label": "Note",
+              "body": "LTS (Long-Term Support) releases receive updates for years; Java 25 is an LTS. Non-LTS releases are superseded every six months."
+            }
+          ],
+          "source": {
+            "label": "Adoptium Temurin",
+            "url": "https://adoptium.net/temurin/releases/"
+          },
+          "related": [
+            "JDK vs JRE vs JVM",
+            "How Java runs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "types",
+      "name": "Types & Variables",
+      "glance": "Java has eight primitive value types with fixed, machine-independent sizes, plus a matching wrapper class for each. A bare whole-number literal is an int and a bare decimal is a double; suffixes (L, f) and the overflow rule follow from that. Primitives are held and copied by value, which is the root of how == later behaves on objects versus primitives.",
+      "entries": [
+        {
+          "term": "primitive types",
+          "aliases": [
+            "primitives",
+            "byte",
+            "short",
+            "long",
+            "float",
+            "char",
+            "boolean",
+            "value types",
+            "ranges"
+          ],
+          "type": "concept",
+          "essence": "The eight built-in value types, with fixed sizes identical on every machine, stored directly rather than as objects.",
+          "detail": [
+            {
+              "label": "The eight primitives",
+              "columns": [
+                "Type",
+                "Bits",
+                "Range / values"
+              ],
+              "rows": [
+                [
+                  "byte",
+                  "8",
+                  "-128 to 127"
+                ],
+                [
+                  "short",
+                  "16",
+                  "-32,768 to 32,767"
+                ],
+                [
+                  "int",
+                  "32",
+                  "-2,147,483,648 to 2,147,483,647"
+                ],
+                [
+                  "long",
+                  "64",
+                  "about -9.2 to 9.2 quintillion (-2^63 to 2^63-1)"
+                ],
+                [
+                  "float",
+                  "32",
+                  "IEEE 754 single precision, about 6-7 significant digits"
+                ],
+                [
+                  "double",
+                  "64",
+                  "IEEE 754 double precision, about 15-16 significant digits"
+                ],
+                [
+                  "char",
+                  "16",
+                  "0 to 65,535 (an unsigned UTF-16 code unit)"
+                ],
+                [
+                  "boolean",
+                  "-",
+                  "true or false only"
+                ]
+              ]
+            },
+            {
+              "label": "Mechanism",
+              "body": "A primitive variable holds the value itself, in its own fixed-size slot — not a reference to an object elsewhere. The sizes above are the same on every platform, so integer overflow and float precision behave identically everywhere."
+            },
+            {
+              "label": "Note",
+              "body": "int is the default type for whole numbers and double for decimals; the integer types are signed two's-complement, and char is the one unsigned integer type."
+            }
+          ],
+          "source": {
+            "label": "JLS §4.2",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"
+          },
+          "related": [
+            "int",
+            "double",
+            "wrapper classes",
+            "numeric literals",
+            "value semantics"
+          ]
+        },
+        {
+          "term": "int",
+          "aliases": [
+            "integer",
+            "whole number"
+          ],
+          "type": "syntax",
+          "essence": "A 32-bit signed whole number — Java's default type for integer values.",
+          "detail": [
+            {
+              "label": "Range",
+              "body": "-2,147,483,648 to 2,147,483,647 (-2^31 to 2^31-1), stored as 4 bytes two's-complement."
+            },
+            {
+              "label": "Use when",
+              "body": "Counting, indexing, and whole-number arithmetic that stays in range. Use long when a value may exceed the int range — exceeding it wraps around silently rather than erroring."
+            },
+            {
+              "label": "Example",
+              "code": "int count = 42;\nint sum = a + b;"
+            }
+          ],
+          "source": {
+            "label": "JLS §4.2",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"
+          },
+          "related": [
+            "primitive types",
+            "double",
+            "numeric literals",
+            "numeric promotion"
+          ]
+        },
+        {
+          "term": "double",
+          "aliases": [
+            "floating point",
+            "decimal",
+            "real number"
+          ],
+          "type": "syntax",
+          "essence": "A 64-bit IEEE 754 floating-point number — Java's default type for decimal values.",
+          "detail": [
+            {
+              "label": "Range",
+              "body": "About 15-16 significant decimal digits. Stores a very wide range of magnitudes, but as binary fractions, so some decimals (like 0.1) are held approximately."
+            },
+            {
+              "label": "Use when",
+              "body": "Any calculation with fractional values where tiny rounding error is acceptable — averages, measurements, graphics. Avoid it for exact money math."
+            },
+            {
+              "label": "Example",
+              "code": "double g = 9.81;\ndouble avg = total / (double) n;"
+            }
+          ],
+          "source": {
+            "label": "JLS §4.2",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"
+          },
+          "related": [
+            "primitive types",
+            "int",
+            "numeric literals",
+            "casting"
+          ]
+        },
+        {
+          "term": "wrapper classes",
+          "aliases": [
+            "Integer",
+            "Double",
+            "Boolean",
+            "Character",
+            "Long",
+            "boxing",
+            "wrapper",
+            "MAX_VALUE"
+          ],
+          "type": "concept",
+          "essence": "An object class matching each primitive (int -> Integer, etc.), used where Java needs an object instead of a raw value.",
+          "detail": [
+            {
+              "label": "The eight wrappers",
+              "columns": [
+                "Primitive",
+                "Wrapper"
+              ],
+              "rows": [
+                [
+                  "byte",
+                  "Byte"
+                ],
+                [
+                  "short",
+                  "Short"
+                ],
+                [
+                  "int",
+                  "Integer"
+                ],
+                [
+                  "long",
+                  "Long"
+                ],
+                [
+                  "float",
+                  "Float"
+                ],
+                [
+                  "double",
+                  "Double"
+                ],
+                [
+                  "char",
+                  "Character"
+                ],
+                [
+                  "boolean",
+                  "Boolean"
+                ]
+              ]
+            },
+            {
+              "label": "Use when",
+              "body": "Anywhere an object is required but a primitive is not allowed — most importantly the collections classes taught later. The wrappers also hold useful constants and helpers, e.g. Integer.MAX_VALUE and Integer.parseInt(\"42\")."
+            },
+            {
+              "label": "Note",
+              "body": "Two of the class names differ from the primitive: int -> Integer and char -> Character. All eight live in java.lang, so no import is needed."
+            }
+          ],
+          "source": {
+            "label": "java.lang (API)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/package-summary.html"
+          },
+          "related": [
+            "primitive types",
+            "int",
+            "double"
+          ]
+        },
+        {
+          "term": "numeric literals",
+          "aliases": [
+            "literal",
+            "suffix",
+            "L suffix",
+            "f suffix",
+            "underscore",
+            "10_000",
+            "literal overflow"
+          ],
+          "type": "syntax",
+          "essence": "A bare whole number is typed int and a bare decimal is typed double; suffixes L and f change that, and underscores group digits.",
+          "detail": [
+            {
+              "label": "Defaults and suffixes",
+              "columns": [
+                "Literal",
+                "Type"
+              ],
+              "rows": [
+                [
+                  "100",
+                  "int (bare whole number)"
+                ],
+                [
+                  "3.14",
+                  "double (bare decimal)"
+                ],
+                [
+                  "100L",
+                  "long (L suffix)"
+                ],
+                [
+                  "3.14f",
+                  "float (f suffix)"
+                ],
+                [
+                  "1_000_000",
+                  "int (underscores are ignored, for readability)"
+                ]
+              ]
+            },
+            {
+              "label": "The overflow trap",
+              "body": "long big = 10000000000; does NOT compile. The literal is typed int before it is ever assigned to the long, and 10,000,000,000 overflows int's range — so it fails at the literal itself. Write 10_000_000_000L so it is a long from the start."
+            },
+            {
+              "label": "Mechanism",
+              "body": "A suffix sets the literal's type up front; it does not convert an already-typed value. Underscores may sit only between digits, never at the start, end, or next to the decimal point."
+            }
+          ],
+          "source": {
+            "label": "JLS §3.10",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html"
+          },
+          "related": [
+            "int",
+            "double",
+            "primitive types"
+          ]
+        },
+        {
+          "term": "variable declaration",
+          "aliases": [
+            "declare",
+            "assignment",
+            "initialize",
+            "type name value"
+          ],
+          "type": "syntax",
+          "essence": "Name a typed storage slot and optionally give it a value: type name = value;",
+          "detail": [
+            {
+              "label": "Form",
+              "code": "int count = 0;\nString name = \"Roque\";\ndouble total = 0.0;"
+            },
+            {
+              "label": "Note",
+              "body": "The declared type fixes what the variable can hold for its whole life. A declaration without a value (int count;) is legal, but the variable must be assigned before it is read."
+            }
+          ],
+          "source": {
+            "label": "JLS §4.12",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"
+          },
+          "related": [
+            "var",
+            "primitive types",
+            "value semantics"
+          ]
+        },
+        {
+          "term": "var",
+          "aliases": [
+            "local type inference",
+            "inferred type",
+            "var keyword"
+          ],
+          "type": "syntax",
+          "essence": "Lets the compiler infer a LOCAL variable's type from its initializer — still fully static typing, just written shorter.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "var total = 0.0; compiles exactly as double total = 0.0; — the compiler reads the initializer, fixes the type permanently, and var vanishes. The variable is not dynamically typed and cannot later hold a different type."
+            },
+            {
+              "label": "Use when",
+              "body": "A local variable whose type is obvious from the right-hand side. var requires an initializer, so the compiler has something to infer from."
+            },
+            {
+              "label": "Cannot be used for",
+              "body": "Fields, method parameters, return types, or a declaration with no initializer (var x; is a compile error) — none of these give the compiler an initializer to read."
+            }
+          ],
+          "source": {
+            "label": "JLS §14.4",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html"
+          },
+          "related": [
+            "variable declaration",
+            "primitive types"
+          ]
+        },
+        {
+          "term": "value semantics",
+          "aliases": [
+            "pass by value",
+            "copy",
+            "primitive assignment",
+            "independent copy"
+          ],
+          "type": "concept",
+          "essence": "Assigning or passing a primitive copies its value, so the copy and the original are fully independent afterward.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "A primitive variable holds its value directly. b = a copies a's value into b's own slot; changing one afterward never affects the other."
+            },
+            {
+              "label": "Example",
+              "code": "int a = 5;\nint b = a;   // b gets a copy of 5\nb = 99;      // a is still 5"
+            },
+            {
+              "label": "Why it matters",
+              "body": "This is the contrast that makes reference types (objects) understandable later: those copy a reference to one shared object, not the object itself. The difference is exactly what == will hinge on."
+            }
+          ],
+          "source": {
+            "label": "JLS §4.12",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"
+          },
+          "related": [
+            "primitive types",
+            "variable declaration"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "operators",
+      "name": "Operators, Casting & Math",
+      "glance": "Integer division truncates and % gives the remainder; mixing in one floating-point operand promotes the whole expression to floating point. Widening to a bigger type is automatic, narrowing to a smaller one needs an explicit cast that truncates toward zero, with a compile-time-constant exception. The Math methods have fixed return types worth memorizing — pow and sqrt always return double, round returns an integer type.",
+      "entries": [
+        {
+          "term": "integer division and modulus",
+          "aliases": [
+            "/",
+            "%",
+            "truncation",
+            "remainder",
+            "integer division",
+            "modulo"
+          ],
+          "type": "concept",
+          "essence": "When both operands are integers, / discards the fractional part and % returns the remainder.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "int / int produces an int: the mathematical result is truncated toward zero, not rounded. % returns what is left over after that truncated division."
+            },
+            {
+              "label": "Examples",
+              "columns": [
+                "Expression",
+                "Result"
+              ],
+              "rows": [
+                [
+                  "7 / 2",
+                  "3 (not 3.5 — fractional part dropped)"
+                ],
+                [
+                  "7 % 2",
+                  "1 (remainder)"
+                ],
+                [
+                  "-7 / 2",
+                  "-3 (truncates toward zero)"
+                ]
+              ]
+            },
+            {
+              "label": "Use when",
+              "body": "This is the classic surprise: dividing two ints can never yield a decimal. Make one operand floating-point to get a real quotient (see numeric promotion)."
+            }
+          ],
+          "source": {
+            "label": "JLS §15.17",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html"
+          },
+          "related": [
+            "numeric promotion",
+            "casting"
+          ]
+        },
+        {
+          "term": "numeric promotion",
+          "aliases": [
+            "type promotion",
+            "mixed arithmetic",
+            "widening in expressions",
+            "promotion"
+          ],
+          "type": "concept",
+          "essence": "In a mixed-type arithmetic expression, the narrower operand is promoted so both share the wider type before the operation runs.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "If either operand is a floating-point type, the whole operation is done in floating point. So 9.0 / 4 promotes 4 to 4.0 and yields 2.25, whereas 9 / 4 is pure int division and yields 2."
+            },
+            {
+              "label": "Examples",
+              "columns": [
+                "Expression",
+                "Result",
+                "Why"
+              ],
+              "rows": [
+                [
+                  "9.0 / 4",
+                  "2.25",
+                  "one double operand promotes the 4"
+                ],
+                [
+                  "9 / 4",
+                  "2",
+                  "both int, integer division"
+                ],
+                [
+                  "5 + 2.0",
+                  "7.0",
+                  "result is double"
+                ]
+              ]
+            },
+            {
+              "label": "Use when",
+              "body": "To force a real quotient from two int variables, make one a double first: (double) a / b."
+            }
+          ],
+          "source": {
+            "label": "JLS §5.6",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-5.html"
+          },
+          "related": [
+            "integer division and modulus",
+            "casting",
+            "double"
+          ]
+        },
+        {
+          "term": "casting",
+          "aliases": [
+            "cast",
+            "widening",
+            "narrowing",
+            "type conversion",
+            "(int)",
+            "truncate"
+          ],
+          "type": "concept",
+          "essence": "Widening to a larger type is automatic; narrowing to a smaller type needs an explicit (type) cast and can lose data.",
+          "detail": [
+            {
+              "label": "Widening (automatic)",
+              "body": "A smaller type flows into a larger one with no cast, because no information is lost: int -> long -> double, for example. int x = 5; double d = x; is fine."
+            },
+            {
+              "label": "Widening path",
+              "chain": [
+                {
+                  "name": "byte"
+                },
+                {
+                  "name": "short"
+                },
+                {
+                  "name": "int"
+                },
+                {
+                  "name": "long"
+                },
+                {
+                  "name": "float"
+                },
+                {
+                  "name": "double"
+                }
+              ]
+            },
+            {
+              "label": "Narrowing (explicit)",
+              "body": "Going to a smaller type requires a cast and may lose data. A floating-to-integer cast truncates toward zero — it does not round: (int) 9.99 is 9 and (int) -9.99 is -9."
+            },
+            {
+              "label": "Example",
+              "code": "double d = 9.99;\nint n = (int) d;    // 9  (truncated, not rounded)\nlong big = 5;       // widening, no cast needed"
+            }
+          ],
+          "source": {
+            "label": "JLS §5",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-5.html"
+          },
+          "related": [
+            "final-constant narrowing",
+            "numeric promotion",
+            "primitive types"
+          ]
+        },
+        {
+          "term": "final-constant narrowing",
+          "aliases": [
+            "final",
+            "compile-time constant",
+            "constant assignment",
+            "implicit narrowing"
+          ],
+          "type": "concept",
+          "essence": "A final variable holding a compile-time constant that fits the target can be assigned to a narrower type WITHOUT a cast.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "When the right-hand side is a final variable whose constant value is known at compile time and fits the smaller type's range, the compiler allows the assignment with no cast. Drop final (or exceed the range) and it becomes a normal narrowing that fails to compile."
+            },
+            {
+              "label": "Example",
+              "code": "final int x = 10;\nbyte b = x;      // compiles: 10 is constant and fits byte\n\nint y = 10;\nbyte c = y;      // ERROR: y is not final, needs (byte) y"
+            },
+            {
+              "label": "Use when",
+              "body": "Mostly an exam and edge-case detail — it explains why an apparently identical assignment compiles in one place and not another."
+            }
+          ],
+          "source": {
+            "label": "JLS §5.2",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-5.html"
+          },
+          "related": [
+            "casting",
+            "primitive types"
+          ]
+        },
+        {
+          "term": "Math methods",
+          "aliases": [
+            "Math.pow",
+            "Math.sqrt",
+            "Math.round",
+            "Math.abs",
+            "Math.max",
+            "Math.min",
+            "return types"
+          ],
+          "type": "concept",
+          "essence": "The java.lang.Math helpers have fixed return types worth memorizing — notably pow/sqrt always return double and round returns an integer type.",
+          "detail": [
+            {
+              "label": "Return types (verified on JDK 21)",
+              "columns": [
+                "Call",
+                "Result",
+                "Return type"
+              ],
+              "rows": [
+                [
+                  "Math.pow(2, 10)",
+                  "1024.0",
+                  "double (always)"
+                ],
+                [
+                  "Math.sqrt(16)",
+                  "4.0",
+                  "double (always)"
+                ],
+                [
+                  "Math.round(9.5)",
+                  "10",
+                  "long (from a double arg)"
+                ],
+                [
+                  "Math.round(9.5f)",
+                  "10",
+                  "int (from a float arg)"
+                ],
+                [
+                  "Math.abs(-7)",
+                  "7",
+                  "matches the argument type"
+                ],
+                [
+                  "Math.max(3.5, 7)",
+                  "7.0",
+                  "double (7 promoted)"
+                ]
+              ]
+            },
+            {
+              "label": "Note",
+              "body": "pow and sqrt return double even when the result is a whole number, so Math.pow(2,10) is 1024.0, not 1024. round is the one that hands back an integer type: long for a double argument, int for a float argument."
+            }
+          ],
+          "source": {
+            "label": "java.lang.Math (API)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Math.html"
+          },
+          "related": [
+            "numeric promotion",
+            "casting",
+            "double"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "strings",
+      "name": "Strings & Text",
+      "glance": "A String is an immutable object — every method that seems to change it actually returns a new one. That single fact explains the literal pool, why == is the classic trap for anyone coming from Python, and why StringBuilder exists. Text blocks add readable multi-line literals, with precise, easy-to-miss whitespace rules.",
+      "entries": [
+        {
+          "term": "String",
+          "aliases": [
+            "text",
+            "java.lang.String",
+            "string literal"
+          ],
+          "type": "concept",
+          "essence": "An immutable sequence of characters (UTF-16) — a reference type, not a primitive, with special literal and + syntax.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "A String is an object holding a fixed character sequence. The language gives it two conveniences no other class gets: double-quote literals (\"hi\") and the + concatenation operator."
+            },
+            {
+              "label": "Example",
+              "code": "String s = \"hello\";\nString greeting = s + \", world\";"
+            }
+          ],
+          "source": {
+            "label": "java.lang.String (API)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html"
+          },
+          "related": [
+            "String immutability",
+            "== vs .equals()",
+            "StringBuilder",
+            "string pool"
+          ]
+        },
+        {
+          "term": "String immutability",
+          "aliases": [
+            "immutable",
+            "unchangeable",
+            "toUpperCase returns new"
+          ],
+          "type": "concept",
+          "essence": "Once a String exists, its contents can never change — every 'modifying' method returns a brand-new String and leaves the original untouched.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "Methods like toUpperCase(), trim(), and replace() do not edit the String in place. They compute and return a new String object; the original is unchanged."
+            },
+            {
+              "label": "Proof",
+              "body": "Verified empirically in-lesson: calling s.toUpperCase() and then re-checking s showed s was untouched — the uppercased text only exists in the returned value."
+            },
+            {
+              "label": "Why it matters",
+              "body": "Immutability is what makes the literal pool and thread-safety possible — a shared String can never be altered out from under another user of it."
+            },
+            {
+              "label": "Example",
+              "code": "String s = \"hi\";\ns.toUpperCase();       // result thrown away!\nString big = s.toUpperCase();  // correct: capture it"
+            }
+          ],
+          "source": {
+            "label": "java.lang.String (API)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html"
+          },
+          "related": [
+            "string pool",
+            "StringBuilder",
+            "String"
+          ]
+        },
+        {
+          "term": "string pool",
+          "aliases": [
+            "intern",
+            "literal pool",
+            "string interning",
+            "literal cache"
+          ],
+          "type": "concept",
+          "essence": "Identical String literals share one single object in a cache called the pool — safe only because Strings can never change.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "When the same literal text appears more than once, Java reuses one pooled object rather than making duplicates. Because Strings are immutable, sharing is safe — no user of the shared object can mutate it."
+            },
+            {
+              "label": "Consequence",
+              "body": "Two identical literals are literally the same object, so == between them happens to return true. This is an implementation detail — never rely on it for comparison."
+            }
+          ],
+          "source": {
+            "label": "JLS §3.10.5",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html"
+          },
+          "related": [
+            "String immutability",
+            "new String()",
+            "== vs .equals()"
+          ]
+        },
+        {
+          "term": "new String()",
+          "aliases": [
+            "new string",
+            "opt out of pool",
+            "explicit string object"
+          ],
+          "type": "syntax",
+          "essence": "Explicitly constructs a fresh String object that deliberately does NOT come from the pool — even if an identical literal already exists.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "new String(\"a\") forces a distinct object. So new String(\"a\") == \"a\" is false (different objects), even though their contents are equal."
+            },
+            {
+              "label": "Use when",
+              "body": "Almost never in normal code. Its main value is illustrating the pool: it is the deliberate way to opt out of literal sharing."
+            },
+            {
+              "label": "Example",
+              "code": "String a = \"a\";\nString b = new String(\"a\");\na == b;        // false — different objects\na.equals(b);   // true  — same contents"
+            }
+          ],
+          "source": {
+            "label": "java.lang.String (API)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html"
+          },
+          "related": [
+            "string pool",
+            "== vs .equals()",
+            "String immutability"
+          ]
+        },
+        {
+          "term": "== vs .equals()",
+          "aliases": [
+            "equality",
+            "equals",
+            "reference equality",
+            "content equality",
+            "compare strings",
+            "identity"
+          ],
+          "type": "concept",
+          "essence": "== asks 'are these the same object?' (reference identity); .equals() asks 'do these have the same contents?' — for Strings, always use .equals().",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "== compares references: are both variables pointing at the exact same object? .equals() (as String overrides it) compares the actual character sequences."
+            },
+            {
+              "label": "The Python trap",
+              "body": "In Python, == compares values. In Java, == on any object compares identity, not value. Carrying the Python habit over is the classic source of String bugs."
+            },
+            {
+              "label": "Example",
+              "code": "String a = new String(\"hi\");\nString b = new String(\"hi\");\na == b;        // false — two objects\na.equals(b);   // true  — same text"
+            }
+          ],
+          "source": {
+            "label": "JLS §15.21",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html"
+          },
+          "related": [
+            "string pool",
+            "new String()",
+            "String immutability"
+          ]
+        },
+        {
+          "term": "StringBuilder",
+          "aliases": [
+            "mutable string",
+            "concatenation",
+            "append",
+            "string buffer"
+          ],
+          "type": "concept",
+          "essence": "A mutable character buffer — the right tool for building a String piece by piece, because it edits one buffer in place instead of creating a new object per step.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "StringBuilder holds a growable internal buffer (initial capacity 16). append() and insert() modify that one buffer; you call toString() at the end to get the finished String."
+            },
+            {
+              "label": "Use when",
+              "body": "Assembling text in a loop, or from many pieces. For a couple of + operations, plain String is fine and clearer."
+            },
+            {
+              "label": "Example",
+              "code": "StringBuilder sb = new StringBuilder();\nfor (String w : words) sb.append(w).append(' ');\nString line = sb.toString();"
+            }
+          ],
+          "source": {
+            "label": "java.lang.StringBuilder (API)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html"
+          },
+          "related": [
+            "String immutability",
+            "String"
+          ]
+        },
+        {
+          "term": "text blocks",
+          "aliases": [
+            "triple quote",
+            "multiline string",
+            "\"\"\"",
+            "block string"
+          ],
+          "type": "syntax",
+          "essence": "Multi-line String literals delimited by triple quotes — readable JSON, HTML, or SQL without escaped newlines.",
+          "detail": [
+            {
+              "label": "Form",
+              "body": "Open with \"\"\" followed immediately by a newline; write the content on following lines; close with \"\"\". The result is an ordinary String."
+            },
+            {
+              "label": "Example",
+              "code": "String json = \"\"\"\n    {\n      \"name\": \"Roque\"\n    }\n    \"\"\";"
+            }
+          ],
+          "source": {
+            "label": "JLS §3.10.6",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html"
+          },
+          "related": [
+            "text block whitespace",
+            "String"
+          ]
+        },
+        {
+          "term": "text block whitespace",
+          "aliases": [
+            "incidental whitespace",
+            "trailing whitespace",
+            "\\s",
+            "line continuation",
+            "indentation stripping"
+          ],
+          "type": "syntax",
+          "essence": "Text blocks strip the whitespace you didn't mean and keep the whitespace you did — via a few precise rules worth memorizing.",
+          "detail": [
+            {
+              "label": "Incidental leading whitespace",
+              "body": "The common indentation shared by all lines (measured against the least-indented line and the closing \"\"\" position) is stripped automatically, so you can indent the block to match your code without that indentation appearing in the string."
+            },
+            {
+              "label": "Trailing whitespace",
+              "body": "Whitespace at the end of each line is removed automatically."
+            },
+            {
+              "label": "Keep a trailing space: \\s",
+              "body": "End a line with the \\s escape to preserve exactly one trailing space that would otherwise be stripped."
+            },
+            {
+              "label": "Join lines: trailing \\",
+              "body": "End a line with a backslash to suppress its newline — the next line continues the same logical line."
+            }
+          ],
+          "source": {
+            "label": "JLS §3.10.6",
+            "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html"
+          },
+          "related": [
+            "text blocks",
+            "String"
+          ]
+        }
+      ]
+    }
+  ]
+}

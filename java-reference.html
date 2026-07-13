@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Java Reference</title>
+<script id="refdata" type="application/json">{"meta": {"schemaVersion": "1.0", "title": "Java Reference", "subtitle": "Foundations to Expert · Java 25 LTS", "renderNote": "Canonical source. HTML and PDF are generated FROM this file. Edit here, regenerate both. Never edit the outputs directly.", "typeVocabulary": {"concept": "A mechanism or idea — how something works and why.", "syntax": "A concrete form, keyword, or tool invocation."}, "provenance": {"verified": "Every entry is drawn from the learner's actual completed lessons (through Lesson 1.3) and its outputs verified against a real JDK 21."}}, "topicAreas": [{"id": "runtime", "name": "Language & Runtime", "glance": "Java source is compiled once by javac into platform-neutral bytecode, then run on any machine by the java launcher and its JVM. The JVM — not the compiler — produces the final machine code, and it runs any .class file, so other JVM languages share the same runtime. This area also covers the everyday toolchain: the edit-compile-run loop, javap, comments, the class/file-name rule, and how OpenJDK becomes an installable distribution like Temurin.", "entries": [{"term": "How Java runs", "aliases": ["compile", "compilation", "run", "execution model", "write once run anywhere", "wora"], "type": "concept", "essence": "Java source is compiled to platform-neutral bytecode, which the JVM then executes at run time — so the same compiled program runs on any machine with a JVM.", "detail": [{"label": "Pipeline", "chain": [{"name": "Foo.java", "role": "source"}, {"name": "javac", "role": "compiler"}, {"name": "Foo.class", "role": "bytecode"}, {"name": "java / JVM", "role": "runtime"}, {"name": "native code", "role": "CPU"}]}, {"label": "Mechanism", "body": "javac turns Foo.java into Foo.class (bytecode, not machine code). java starts the JVM, which loads that bytecode and — via JIT compilation and interpretation — turns it into native machine code as the program runs."}, {"label": "Why", "body": "The bytecode layer is the portability seam: compile once, and any operating system with a JVM can run the result. That is the whole 'write once, run anywhere' claim, made concrete."}, {"label": "Example", "code": "javac Hello.java   # source  -> Hello.class (bytecode)\njava Hello         # JVM loads bytecode -> runs it"}], "source": {"label": "JLS SE 25", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"}, "related": ["javac", "java", "bytecode", "JDK vs JRE vs JVM"]}, {"term": "javac", "aliases": ["compiler", "compile command"], "type": "syntax", "essence": "The compiler. It reads a .java source file and produces a .class bytecode file.", "detail": [{"label": "Form", "body": "javac takes the full file name, extension included."}, {"label": "Example", "code": "javac Hello.java   # requires the .java extension\n# produces: Hello.class"}], "source": {"label": "JLS SE 25", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"}, "related": ["java", "How Java runs", "bytecode"]}, {"term": "java", "aliases": ["launcher", "run command", "jvm launcher"], "type": "syntax", "essence": "The launcher. It starts the JVM on a compiled class and runs its main method.", "detail": [{"label": "Form", "body": "java takes the class NAME only — no .java, no .class extension."}, {"label": "Mechanism", "body": "The final step from bytecode to native machine code happens HERE, inside the JVM — not in javac. javac stops at bytecode."}, {"label": "Example", "code": "java Hello   # bare class name, NO extension\n# NOT: java Hello.class  (wrong)"}], "source": {"label": "JLS SE 25", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"}, "related": ["javac", "How Java runs", "main method"]}, {"term": "JDK vs JRE vs JVM", "aliases": ["jdk", "jre", "jvm", "java development kit", "runtime environment", "virtual machine"], "type": "concept", "essence": "Three nested layers: the JDK builds programs, the JRE runs them, and the JVM inside it actually executes the bytecode.", "detail": [{"label": "The three layers", "facts": [["JDK", "JRE + developer tools (javac, javap, jar). What you install to WRITE Java."], ["JRE", "JVM + the standard class libraries. Enough to RUN a finished program."], ["JVM", "the engine inside that actually executes the bytecode."]]}, {"label": "Nesting", "chain": [{"name": "JDK", "role": "build"}, {"name": "JRE", "role": "run"}, {"name": "JVM", "role": "execute"}]}, {"label": "Use when", "body": "You need the JDK to write and compile Java. A machine that only runs finished Java programs needs just the runtime."}], "source": {"label": "JLS SE 25", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"}, "related": ["How Java runs", "javac", "java"]}, {"term": "bytecode", "aliases": ["class file", ".class", "intermediate representation", "javap", "mnemonics"], "type": "concept", "essence": "Platform-neutral instructions stored in .class files — the JVM's 'machine code', not the CPU's.", "detail": [{"label": "Mechanism", "body": "javac emits bytecode: a compact, CPU-independent instruction set the JVM understands. The JVM translates it to real machine instructions at run time via interpretation and JIT compilation. It is the JVM's instruction set, not any physical processor's."}, {"label": "Two forms", "facts": [["mnemonics", "human-readable ops printed by javap -c (getstatic, invokevirtual, ldc)."], ["raw bytes", "the numeric encoding of those ops stored in the .class file."]]}, {"label": "Why it matters", "body": "Because the JVM runs any valid .class file, not Java specifically, other languages that compile to bytecode — Kotlin, Scala, Clojure, Groovy — run on the same JVM unchanged. Bytecode, not the Java language, is the portability seam."}], "source": {"label": "JLS SE 25", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"}, "related": ["How Java runs", "javac", "JDK vs JRE vs JVM"]}, {"term": "main method", "aliases": ["entry point", "public static void main", "String[] args", "psvm"], "type": "syntax", "essence": "The fixed method signature the JVM calls to start a program — public static void main(String[] args).", "detail": [{"label": "Form", "code": "public class Hello {\n    public static void main(String[] args) {\n        System.out.println(\"Hello\");\n    }\n}"}, {"label": "Each keyword", "facts": [["public", "the JVM must be able to call it from outside the class"], ["static", "it runs without first creating an object of the class"], ["void", "it returns nothing to the JVM"], ["main", "the exact name the JVM looks for as the entry point"], ["String[] args", "command-line arguments, passed in as an array of strings"]]}, {"label": "Note", "body": "Java 25 adds a simplified entry point (an instance main, no class or args boilerplate) as a preview. This course writes the classic signature above — it is the stable, universal form and what the OCP exam tests."}], "source": {"label": "JLS SE 25", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"}, "related": ["java", "How Java runs", "class declaration"]}, {"term": "edit-compile-run loop", "aliases": ["recompile", "stale class", "rebuild", "edit compile run"], "type": "concept", "essence": "After editing a .java file you must re-run javac before java, or the JVM keeps running the previous compiled version.", "detail": [{"label": "Mechanism", "body": "java executes the .class file, never the .java source. Editing the source does not change the .class until javac rebuilds it. Skip the recompile and you silently run stale bytecode."}, {"label": "Use when", "body": "Every code change: save, javac, then java. If a change seems to have no effect, an un-rerun javac is the first thing to check."}, {"label": "Example", "code": "# edit Hello.java, then ALWAYS:\njavac Hello.java   # rebuild the .class\njava Hello         # now runs the new version"}], "source": {"label": "JLS SE 25", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/index.html"}, "related": ["javac", "java", "bytecode"]}, {"term": "javap", "aliases": ["disassemble", "bytecode viewer", "class disassembler"], "type": "syntax", "essence": "The disassembler — prints the bytecode instructions inside a compiled .class file in readable form.", "detail": [{"label": "Form", "body": "javap -c takes a class name and prints its methods as bytecode mnemonics. It reads the compiled class, not the source."}, {"label": "Use when", "body": "Confirming what the compiler actually produced — seeing that source became bytecode, and what those instructions are."}, {"label": "Example", "code": "javap -c Hello   # prints Hello.class bytecode\n# e.g. getstatic, ldc, invokevirtual, return"}], "source": {"label": "JDK 25 Tool Specs", "url": "https://docs.oracle.com/en/java/javase/25/docs/specs/man/index.html"}, "related": ["bytecode", "javac"]}, {"term": "comments", "aliases": ["//", "/* */", "/** */", "javadoc comment", "line comment", "block comment"], "type": "syntax", "essence": "Notes ignored by the compiler — line comments with //, block comments with /* */, and Javadoc with /** */.", "detail": [{"label": "Form", "columns": ["Syntax", "Spans", "Purpose"], "rows": [["// text", "to end of line", "a quick inline note"], ["/* text */", "one or more lines", "a longer block note"], ["/** text */", "one or more lines", "Javadoc — documents the class/method that follows"]]}, {"label": "Note", "body": "All three are stripped before compilation and have no effect on the running program. Javadoc /** */ is additionally read by the javadoc tool to generate API docs."}], "source": {"label": "JLS §3.7", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html"}, "related": ["main method", "class declaration"]}, {"term": "class declaration", "aliases": ["public class", "class", "file name must match", "top-level class"], "type": "syntax", "essence": "public class Name { ... } — and a public class must live in a file named exactly Name.java.", "detail": [{"label": "Mechanism", "body": "A source file's public class must share the file's name, character for character. Hello.java must declare public class Hello; a mismatch is a compile error."}, {"label": "Form", "code": "// file: Hello.java\npublic class Hello {\n    // fields and methods\n}"}, {"label": "Note", "body": "The name is case-sensitive: Hello and hello are different. This is why javac takes the file name (Hello.java) but java takes the class name (Hello)."}], "source": {"label": "JLS §7.6", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html"}, "related": ["main method", "javac", "java"]}, {"term": "JDK distributions", "aliases": ["OpenJDK", "Temurin", "Adoptium", "Oracle JDK", "which JDK", "x64"], "type": "concept", "essence": "OpenJDK is the open-source reference codebase; vendors build it into installable distributions such as Eclipse Temurin (from Adoptium).", "detail": [{"label": "Mechanism", "body": "OpenJDK is the shared source. Multiple vendors compile it into ready-to-install JDKs that pass the same compatibility tests, so they behave identically for standard Java. They differ in packaging, support terms, and update cadence, not language behavior."}, {"label": "Use when", "body": "Choosing what to install: a free, well-supported build like Temurin (Adoptium) is a standard choice. This course uses Temurin JDK 25 LTS (x64 = the 64-bit build)."}, {"label": "Note", "body": "LTS (Long-Term Support) releases receive updates for years; Java 25 is an LTS. Non-LTS releases are superseded every six months."}], "source": {"label": "Adoptium Temurin", "url": "https://adoptium.net/temurin/releases/"}, "related": ["JDK vs JRE vs JVM", "How Java runs"]}]}, {"id": "types", "name": "Types & Variables", "glance": "Java has eight primitive value types with fixed, machine-independent sizes, plus a matching wrapper class for each. A bare whole-number literal is an int and a bare decimal is a double; suffixes (L, f) and the overflow rule follow from that. Primitives are held and copied by value, which is the root of how == later behaves on objects versus primitives.", "entries": [{"term": "primitive types", "aliases": ["primitives", "byte", "short", "long", "float", "char", "boolean", "value types", "ranges"], "type": "concept", "essence": "The eight built-in value types, with fixed sizes identical on every machine, stored directly rather than as objects.", "detail": [{"label": "The eight primitives", "columns": ["Type", "Bits", "Range / values"], "rows": [["byte", "8", "-128 to 127"], ["short", "16", "-32,768 to 32,767"], ["int", "32", "-2,147,483,648 to 2,147,483,647"], ["long", "64", "about -9.2 to 9.2 quintillion (-2^63 to 2^63-1)"], ["float", "32", "IEEE 754 single precision, about 6-7 significant digits"], ["double", "64", "IEEE 754 double precision, about 15-16 significant digits"], ["char", "16", "0 to 65,535 (an unsigned UTF-16 code unit)"], ["boolean", "-", "true or false only"]]}, {"label": "Mechanism", "body": "A primitive variable holds the value itself, in its own fixed-size slot — not a reference to an object elsewhere. The sizes above are the same on every platform, so integer overflow and float precision behave identically everywhere."}, {"label": "Note", "body": "int is the default type for whole numbers and double for decimals; the integer types are signed two's-complement, and char is the one unsigned integer type."}], "source": {"label": "JLS §4.2", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"}, "related": ["int", "double", "wrapper classes", "numeric literals", "value semantics"]}, {"term": "int", "aliases": ["integer", "whole number"], "type": "syntax", "essence": "A 32-bit signed whole number — Java's default type for integer values.", "detail": [{"label": "Range", "body": "-2,147,483,648 to 2,147,483,647 (-2^31 to 2^31-1), stored as 4 bytes two's-complement."}, {"label": "Use when", "body": "Counting, indexing, and whole-number arithmetic that stays in range. Use long when a value may exceed the int range — exceeding it wraps around silently rather than erroring."}, {"label": "Example", "code": "int count = 42;\nint sum = a + b;"}], "source": {"label": "JLS §4.2", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"}, "related": ["primitive types", "double", "numeric literals", "numeric promotion"]}, {"term": "double", "aliases": ["floating point", "decimal", "real number"], "type": "syntax", "essence": "A 64-bit IEEE 754 floating-point number — Java's default type for decimal values.", "detail": [{"label": "Range", "body": "About 15-16 significant decimal digits. Stores a very wide range of magnitudes, but as binary fractions, so some decimals (like 0.1) are held approximately."}, {"label": "Use when", "body": "Any calculation with fractional values where tiny rounding error is acceptable — averages, measurements, graphics. Avoid it for exact money math."}, {"label": "Example", "code": "double g = 9.81;\ndouble avg = total / (double) n;"}], "source": {"label": "JLS §4.2", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"}, "related": ["primitive types", "int", "numeric literals", "casting"]}, {"term": "wrapper classes", "aliases": ["Integer", "Double", "Boolean", "Character", "Long", "boxing", "wrapper", "MAX_VALUE"], "type": "concept", "essence": "An object class matching each primitive (int -> Integer, etc.), used where Java needs an object instead of a raw value.", "detail": [{"label": "The eight wrappers", "columns": ["Primitive", "Wrapper"], "rows": [["byte", "Byte"], ["short", "Short"], ["int", "Integer"], ["long", "Long"], ["float", "Float"], ["double", "Double"], ["char", "Character"], ["boolean", "Boolean"]]}, {"label": "Use when", "body": "Anywhere an object is required but a primitive is not allowed — most importantly the collections classes taught later. The wrappers also hold useful constants and helpers, e.g. Integer.MAX_VALUE and Integer.parseInt(\"42\")."}, {"label": "Note", "body": "Two of the class names differ from the primitive: int -> Integer and char -> Character. All eight live in java.lang, so no import is needed."}], "source": {"label": "java.lang (API)", "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/package-summary.html"}, "related": ["primitive types", "int", "double"]}, {"term": "numeric literals", "aliases": ["literal", "suffix", "L suffix", "f suffix", "underscore", "10_000", "literal overflow"], "type": "syntax", "essence": "A bare whole number is typed int and a bare decimal is typed double; suffixes L and f change that, and underscores group digits.", "detail": [{"label": "Defaults and suffixes", "columns": ["Literal", "Type"], "rows": [["100", "int (bare whole number)"], ["3.14", "double (bare decimal)"], ["100L", "long (L suffix)"], ["3.14f", "float (f suffix)"], ["1_000_000", "int (underscores are ignored, for readability)"]]}, {"label": "The overflow trap", "body": "long big = 10000000000; does NOT compile. The literal is typed int before it is ever assigned to the long, and 10,000,000,000 overflows int's range — so it fails at the literal itself. Write 10_000_000_000L so it is a long from the start."}, {"label": "Mechanism", "body": "A suffix sets the literal's type up front; it does not convert an already-typed value. Underscores may sit only between digits, never at the start, end, or next to the decimal point."}], "source": {"label": "JLS §3.10", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html"}, "related": ["int", "double", "primitive types"]}, {"term": "variable declaration", "aliases": ["declare", "assignment", "initialize", "type name value"], "type": "syntax", "essence": "Name a typed storage slot and optionally give it a value: type name = value;", "detail": [{"label": "Form", "code": "int count = 0;\nString name = \"Roque\";\ndouble total = 0.0;"}, {"label": "Note", "body": "The declared type fixes what the variable can hold for its whole life. A declaration without a value (int count;) is legal, but the variable must be assigned before it is read."}], "source": {"label": "JLS §4.12", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"}, "related": ["var", "primitive types", "value semantics"]}, {"term": "var", "aliases": ["local type inference", "inferred type", "var keyword"], "type": "syntax", "essence": "Lets the compiler infer a LOCAL variable's type from its initializer — still fully static typing, just written shorter.", "detail": [{"label": "Mechanism", "body": "var total = 0.0; compiles exactly as double total = 0.0; — the compiler reads the initializer, fixes the type permanently, and var vanishes. The variable is not dynamically typed and cannot later hold a different type."}, {"label": "Use when", "body": "A local variable whose type is obvious from the right-hand side. var requires an initializer, so the compiler has something to infer from."}, {"label": "Cannot be used for", "body": "Fields, method parameters, return types, or a declaration with no initializer (var x; is a compile error) — none of these give the compiler an initializer to read."}], "source": {"label": "JLS §14.4", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html"}, "related": ["variable declaration", "primitive types"]}, {"term": "value semantics", "aliases": ["pass by value", "copy", "primitive assignment", "independent copy"], "type": "concept", "essence": "Assigning or passing a primitive copies its value, so the copy and the original are fully independent afterward.", "detail": [{"label": "Mechanism", "body": "A primitive variable holds its value directly. b = a copies a's value into b's own slot; changing one afterward never affects the other."}, {"label": "Example", "code": "int a = 5;\nint b = a;   // b gets a copy of 5\nb = 99;      // a is still 5"}, {"label": "Why it matters", "body": "This is the contrast that makes reference types (objects) understandable later: those copy a reference to one shared object, not the object itself. The difference is exactly what == will hinge on."}], "source": {"label": "JLS §4.12", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"}, "related": ["primitive types", "variable declaration"]}]}, {"id": "operators", "name": "Operators, Casting & Math", "glance": "Integer division truncates and % gives the remainder; mixing in one floating-point operand promotes the whole expression to floating point. Widening to a bigger type is automatic, narrowing to a smaller one needs an explicit cast that truncates toward zero, with a compile-time-constant exception. The Math methods have fixed return types worth memorizing — pow and sqrt always return double, round returns an integer type.", "entries": [{"term": "integer division and modulus", "aliases": ["/", "%", "truncation", "remainder", "integer division", "modulo"], "type": "concept", "essence": "When both operands are integers, / discards the fractional part and % returns the remainder.", "detail": [{"label": "Mechanism", "body": "int / int produces an int: the mathematical result is truncated toward zero, not rounded. % returns what is left over after that truncated division."}, {"label": "Examples", "columns": ["Expression", "Result"], "rows": [["7 / 2", "3 (not 3.5 — fractional part dropped)"], ["7 % 2", "1 (remainder)"], ["-7 / 2", "-3 (truncates toward zero)"]]}, {"label": "Use when", "body": "This is the classic surprise: dividing two ints can never yield a decimal. Make one operand floating-point to get a real quotient (see numeric promotion)."}], "source": {"label": "JLS §15.17", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html"}, "related": ["numeric promotion", "casting"]}, {"term": "numeric promotion", "aliases": ["type promotion", "mixed arithmetic", "widening in expressions", "promotion"], "type": "concept", "essence": "In a mixed-type arithmetic expression, the narrower operand is promoted so both share the wider type before the operation runs.", "detail": [{"label": "Mechanism", "body": "If either operand is a floating-point type, the whole operation is done in floating point. So 9.0 / 4 promotes 4 to 4.0 and yields 2.25, whereas 9 / 4 is pure int division and yields 2."}, {"label": "Examples", "columns": ["Expression", "Result", "Why"], "rows": [["9.0 / 4", "2.25", "one double operand promotes the 4"], ["9 / 4", "2", "both int, integer division"], ["5 + 2.0", "7.0", "result is double"]]}, {"label": "Use when", "body": "To force a real quotient from two int variables, make one a double first: (double) a / b."}], "source": {"label": "JLS §5.6", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-5.html"}, "related": ["integer division and modulus", "casting", "double"]}, {"term": "casting", "aliases": ["cast", "widening", "narrowing", "type conversion", "(int)", "truncate"], "type": "concept", "essence": "Widening to a larger type is automatic; narrowing to a smaller type needs an explicit (type) cast and can lose data.", "detail": [{"label": "Widening (automatic)", "body": "A smaller type flows into a larger one with no cast, because no information is lost: int -> long -> double, for example. int x = 5; double d = x; is fine."}, {"label": "Widening path", "chain": [{"name": "byte"}, {"name": "short"}, {"name": "int"}, {"name": "long"}, {"name": "float"}, {"name": "double"}]}, {"label": "Narrowing (explicit)", "body": "Going to a smaller type requires a cast and may lose data. A floating-to-integer cast truncates toward zero — it does not round: (int) 9.99 is 9 and (int) -9.99 is -9."}, {"label": "Example", "code": "double d = 9.99;\nint n = (int) d;    // 9  (truncated, not rounded)\nlong big = 5;       // widening, no cast needed"}], "source": {"label": "JLS §5", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-5.html"}, "related": ["final-constant narrowing", "numeric promotion", "primitive types"]}, {"term": "final-constant narrowing", "aliases": ["final", "compile-time constant", "constant assignment", "implicit narrowing"], "type": "concept", "essence": "A final variable holding a compile-time constant that fits the target can be assigned to a narrower type WITHOUT a cast.", "detail": [{"label": "Mechanism", "body": "When the right-hand side is a final variable whose constant value is known at compile time and fits the smaller type's range, the compiler allows the assignment with no cast. Drop final (or exceed the range) and it becomes a normal narrowing that fails to compile."}, {"label": "Example", "code": "final int x = 10;\nbyte b = x;      // compiles: 10 is constant and fits byte\n\nint y = 10;\nbyte c = y;      // ERROR: y is not final, needs (byte) y"}, {"label": "Use when", "body": "Mostly an exam and edge-case detail — it explains why an apparently identical assignment compiles in one place and not another."}], "source": {"label": "JLS §5.2", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-5.html"}, "related": ["casting", "primitive types"]}, {"term": "Math methods", "aliases": ["Math.pow", "Math.sqrt", "Math.round", "Math.abs", "Math.max", "Math.min", "return types"], "type": "concept", "essence": "The java.lang.Math helpers have fixed return types worth memorizing — notably pow/sqrt always return double and round returns an integer type.", "detail": [{"label": "Return types (verified on JDK 21)", "columns": ["Call", "Result", "Return type"], "rows": [["Math.pow(2, 10)", "1024.0", "double (always)"], ["Math.sqrt(16)", "4.0", "double (always)"], ["Math.round(9.5)", "10", "long (from a double arg)"], ["Math.round(9.5f)", "10", "int (from a float arg)"], ["Math.abs(-7)", "7", "matches the argument type"], ["Math.max(3.5, 7)", "7.0", "double (7 promoted)"]]}, {"label": "Note", "body": "pow and sqrt return double even when the result is a whole number, so Math.pow(2,10) is 1024.0, not 1024. round is the one that hands back an integer type: long for a double argument, int for a float argument."}], "source": {"label": "java.lang.Math (API)", "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Math.html"}, "related": ["numeric promotion", "casting", "double"]}]}, {"id": "strings", "name": "Strings & Text", "glance": "A String is an immutable object — every method that seems to change it actually returns a new one. That single fact explains the literal pool, why == is the classic trap for anyone coming from Python, and why StringBuilder exists. Text blocks add readable multi-line literals, with precise, easy-to-miss whitespace rules.", "entries": [{"term": "String", "aliases": ["text", "java.lang.String", "string literal"], "type": "concept", "essence": "An immutable sequence of characters (UTF-16) — a reference type, not a primitive, with special literal and + syntax.", "detail": [{"label": "Mechanism", "body": "A String is an object holding a fixed character sequence. The language gives it two conveniences no other class gets: double-quote literals (\"hi\") and the + concatenation operator."}, {"label": "Example", "code": "String s = \"hello\";\nString greeting = s + \", world\";"}], "source": {"label": "java.lang.String (API)", "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html"}, "related": ["String immutability", "== vs .equals()", "StringBuilder", "string pool"]}, {"term": "String immutability", "aliases": ["immutable", "unchangeable", "toUpperCase returns new"], "type": "concept", "essence": "Once a String exists, its contents can never change — every 'modifying' method returns a brand-new String and leaves the original untouched.", "detail": [{"label": "Mechanism", "body": "Methods like toUpperCase(), trim(), and replace() do not edit the String in place. They compute and return a new String object; the original is unchanged."}, {"label": "Proof", "body": "Verified empirically in-lesson: calling s.toUpperCase() and then re-checking s showed s was untouched — the uppercased text only exists in the returned value."}, {"label": "Why it matters", "body": "Immutability is what makes the literal pool and thread-safety possible — a shared String can never be altered out from under another user of it."}, {"label": "Example", "code": "String s = \"hi\";\ns.toUpperCase();       // result thrown away!\nString big = s.toUpperCase();  // correct: capture it"}], "source": {"label": "java.lang.String (API)", "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html"}, "related": ["string pool", "StringBuilder", "String"]}, {"term": "string pool", "aliases": ["intern", "literal pool", "string interning", "literal cache"], "type": "concept", "essence": "Identical String literals share one single object in a cache called the pool — safe only because Strings can never change.", "detail": [{"label": "Mechanism", "body": "When the same literal text appears more than once, Java reuses one pooled object rather than making duplicates. Because Strings are immutable, sharing is safe — no user of the shared object can mutate it."}, {"label": "Consequence", "body": "Two identical literals are literally the same object, so == between them happens to return true. This is an implementation detail — never rely on it for comparison."}], "source": {"label": "JLS §3.10.5", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html"}, "related": ["String immutability", "new String()", "== vs .equals()"]}, {"term": "new String()", "aliases": ["new string", "opt out of pool", "explicit string object"], "type": "syntax", "essence": "Explicitly constructs a fresh String object that deliberately does NOT come from the pool — even if an identical literal already exists.", "detail": [{"label": "Mechanism", "body": "new String(\"a\") forces a distinct object. So new String(\"a\") == \"a\" is false (different objects), even though their contents are equal."}, {"label": "Use when", "body": "Almost never in normal code. Its main value is illustrating the pool: it is the deliberate way to opt out of literal sharing."}, {"label": "Example", "code": "String a = \"a\";\nString b = new String(\"a\");\na == b;        // false — different objects\na.equals(b);   // true  — same contents"}], "source": {"label": "java.lang.String (API)", "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html"}, "related": ["string pool", "== vs .equals()", "String immutability"]}, {"term": "== vs .equals()", "aliases": ["equality", "equals", "reference equality", "content equality", "compare strings", "identity"], "type": "concept", "essence": "== asks 'are these the same object?' (reference identity); .equals() asks 'do these have the same contents?' — for Strings, always use .equals().", "detail": [{"label": "Mechanism", "body": "== compares references: are both variables pointing at the exact same object? .equals() (as String overrides it) compares the actual character sequences."}, {"label": "The Python trap", "body": "In Python, == compares values. In Java, == on any object compares identity, not value. Carrying the Python habit over is the classic source of String bugs."}, {"label": "Example", "code": "String a = new String(\"hi\");\nString b = new String(\"hi\");\na == b;        // false — two objects\na.equals(b);   // true  — same text"}], "source": {"label": "JLS §15.21", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html"}, "related": ["string pool", "new String()", "String immutability"]}, {"term": "StringBuilder", "aliases": ["mutable string", "concatenation", "append", "string buffer"], "type": "concept", "essence": "A mutable character buffer — the right tool for building a String piece by piece, because it edits one buffer in place instead of creating a new object per step.", "detail": [{"label": "Mechanism", "body": "StringBuilder holds a growable internal buffer (initial capacity 16). append() and insert() modify that one buffer; you call toString() at the end to get the finished String."}, {"label": "Use when", "body": "Assembling text in a loop, or from many pieces. For a couple of + operations, plain String is fine and clearer."}, {"label": "Example", "code": "StringBuilder sb = new StringBuilder();\nfor (String w : words) sb.append(w).append(' ');\nString line = sb.toString();"}], "source": {"label": "java.lang.StringBuilder (API)", "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html"}, "related": ["String immutability", "String"]}, {"term": "text blocks", "aliases": ["triple quote", "multiline string", "\"\"\"", "block string"], "type": "syntax", "essence": "Multi-line String literals delimited by triple quotes — readable JSON, HTML, or SQL without escaped newlines.", "detail": [{"label": "Form", "body": "Open with \"\"\" followed immediately by a newline; write the content on following lines; close with \"\"\". The result is an ordinary String."}, {"label": "Example", "code": "String json = \"\"\"\n    {\n      \"name\": \"Roque\"\n    }\n    \"\"\";"}], "source": {"label": "JLS §3.10.6", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html"}, "related": ["text block whitespace", "String"]}, {"term": "text block whitespace", "aliases": ["incidental whitespace", "trailing whitespace", "\\s", "line continuation", "indentation stripping"], "type": "syntax", "essence": "Text blocks strip the whitespace you didn't mean and keep the whitespace you did — via a few precise rules worth memorizing.", "detail": [{"label": "Incidental leading whitespace", "body": "The common indentation shared by all lines (measured against the least-indented line and the closing \"\"\" position) is stripped automatically, so you can indent the block to match your code without that indentation appearing in the string."}, {"label": "Trailing whitespace", "body": "Whitespace at the end of each line is removed automatically."}, {"label": "Keep a trailing space: \\s", "body": "End a line with the \\s escape to preserve exactly one trailing space that would otherwise be stripped."}, {"label": "Join lines: trailing \\", "body": "End a line with a backslash to suppress its newline — the next line continues the same logical line."}], "source": {"label": "JLS §3.10.6", "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html"}, "related": ["text blocks", "String"]}]}]}</script>
+<style>
+:root{
+  --bg:#F4F6F8; --surface:#FFFFFF; --surface-2:#EBEEF2; --border:#DFE3E9;
+  --ink:#171A21; --ink-2:#565E6B; --ink-3:#8B93A0;
+  --accent:#0F7B8A; --accent-ink:#0B5E6A; --accent-soft:#D7EBEE; --accent-line:#8FCBD3;
+  --mark:#FCE8A6;
+  --shadow:0 1px 2px rgba(20,30,45,.06), 0 6px 20px rgba(20,30,45,.05);
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,"Cascadia Code","Roboto Mono",monospace;
+  --maxw:760px;
+}
+html[data-theme="dark"]{
+  --bg:#0F1216; --surface:#171B21; --surface-2:#1E232B; --border:#2A303A;
+  --ink:#E7EAEF; --ink-2:#A4ACB8; --ink-3:#727B88;
+  --accent:#33AEBD; --accent-ink:#7FD3DD; --accent-soft:#16323A; --accent-line:#26525C;
+  --mark:#5A4C1E;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--font-sans);
+  font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+a{color:var(--accent-ink); text-decoration:none}
+mark{background:var(--mark); color:inherit; border-radius:2px; padding:0 .5px}
+
+/* ---------- top bar ---------- */
+.top{
+  position:sticky; top:0; z-index:40;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:saturate(1.4) blur(10px);
+  -webkit-backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:calc(env(safe-area-inset-top) + 10px) 16px 10px;
+}
+.top-inner{max-width:var(--maxw); margin:0 auto; display:flex; flex-direction:column; gap:10px}
+.brand{display:flex; align-items:center; justify-content:space-between; gap:12px}
+.wordmark{display:flex; flex-direction:column; line-height:1.15; min-width:0}
+.wordmark .n{font-family:var(--font-mono); font-weight:600; font-size:16px; letter-spacing:-.2px}
+.wordmark .n b{color:var(--accent-ink); font-weight:700}
+.wordmark .s{font-size:11px; color:var(--ink-3); letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.iconbtn{
+  appearance:none; border:1px solid var(--border); background:var(--surface); color:var(--ink-2);
+  width:38px; height:38px; border-radius:10px; display:grid; place-items:center; cursor:pointer;
+  flex:0 0 auto; transition:border-color .15s, color .15s;
+}
+.iconbtn:hover{color:var(--ink); border-color:var(--accent-line)}
+.iconbtn svg{width:18px; height:18px; display:block}
+.tools{display:flex; gap:8px}
+
+/* ---------- search ---------- */
+.searchwrap{position:relative}
+.searchbar{
+  display:flex; align-items:center; gap:9px;
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:0 12px; height:46px; box-shadow:var(--shadow);
+  transition:border-color .15s, box-shadow .15s;
+}
+.searchbar:focus-within{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.searchbar svg{width:18px; height:18px; color:var(--ink-3); flex:0 0 auto}
+.searchbar input{
+  border:0; outline:0; background:transparent; color:var(--ink);
+  font-family:var(--font-sans); font-size:16px; width:100%; height:100%;
+}
+.searchbar input::placeholder{color:var(--ink-3)}
+.searchbar .kbd{
+  font-family:var(--font-mono); font-size:11px; color:var(--ink-3);
+  border:1px solid var(--border); border-radius:6px; padding:2px 6px; flex:0 0 auto;
+}
+.clearbtn{appearance:none;border:0;background:transparent;color:var(--ink-3);cursor:pointer;padding:4px;display:none}
+.clearbtn svg{width:16px;height:16px}
+.searchbar.has-q .clearbtn{display:block}
+.searchbar.has-q .kbd{display:none}
+
+/* results overlay */
+.results{
+  position:absolute; left:0; right:0; top:calc(100% + 8px); z-index:50;
+  background:var(--surface); border:1px solid var(--border); border-radius:14px;
+  box-shadow:var(--shadow); overflow:hidden; display:none; max-height:70vh; overflow-y:auto;
+}
+.results.open{display:block}
+.result{
+  display:block; width:100%; text-align:left; appearance:none; border:0; background:transparent;
+  padding:11px 14px; cursor:pointer; border-bottom:1px solid var(--border);
+}
+.result:last-child{border-bottom:0}
+.result:hover,.result.active{background:var(--surface-2)}
+.result .r-top{display:flex; align-items:center; gap:8px}
+.result .r-term{font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--ink)}
+.result .r-ess{font-size:12.5px; color:var(--ink-2); margin-top:3px; line-height:1.45;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.result .r-hint{padding:11px 14px; font-size:12.5px; color:var(--ink-3)}
+
+/* ---------- filters ---------- */
+.filters{display:flex; gap:7px; overflow-x:auto; padding:2px 2px 1px; margin:-2px; scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{
+  appearance:none; white-space:nowrap; cursor:pointer; flex:0 0 auto;
+  border:1px solid var(--border); background:var(--surface); color:var(--ink-2);
+  font-family:var(--font-mono); font-size:12px; font-weight:500; letter-spacing:.2px;
+  padding:6px 11px; border-radius:999px; transition:.15s; display:flex; align-items:center; gap:6px;
+}
+.chip:hover{color:var(--ink); border-color:var(--accent-line)}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff}
+.chip .dot{width:7px;height:7px;border-radius:50%}
+.chip .dot.concept{background:var(--accent)} .chip .dot.syntax{background:var(--ink-3)}
+html[data-theme] .chip[aria-pressed="true"] .dot{background:rgba(255,255,255,.9)}
+
+/* ---------- index sheet ---------- */
+.index{
+  max-width:var(--maxw); margin:0 auto; overflow:hidden;
+  max-height:0; transition:max-height .28s ease;
+}
+.index.open{max-height:400px}
+.index-inner{padding:12px 16px 4px}
+.index a{
+  display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  padding:9px 12px; border:1px solid var(--border); border-radius:10px; background:var(--surface);
+  margin-bottom:8px; color:var(--ink);
+}
+.index a .ix-n{font-weight:600; font-size:14px}
+.index a .ix-c{font-family:var(--font-mono); font-size:11px; color:var(--ink-3)}
+
+/* ---------- main ---------- */
+main{max-width:var(--maxw); margin:0 auto; padding:18px 16px 80px}
+.area{margin-bottom:34px; scroll-margin-top:184px}
+.area-head{display:flex; align-items:baseline; gap:10px; margin:0 2px 12px}
+.eyebrow{font-family:var(--font-mono); font-size:10.5px; font-weight:600; letter-spacing:1.4px;
+  text-transform:uppercase; color:var(--accent-ink)}
+.area-title{font-size:20px; font-weight:680; letter-spacing:-.3px; margin:0}
+.area-count{font-family:var(--font-mono); font-size:11px; color:var(--ink-3); margin-left:auto}
+.glance{
+  background:var(--accent-soft); border:1px solid var(--accent-line);
+  border-radius:12px; padding:13px 15px; margin-bottom:16px;
+}
+.glance .eyebrow{color:var(--accent-ink); display:block; margin-bottom:5px}
+.glance p{margin:0; font-size:14px; line-height:1.6; color:var(--ink)}
+html[data-theme="dark"] .glance p{color:var(--ink)}
+
+/* ---------- entry card ---------- */
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  margin-bottom:11px; overflow:hidden; box-shadow:var(--shadow);
+  scroll-margin-top:184px; transition:border-color .18s;
+}
+.card.flash{border-color:var(--accent); animation:flash 1.4s ease}
+@keyframes flash{0%{box-shadow:0 0 0 3px var(--accent-soft)}100%{box-shadow:var(--shadow)}}
+.card-head{
+  appearance:none; width:100%; text-align:left; border:0; background:transparent; cursor:pointer;
+  padding:13px 15px; display:block; color:inherit;
+}
+.card-row{display:flex; align-items:center; gap:8px}
+.badge{
+  font-family:var(--font-mono); font-size:9.5px; font-weight:700; letter-spacing:.6px; text-transform:uppercase;
+  padding:2.5px 6px; border-radius:5px; flex:0 0 auto; line-height:1;
+}
+.badge.concept{background:var(--accent-soft); color:var(--accent-ink)}
+.badge.syntax{background:var(--surface-2); color:var(--ink-2)}
+.term{font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--ink); letter-spacing:-.2px; min-width:0; word-break:break-word}
+.chev{margin-left:auto; color:var(--ink-3); flex:0 0 auto; transition:transform .2s}
+.chev svg{width:18px;height:18px;display:block}
+.card[open] .chev{transform:rotate(90deg)}
+.essence{margin:7px 0 0; font-size:14.5px; line-height:1.5; color:var(--ink-2)}
+.card[open] .essence{color:var(--ink)}
+
+/* detail */
+.detail{display:none; padding:2px 15px 15px 17px; border-left:2px solid var(--accent-line); margin:0 0 0 13px}
+.card[open] .detail{display:block}
+.field{margin-top:13px}
+.field .flabel{font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; color:var(--ink-3); margin-bottom:4px}
+.field .fbody{font-size:14px; line-height:1.6; color:var(--ink)}
+.field .fbody code{font-family:var(--font-mono); font-size:12.5px; background:var(--surface-2); padding:1px 5px; border-radius:5px}
+
+pre{margin:6px 0 0; background:var(--surface-2); border:1px solid var(--border); border-radius:9px;
+  padding:11px 12px; overflow-x:auto; position:relative}
+pre code{font-family:var(--font-mono); font-size:12.5px; line-height:1.55; color:var(--ink); white-space:pre}
+.copybtn{
+  position:absolute; top:7px; right:7px; appearance:none; cursor:pointer;
+  border:1px solid var(--border); background:var(--surface); color:var(--ink-3);
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.4px; padding:3px 7px; border-radius:6px;
+  opacity:.65; transition:.15s;
+}
+.copybtn:hover{opacity:1; color:var(--ink)}
+
+
+/* tables — list/collection content */
+.tablewrap{margin-top:6px; overflow-x:auto; border:1px solid var(--border); border-radius:9px; -webkit-overflow-scrolling:touch}
+table.ref{border-collapse:collapse; width:100%; font-size:12.5px}
+table.ref th,table.ref td{text-align:left; padding:7px 11px; border-bottom:1px solid var(--border); white-space:nowrap}
+table.ref thead th{font-family:var(--font-mono); font-size:9.5px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--ink-3); background:var(--surface-2)}
+table.ref tbody tr:last-child td{border-bottom:0}
+table.ref td{color:var(--ink-2)}
+table.ref td:first-child{font-family:var(--font-mono); font-weight:600; color:var(--ink)}
+
+/* mobile: reflow tables into stacked cards (no horizontal scroll) */
+@media (max-width:560px){
+  .tablewrap{border:0; overflow:visible}
+  table.ref{font-size:13px}
+  table.ref thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+  table.ref, table.ref tbody, table.ref tr, table.ref td{display:block; width:100%}
+  table.ref tr{border:1px solid var(--border); border-radius:9px; background:var(--surface); padding:9px 11px; margin-bottom:8px}
+  table.ref td{border:0; padding:0}
+  table.ref td:first-child{padding-bottom:6px; margin-bottom:6px; border-bottom:1px solid var(--border); font-size:14px; white-space:normal}
+  table.ref td:not(:first-child){display:grid; grid-template-columns:5.5em 1fr; gap:10px; padding:2px 0}
+  table.ref td:not(:first-child)::before{content:attr(data-label); font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:.4px; text-transform:uppercase; color:var(--ink-3); align-self:center}
+}
+
+/* fact rows — mono keyword leads a prose description */
+.facts{display:grid; grid-template-columns:minmax(0,max-content) 1fr; column-gap:14px; row-gap:6px; margin-top:6px}
+.facts dt{font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--ink); white-space:nowrap; line-height:1.5}
+.facts dd{font-size:14px; line-height:1.45; color:var(--ink-2)}
+@media (max-width:480px){ .facts{grid-template-columns:1fr; row-gap:2px} .facts dt{margin-top:6px} .facts dt:first-of-type{margin-top:0} }
+
+/* chain / flow diagram — labeled nodes joined by arrows */
+.chain{display:flex; flex-wrap:wrap; align-items:stretch; gap:6px; margin-top:6px}
+.chain .node{display:flex; flex-direction:column; gap:2px; justify-content:center; padding:7px 11px; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; min-width:0}
+.chain .node-name{font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--ink)}
+.chain .node-role{font-family:var(--font-mono); font-size:9px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--accent-ink)}
+.chain .arrow{align-self:center; color:var(--accent); font-weight:700; font-size:15px}
+
+/* topic nav — persistent wayfinding with scroll tracking */
+.topicnav{display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; margin:0 -2px; padding:1px 2px}
+.topicnav::-webkit-scrollbar{display:none}
+.topicnav a{flex:0 0 auto; white-space:nowrap; font-family:var(--font-mono); font-size:12px; font-weight:500; color:var(--ink-3);
+  padding:5px 9px; border-radius:7px; border-bottom:2px solid transparent; text-decoration:none; transition:color .15s}
+.topicnav a:hover{color:var(--ink-2)}
+.topicnav a.active{color:var(--accent-ink); border-bottom-color:var(--accent)}
+
+/* source + related */
+.foot{display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin-top:14px; padding-top:12px; border-top:1px solid var(--border)}
+.source{display:inline-flex; align-items:center; gap:5px; font-size:12px; color:var(--ink-2)}
+.source .sl{font-family:var(--font-mono); font-size:10px; letter-spacing:.4px; color:var(--ink-3); text-transform:uppercase}
+.source a{display:inline-flex; align-items:center; gap:4px; color:var(--accent-ink); font-size:12.5px; font-weight:500}
+.source a svg{width:11px;height:11px}
+.related{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+.related .rl{font-family:var(--font-mono); font-size:10px; letter-spacing:.4px; color:var(--ink-3); text-transform:uppercase; margin-right:2px}
+.rel{appearance:none; cursor:pointer; border:1px solid var(--border); background:var(--surface-2);
+  color:var(--ink-2); font-family:var(--font-mono); font-size:11px; padding:3px 8px; border-radius:999px; transition:.15s}
+.rel:hover{color:var(--accent-ink); border-color:var(--accent-line)}
+.prov{margin-top:10px; font-size:11.5px; color:var(--ink-3); font-style:italic}
+
+.empty{text-align:center; color:var(--ink-3); padding:50px 20px; font-size:14px}
+.empty .term{color:var(--accent-ink)}
+
+.legend{display:flex; flex-wrap:wrap; gap:4px 12px; margin:2px 2px 0; font-family:var(--font-mono); font-size:10.5px; color:var(--ink-3)}
+.legend span{display:inline-flex; align-items:center; gap:5px}
+.legend i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.ttop{position:fixed; right:16px; bottom:calc(16px + env(safe-area-inset-bottom)); z-index:30;
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--border); background:var(--surface);
+  color:var(--ink-2); display:none; place-items:center; cursor:pointer; box-shadow:var(--shadow)}
+.ttop.show{display:grid}
+.ttop svg{width:20px;height:20px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="wordmark">
+        <span class="n" id="wm"></span>
+        <span class="s" id="ws"></span>
+      </div>
+      <div class="tools">
+        <button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode">
+          <svg id="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+          <svg id="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="searchwrap">
+      <div class="searchbar" id="sbar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="q" type="search" inputmode="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search concepts, syntax, examples…" aria-label="Search the reference">
+        <span class="kbd">/</span>
+        <button class="clearbtn" id="clearBtn" aria-label="Clear search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="results" id="results" role="listbox"></div>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="chip" data-f="all" aria-pressed="true">All</button>
+      <button class="chip" data-f="concept" aria-pressed="false"><span class="dot concept"></span>Concept</button>
+      <button class="chip" data-f="syntax" aria-pressed="false"><span class="dot syntax"></span>Syntax</button>
+    </div>
+    <nav class="topicnav" id="topicnav" aria-label="Topic areas"></nav>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<button class="ttop" id="toTop" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
+
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById('refdata').textContent);
+const $ = (s,r=document)=>r.querySelector(s);
+const esc = s => s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---- header text ---- */
+$('#wm').innerHTML = 'Java<b>Ref</b>';
+$('#ws').textContent = DATA.meta.subtitle || '';
+
+/* ---- flatten entries with area info ---- */
+const ALL = [];
+DATA.topicAreas.forEach(area=>{
+  area.entries.forEach(e=>{ ALL.push({...e, areaId:area.id, areaName:area.name}); });
+});
+const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+
+/* ---- build markup ---- */
+function iconExt(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';}
+function iconChev(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';}
+
+function fieldHTML(f){
+  if(f.columns){
+    const head='<thead><tr>'+f.columns.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead>';
+    const body='<tbody>'+(f.rows||[]).map(r=>'<tr>'+r.map((c,i)=>'<td'+(i?' data-label="'+esc(f.columns[i])+'"':'')+'>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody>';
+    return '<div class="field"><div class="flabel">'+esc(f.label)+'</div><div class="tablewrap"><table class="ref">'+head+body+'</table></div></div>';
+  }
+  if(f.facts){
+    const rows=f.facts.map(p=>'<dt>'+esc(p[0])+'</dt><dd>'+esc(p[1])+'</dd>').join('');
+    return '<div class="field"><div class="flabel">'+esc(f.label)+'</div><dl class="facts">'+rows+'</dl></div>';
+  }
+  if(f.chain){
+    const nodes=f.chain.map(n=>{
+      const name = typeof n==='string' ? n : n.name;
+      const role = typeof n==='string' ? '' : (n.role||'');
+      return '<span class="node"><span class="node-name">'+esc(name)+'</span>'+(role?'<span class="node-role">'+esc(role)+'</span>':'')+'</span>';
+    }).join('<span class="arrow" aria-hidden="true">→</span>');
+    return '<div class="field"><div class="flabel">'+esc(f.label)+'</div><div class="chain">'+nodes+'</div></div>';
+  }
+  if(f.code!==undefined){
+    return '<div class="field"><div class="flabel">'+esc(f.label)+'</div>'+
+      '<pre><button class="copybtn" type="button">copy</button><code>'+esc(f.code)+'</code></pre></div>';
+  }
+  return '<div class="field"><div class="flabel">'+esc(f.label)+'</div><div class="fbody">'+esc(f.body)+'</div></div>';
+}
+function entryHTML(e){
+  const id = slug(e.term);
+  const details = (e.detail||[]).map(fieldHTML).join('');
+  const prov = e.provenance==='representative' ? '<div class="prov">Representative — confirm against your actual lesson.</div>' : '';
+  let source = '';
+  if(e.source){ source = '<span class="source"><span class="sl">Source</span> <a href="'+esc(e.source.url)+'" target="_blank" rel="noopener">'+esc(e.source.label)+' '+iconExt()+'</a></span>'; }
+  let related = '';
+  if(e.related && e.related.length){
+    related = '<span class="related"><span class="rl">See also</span>'+
+      e.related.map(r=>'<button class="rel" type="button" data-jump="'+esc(slug(r))+'">'+esc(r)+'</button>').join('')+'</span>';
+  }
+  const foot = (source||related) ? '<div class="foot">'+source+related+'</div>' : '';
+  return '<div class="card" id="'+id+'" data-type="'+e.type+'" data-term="'+esc(e.term.toLowerCase())+'">'+
+    '<button class="card-head" type="button" aria-expanded="false">'+
+      '<span class="card-row"><span class="badge '+e.type+'">'+e.type+'</span>'+
+      '<span class="term">'+esc(e.term)+'</span>'+
+      '<span class="chev">'+iconChev()+'</span></span>'+
+      '<p class="essence">'+esc(e.essence)+'</p>'+
+    '</button>'+
+    '<div class="detail">'+details+prov+foot+'</div>'+
+  '</div>';
+}
+function areaHTML(area){
+  const entries = area.entries.map(entryHTML).join('');
+  return '<section class="area" id="area-'+area.id+'">'+
+    '<div class="area-head"><h2 class="area-title">'+esc(area.name)+'</h2>'+
+      '<span class="area-count">'+area.entries.length+'</span></div>'+
+    '<div class="glance"><span class="eyebrow">At a glance</span><p>'+esc(area.glance)+'</p></div>'+
+    entries+'</section>';
+}
+$('#main').innerHTML = DATA.topicAreas.map(areaHTML).join('') + '<div class="empty" id="noRes" style="display:none">No entries match this filter.</div>';
+
+/* topic nav */
+$('#topicnav').innerHTML = DATA.topicAreas.map(a=>
+  '<a href="#area-'+a.id+'" data-nav="area-'+a.id+'">'+esc(a.name)+'</a>'
+).join('');
+
+/* ---- expand / collapse ---- */
+$('#main').addEventListener('click', e=>{
+  const head = e.target.closest('.card-head');
+  if(head){
+    const card = head.closest('.card');
+    const open = card.hasAttribute('open');
+    if(open){card.removeAttribute('open'); head.setAttribute('aria-expanded','false');}
+    else{card.setAttribute('open',''); head.setAttribute('aria-expanded','true');}
+    return;
+  }
+  const copy = e.target.closest('.copybtn');
+  if(copy){
+    const code = copy.parentElement.querySelector('code').textContent;
+    navigator.clipboard?.writeText(code).then(()=>{const t=copy.textContent;copy.textContent='copied';setTimeout(()=>copy.textContent=t,1200);}).catch(()=>{});
+    return;
+  }
+  const jump = e.target.closest('[data-jump]');
+  if(jump){ jumpTo(jump.getAttribute('data-jump')); }
+});
+
+function jumpTo(id){
+  const card = document.getElementById(id);
+  if(!card) return;
+  clearSearch();
+  setFilter('all');
+  if(!card.hasAttribute('open')){card.setAttribute('open',''); card.querySelector('.card-head').setAttribute('aria-expanded','true');}
+  card.scrollIntoView({behavior:'smooth', block:'center'});
+  card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash');
+}
+
+/* ---- filters ---- */
+let filter = 'all';
+function setFilter(f){
+  filter = f;
+  $$('.chip').forEach(c=>c.setAttribute('aria-pressed', c.dataset.f===f ? 'true':'false'));
+  applyFilter();
+}
+function $$(s){return [...document.querySelectorAll(s)];}
+function applyFilter(){
+  let anyVisible=false;
+  DATA.topicAreas.forEach(area=>{
+    const sec = document.getElementById('area-'+area.id);
+    let shown=0;
+    sec.querySelectorAll('.card').forEach(card=>{
+      const ok = filter==='all' ? true : card.dataset.type===filter;
+      card.style.display = ok ? '' : 'none';
+      if(ok) shown++;
+    });
+    sec.style.display = shown ? '' : 'none';
+    if(shown) anyVisible=true;
+  });
+  $('#noRes').style.display = anyVisible ? 'none' : 'block';
+}
+$('#filters').addEventListener('click', e=>{const c=e.target.closest('.chip'); if(c) setFilter(c.dataset.f);});
+
+/* ---- search ---- */
+const qEl = $('#q'), sbar=$('#sbar'), resBox=$('#results'), clearBtn=$('#clearBtn');
+function subseq(q,t){let i=0;for(const ch of t){if(ch===q[i])i++;if(i===q.length)return true;}return q.length===0;}
+function bodyText(e){
+  let s=e.essence+' ';
+  (e.detail||[]).forEach(f=>{s+=(f.label||'')+' '+(f.body||'')+' '+(f.code||'')+' '; if(f.rows) f.rows.forEach(r=>s+=r.join(' ')+' '); if(f.facts) f.facts.forEach(p=>s+=p.join(' ')+' '); if(f.chain) f.chain.forEach(n=>s+=(typeof n==='string'?n:n.name+' '+(n.role||''))+' ');});
+  return s.toLowerCase();
+}
+function score(e,q){
+  const term=e.term.toLowerCase(), al=(e.aliases||[]).map(a=>a.toLowerCase()), ess=e.essence.toLowerCase(), body=bodyText(e);
+  let s=0;
+  if(term===q)s+=1000; else if(term.startsWith(q))s+=620; else if(term.includes(q))s+=420; else if(subseq(q,term))s+=150;
+  for(const a of al){ if(a===q)s+=520; else if(a.startsWith(q))s+=320; else if(a.includes(q))s+=210; }
+  if(ess.includes(q))s+=120;
+  if(body.includes(q))s+=60;
+  const toks=q.split(/\s+/).filter(Boolean);
+  if(toks.length>1){const hay=term+' '+al.join(' ')+' '+body; if(toks.every(t=>hay.includes(t)))s+=220;}
+  return s;
+}
+function hl(text,q){
+  const t=esc(text); if(!q) return t;
+  const i=text.toLowerCase().indexOf(q); if(i<0) return t;
+  return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length));
+}
+let activeIdx=-1, curResults=[];
+function runSearch(){
+  const raw=qEl.value.trim(), q=raw.toLowerCase();
+  sbar.classList.toggle('has-q', raw.length>0);
+  if(!q){ resBox.classList.remove('open'); resBox.innerHTML=''; curResults=[]; return; }
+  const scored=ALL.map(e=>({e,s:score(e,q)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,12);
+  curResults=scored; activeIdx=-1;
+  if(!scored.length){ resBox.innerHTML='<div class="r-hint">No matches. Try a shorter or different term.</div>'; resBox.classList.add('open'); return; }
+  resBox.innerHTML=scored.map((x,i)=>{
+    const e=x.e;
+    return '<button class="result" role="option" data-i="'+i+'" data-term="'+esc(slug(e.term))+'">'+
+      '<span class="r-top"><span class="badge '+e.type+'">'+e.type+'</span>'+
+      '<span class="r-term">'+hl(e.term,q)+'</span></span>'+
+      '<span class="r-ess">'+hl(e.essence,q)+'</span></button>';
+  }).join('');
+  resBox.classList.add('open');
+}
+resBox.addEventListener('click',e=>{const r=e.target.closest('.result'); if(r) jumpTo(r.dataset.term);});
+qEl.addEventListener('input', runSearch);
+function clearSearch(){ qEl.value=''; sbar.classList.remove('has-q'); resBox.classList.remove('open'); resBox.innerHTML=''; curResults=[]; }
+clearBtn.addEventListener('click',()=>{clearSearch(); qEl.focus();});
+qEl.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){clearSearch(); qEl.blur();}
+  else if(e.key==='Enter'){ if(curResults.length){ const pick=activeIdx>=0?activeIdx:0; jumpTo(slug(curResults[pick].e.term)); } }
+  else if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+    e.preventDefault(); if(!curResults.length) return;
+    activeIdx=(activeIdx+(e.key==='ArrowDown'?1:-1)+curResults.length)%curResults.length;
+    $$('.result').forEach((el,i)=>el.classList.toggle('active',i===activeIdx));
+    $$('.result')[activeIdx]?.scrollIntoView({block:'nearest'});
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='/' && document.activeElement!==qEl && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){ e.preventDefault(); qEl.focus(); }
+});
+document.addEventListener('click',e=>{ if(!e.target.closest('.searchwrap')) resBox.classList.remove('open'); });
+
+/* ---- index sheet toggle ---- */
+/* ---- topic nav + scrollspy ---- */
+const navLinks = $$('#topicnav a');
+const areaEls = DATA.topicAreas.map(a=>document.getElementById('area-'+a.id));
+let activeArea=null;
+function setActiveNav(id){
+  if(id===activeArea) return; activeArea=id;
+  navLinks.forEach(a=>{
+    const on=a.dataset.nav===id; a.classList.toggle('active',on);
+    if(on){ const nav=$('#topicnav'); nav.scrollTo({left:a.offsetLeft - nav.clientWidth/2 + a.offsetWidth/2, behavior:'smooth'}); }
+  });
+}
+function updateSpy(){
+  const probe = ($('.top').offsetHeight||0) + 20;
+  let current=null;
+  areaEls.forEach(el=>{ if(el && el.style.display!=='none' && el.getBoundingClientRect().top - probe <= 0) current=el.id; });
+  if(!current){ const first=areaEls.find(el=>el && el.style.display!=='none'); if(first) current=first.id; }
+  if(current) setActiveNav(current);
+}
+let spyTick=false;
+addEventListener('scroll',()=>{ if(spyTick) return; spyTick=true; requestAnimationFrame(()=>{updateSpy(); spyTick=false;}); },{passive:true});
+$('#topicnav').addEventListener('click',e=>{ const a=e.target.closest('a'); if(a) setActiveNav(a.dataset.nav); });
+updateSpy();
+
+/* ---- theme ---- */
+const root=document.documentElement, themeBtn=$('#themeBtn'), moon=$('#ic-moon'), sun=$('#ic-sun');
+function applyTheme(t){ root.setAttribute('data-theme',t); const dark=t==='dark'; moon.style.display=dark?'none':'block'; sun.style.display=dark?'block':'none'; try{localStorage.setItem('javaref-theme',t);}catch(_){} }
+(function initTheme(){ let t='light'; try{t=localStorage.getItem('javaref-theme')||'light';}catch(_){} applyTheme(t); })();
+themeBtn.addEventListener('click',()=>applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark'));
+
+/* ---- back to top ---- */
+const toTop=$('#toTop');
+addEventListener('scroll',()=>{ toTop.classList.toggle('show', scrollY>600); }, {passive:true});
+toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+</script>
+</body>
+</html>
