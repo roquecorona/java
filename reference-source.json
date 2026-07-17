@@ -9,7 +9,7 @@
       "syntax": "A concrete form, keyword, or tool invocation."
     },
     "provenance": {
-      "verified": "Drawn from the learner's actual completed lessons: runtime/toolchain, the Strings cluster, Operators & Conversion, and Console I/O -- each verified in-session against a real JDK 21/25 compiler, not reconstructed.",
+      "verified": "Drawn from the learner's actual completed lessons: runtime/toolchain, the Strings cluster, Operators & Conversion, Console I/O, and Dates & Times -- each verified in-session against a real JDK 21/25 compiler, not reconstructed.",
       "representative": "Correct Java, but reconstructed generically — confirm it matches what was actually taught, then I swap in the real breakdown."
     }
   },
@@ -673,7 +673,8 @@
           "related": [
             "string pool",
             "StringBuilder",
-            "String"
+            "String",
+            "date-time immutability"
           ]
         },
         {
@@ -1234,6 +1235,483 @@
           },
           "related": [
             "Scanner"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "datetime",
+      "name": "Dates & Times",
+      "glance": "The java.time types differ by exactly what they carry — a date, a time, both, both plus a zone, or a machine-timeline instant — and the right one is the smallest that holds what the problem needs. Every value is immutable, so arithmetic returns a new object and must be assigned. Amounts split the same way: Duration measures exact elapsed time and Period measures calendar time, and across a daylight-saving change they deliberately give different answers.",
+      "entries": [
+        {
+          "term": "java.time types",
+          "aliases": [
+            "LocalDate",
+            "LocalTime",
+            "LocalDateTime",
+            "ZonedDateTime",
+            "Instant",
+            "which date class",
+            "date type"
+          ],
+          "type": "concept",
+          "essence": "Five types that differ only in what they carry; choosing correctly means picking the smallest one that holds what the problem actually needs, because every extra thing carried is another thing that can go wrong.",
+          "detail": [
+            {
+              "label": "The five types",
+              "columns": [
+                "Type",
+                "Carries",
+                "Does NOT carry",
+                "Example value"
+              ],
+              "rows": [
+                [
+                  "LocalDate",
+                  "a calendar date",
+                  "any time or zone",
+                  "2026-01-31"
+                ],
+                [
+                  "LocalTime",
+                  "a time of day",
+                  "any date or zone",
+                  "09:05:30"
+                ],
+                [
+                  "LocalDateTime",
+                  "a date and a time",
+                  "a zone — so it is not a real moment",
+                  "2026-01-31T09:05"
+                ],
+                [
+                  "ZonedDateTime",
+                  "a date, a time, and a zone's rules",
+                  "nothing — a real moment, subject to DST",
+                  "2026-03-08T01:30-05:00[America/New_York]"
+                ],
+                [
+                  "Instant",
+                  "a point on the machine timeline (UTC)",
+                  "human calendar context",
+                  "2026-07-17T14:30:00Z"
+                ]
+              ]
+            },
+            {
+              "label": "Mechanism",
+              "body": "The prefix Local means no zone is attached. A LocalDateTime of 09:05 is a reading any clock anywhere could show; it is not a moment in the world until a zone is attached. Attaching one produces a ZonedDateTime, and that is the precise point at which daylight-saving rules start applying to arithmetic."
+            },
+            {
+              "label": "Use when",
+              "body": "A birthday is a LocalDate -- it does not shift when you fly. A meeting across cities is a ZonedDateTime. A log timestamp is an Instant. Reaching for a bigger type than the problem needs is what imports zone bugs into code that never needed a zone."
+            },
+            {
+              "label": "Note",
+              "body": "All five live in java.time and all are immutable."
+            }
+          ],
+          "source": {
+            "label": "java.time (API, SE 25)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html"
+          },
+          "related": [
+            "creating date-time values",
+            "date-time immutability",
+            "ZonedDateTime & DST"
+          ]
+        },
+        {
+          "term": "creating date-time values",
+          "aliases": [
+            "LocalDate.of",
+            "now",
+            "parse",
+            "factory method",
+            "new LocalDate",
+            "DateTimeException"
+          ],
+          "type": "syntax",
+          "essence": "Built through static factory methods -- of(), now(), and parse() -- never with new, because these classes have no public constructors.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "The java.time classes hide their constructors, so new LocalDate() does not compile. Factories are the only door in. Months are 1-based here: 1 is January, unlike the 0-based month of the legacy java.util.Calendar API."
+            },
+            {
+              "label": "The three ways",
+              "facts": [
+                [
+                  "of(...)",
+                  "build from explicit parts -- LocalDate.of(2026, 1, 31)"
+                ],
+                [
+                  "now()",
+                  "read the current value from the system clock -- LocalDate.now()"
+                ],
+                [
+                  "parse(text)",
+                  "build from ISO text -- LocalDate.parse(\"2026-01-31\")"
+                ]
+              ]
+            },
+            {
+              "label": "Verified behavior (JDK 21)",
+              "body": "An impossible date throws instead of rolling over: LocalDate.of(2026, 2, 30) raises DateTimeException. It does not silently become March 2 the way a lenient date API would."
+            },
+            {
+              "label": "Example",
+              "code": "LocalDate d  = LocalDate.of(2026, 1, 31);   // 2026-01-31\nLocalDate t  = LocalDate.now();\nLocalDate p  = LocalDate.parse(\"2026-01-31\");\n// LocalDate x = new LocalDate();          // does not compile"
+            }
+          ],
+          "source": {
+            "label": "java.time (API, SE 25)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html"
+          },
+          "related": [
+            "java.time types",
+            "date-time immutability"
+          ]
+        },
+        {
+          "term": "date-time immutability",
+          "aliases": [
+            "plusDays",
+            "minusDays",
+            "withYear",
+            "unassigned result",
+            "immutable date",
+            "returns new object"
+          ],
+          "type": "concept",
+          "essence": "Every plus/minus/with call returns a NEW value and leaves the original untouched, so a call whose result is not assigned does nothing at all.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "A date-time object can never change after it is created. plusDays(1) computes a new object and hands it back; the variable it was called on still holds the old value. This is the identical rule String follows, and for the identical reason -- a value that can be shared safely can only ever hand back a new one."
+            },
+            {
+              "label": "Verified behavior (JDK 21)",
+              "body": "Month-end arithmetic clamps rather than overflowing: 2026-01-31 plusMonths(1) gives 2026-02-28, the last valid day of the target month, with no exception raised."
+            },
+            {
+              "label": "Example",
+              "code": "LocalDate d = LocalDate.of(2026, 1, 31);\nd.plusDays(1);         // returns 2026-02-01 -- thrown away\nSystem.out.println(d); // 2026-01-31 -- unchanged\n\nd = d.plusDays(1);     // the working form"
+            }
+          ],
+          "source": {
+            "label": "java.time (API, SE 25)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html"
+          },
+          "related": [
+            "String immutability",
+            "java.time types",
+            "creating date-time values"
+          ]
+        },
+        {
+          "term": "Period vs Duration",
+          "aliases": [
+            "Duration",
+            "Period",
+            "elapsed time",
+            "calendar time",
+            "which amount type",
+            "ofDays",
+            "ofHours",
+            "PT2H",
+            "P1Y2M3D"
+          ],
+          "type": "concept",
+          "essence": "Duration measures exact elapsed time and is blind to calendars; Period measures calendar time and is blind to exact seconds -- and the choice only reveals itself where the two disagree.",
+          "detail": [
+            {
+              "label": "The two amounts",
+              "columns": [
+                "Type",
+                "Measures in",
+                "Blind to",
+                "toString form"
+              ],
+              "rows": [
+                [
+                  "Duration",
+                  "hours, minutes, seconds, nanos",
+                  "calendars -- a day is always exactly 24h to it",
+                  "PT2H · PT1H30M"
+                ],
+                [
+                  "Period",
+                  "years, months, days",
+                  "exact seconds -- a day is whatever the calendar says",
+                  "P1Y2M3D · P1M1D"
+                ]
+              ]
+            },
+            {
+              "label": "Mechanism",
+              "body": "A daylight-saving change is the place the two part company. On a spring-forward date the calendar day is only 23 real hours long. Adding one calendar day and adding 24 exact hours therefore land on different clock times. Neither is wrong -- they answer different questions, and the directional consequence follows from which frame is held fixed: Period holds the clock reading fixed and lets elapsed time vary; Duration holds elapsed time fixed and lets the clock reading vary."
+            },
+            {
+              "label": "Verified behavior (JDK 21)",
+              "code": "ZoneId ny = ZoneId.of(\"America/New_York\");\nZonedDateTime start = ZonedDateTime.of(\n    LocalDateTime.of(2026, 3, 7, 12, 0), ny);   // 12:00 -05:00, day before spring-forward\n\nstart.plusDays(1);                 // 2026-03-08T12:00-04:00  <- same clock time\nstart.plus(Duration.ofHours(24));  // 2026-03-08T13:00-04:00  <- an hour later on the clock\n\n// real hours between start and plusDays(1): 23"
+            },
+            {
+              "label": "Use when",
+              "body": "Ask which frame the answer must honour. \"Same time tomorrow\" is a calendar promise -- Period or plusDays. \"24 hours from now\" is a stopwatch promise -- Duration. Choosing by unit size alone (days feel big, hours feel small) is what selects the wrong one."
+            },
+            {
+              "label": "Note",
+              "body": "The ofX factories are static, so chaining them does not accumulate: Period.ofYears(1).ofMonths(2) evaluates to P2M -- only the last call survives. Build multi-field amounts with Period.of(1, 2, 0)."
+            }
+          ],
+          "source": {
+            "label": "java.time (API, SE 25)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html"
+          },
+          "related": [
+            "Period.between()",
+            "ZonedDateTime & DST",
+            "java.time types"
+          ]
+        },
+        {
+          "term": "Period.between()",
+          "aliases": [
+            "between",
+            "date difference",
+            "months and days",
+            "age calculation",
+            "ChronoUnit.DAYS.between"
+          ],
+          "type": "concept",
+          "essence": "Reports the gap between two dates by removing complete calendar months first, then counting the days left over from wherever that landed -- not by dividing a total day count.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "It advances from the start date by whole calendar months for as long as it can without passing the end date, then counts the remaining days from that landing point. Because months differ in length, the day part depends entirely on where the month-stepping stopped -- which is why the result cannot be reproduced by dividing a total number of days."
+            },
+            {
+              "label": "Verified behavior (JDK 21)",
+              "code": "Period p = Period.between(\n    LocalDate.of(2024, 1, 31),\n    LocalDate.of(2024, 3, 1));\n// P1M1D -- one month, one day\n\n// why: Jan 31 + 1 month clamps to Feb 29 (2024 is a leap year),\n// and Feb 29 -> Mar 1 is one further day."
+            },
+            {
+              "label": "Use when",
+              "body": "Reporting an age or a gap in human calendar terms. For a plain exact count instead, use ChronoUnit.DAYS.between(), which returns a single total and never splits into months."
+            },
+            {
+              "label": "Note",
+              "body": "Argument order matters: a start date later than the end date yields a negative Period."
+            }
+          ],
+          "source": {
+            "label": "java.time (API, SE 25)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html"
+          },
+          "related": [
+            "Period vs Duration",
+            "date-time immutability"
+          ]
+        },
+        {
+          "term": "ZonedDateTime & DST",
+          "aliases": [
+            "ZoneId",
+            "daylight saving",
+            "spring forward",
+            "fall back",
+            "UTC offset",
+            "America/New_York",
+            "23 hour day"
+          ],
+          "type": "concept",
+          "essence": "A ZoneId carries a region's daylight-saving rulebook, so zoned arithmetic adjusts the UTC offset automatically and some calendar days are not 24 hours long.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "A zone is a rulebook, not a fixed offset. America/New_York means -05:00 in winter and -04:00 in summer, and the rulebook states when it flips. On the spring-forward date the 2:00 hour does not exist at all, making that calendar day 23 real hours; on the fall-back date one hour occurs twice, making it 25."
+            },
+            {
+              "label": "Spring-forward, 2026-03-07 12:00 New York (verified JDK 21)",
+              "chain": [
+                {
+                  "name": "12:00 -05:00",
+                  "role": "start"
+                },
+                {
+                  "name": "plusDays(1)",
+                  "role": "calendar +1 day"
+                },
+                {
+                  "name": "12:00 -04:00",
+                  "role": "23 real hours later"
+                }
+              ]
+            },
+            {
+              "label": "Use when",
+              "body": "Any time a real moment must survive a zone or a DST boundary. A LocalDateTime has no rulebook attached and therefore cannot be affected by any of this -- which is a positive reason to prefer it when zones genuinely do not matter."
+            },
+            {
+              "label": "Note",
+              "body": "Constructing a time inside the skipped hour does not throw; it is shifted forward to a real time instead."
+            }
+          ],
+          "source": {
+            "label": "java.time (API, SE 25)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html"
+          },
+          "related": [
+            "zone conversion & the date shift",
+            "Period vs Duration",
+            "java.time types"
+          ]
+        },
+        {
+          "term": "zone conversion & the date shift",
+          "aliases": [
+            "withZoneSameInstant",
+            "withZoneSameLocal",
+            "same instant",
+            "date changes",
+            "across midnight",
+            "timezone conversion"
+          ],
+          "type": "concept",
+          "essence": "Viewing one moment from another zone can move the wall clock across midnight, changing the reported calendar date -- the real danger of routing a calendar-only concept through a ZonedDateTime.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "withZoneSameInstant keeps the moment identical and re-reads it on a different region's clock. If that clock has already passed midnight, the same instant reports a different calendar date. Nothing moved in time; only the viewpoint changed."
+            },
+            {
+              "label": "Verified behavior (JDK 21)",
+              "code": "ZonedDateTime ny = ZonedDateTime.of(\n    LocalDateTime.of(2000, 3, 15, 20, 0),\n    ZoneId.of(\"America/New_York\"));    // 2000-03-15T20:00-05:00\n\nny.withZoneSameInstant(ZoneId.of(\"Asia/Tokyo\"));\n// 2000-03-16T10:00+09:00 -- same instant, NEXT DAY's date"
+            },
+            {
+              "label": "Use when",
+              "body": "Pulling toLocalDate() off a converted ZonedDateTime can hand back a date the user would not recognise as theirs. If the concept is fundamentally a date -- a birthday, a due date -- keep it a LocalDate and never route it through a zone at all."
+            },
+            {
+              "label": "Note",
+              "body": "Contrast withZoneSameLocal, which keeps the clock reading and changes the moment instead -- the opposite trade."
+            }
+          ],
+          "source": {
+            "label": "java.time (API, SE 25)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html"
+          },
+          "related": [
+            "ZonedDateTime & DST",
+            "java.time types"
+          ]
+        },
+        {
+          "term": "DateTimeFormatter patterns",
+          "aliases": [
+            "ofPattern",
+            "format",
+            "parse",
+            "MM vs mm",
+            "HH vs hh",
+            "MMMM",
+            "ISO_LOCAL_DATE",
+            "pattern letters"
+          ],
+          "type": "syntax",
+          "essence": "Formats a date-time into text or parses text back, driven by pattern letters where CASE selects the field and the letter COUNT selects the width or verbosity.",
+          "detail": [
+            {
+              "label": "Mechanism",
+              "body": "Upper and lower case are different fields entirely, not styles of one field: MM is month and mm is minute. The number of letters then chooses how that field is rendered. This is why a wrong-case pattern still compiles, still runs, and simply prints the wrong value -- there is no error to catch it."
+            },
+            {
+              "label": "Case decides the field (verified JDK 21, on 2026-01-31T13:05)",
+              "columns": [
+                "Pattern",
+                "Means",
+                "Output"
+              ],
+              "rows": [
+                [
+                  "MM",
+                  "month",
+                  "01"
+                ],
+                [
+                  "mm",
+                  "minute",
+                  "05"
+                ],
+                [
+                  "HH",
+                  "hour, 24-hour clock",
+                  "13"
+                ],
+                [
+                  "hh",
+                  "hour, 12-hour clock",
+                  "01"
+                ],
+                [
+                  "a",
+                  "AM/PM marker",
+                  "PM"
+                ],
+                [
+                  "dd",
+                  "day of month",
+                  "31"
+                ],
+                [
+                  "yyyy",
+                  "year",
+                  "2026"
+                ]
+              ]
+            },
+            {
+              "label": "Letter count decides verbosity",
+              "columns": [
+                "Pattern",
+                "Output"
+              ],
+              "rows": [
+                [
+                  "M",
+                  "1"
+                ],
+                [
+                  "MM",
+                  "01"
+                ],
+                [
+                  "MMM",
+                  "Jan"
+                ],
+                [
+                  "MMMM",
+                  "January"
+                ]
+              ]
+            },
+            {
+              "label": "Example",
+              "code": "DateTimeFormatter f = DateTimeFormatter.ofPattern(\"MM/dd/yyyy\");\nf.format(LocalDate.of(2026, 1, 31));        // 01/31/2026\nLocalDate.parse(\"01/31/2026\", f);           // 2026-01-31\n\nDateTimeFormatter.ISO_LOCAL_DATE.format(d); // 2026-01-31"
+            },
+            {
+              "label": "Use when",
+              "body": "Reach for a predefined constant such as ISO_LOCAL_DATE when standard ISO text is what is wanted; write ofPattern only for a layout the constants do not already cover."
+            }
+          ],
+          "source": {
+            "label": "DateTimeFormatter (API, SE 25)",
+            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/format/DateTimeFormatter.html"
+          },
+          "related": [
+            "java.time types",
+            "creating date-time values"
           ]
         }
       ]

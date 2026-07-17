@@ -2,7 +2,7 @@
    Strategy: network-first (always fetch latest when online), fall back to
    cache when offline. On each new deploy this CACHE string changes, so old
    caches are purged and the phone picks up the update. */
-const CACHE = 'javaref-3fd0d27c';
+const CACHE = 'javaref-1c049f0c';
 const ASSETS = [
   './',
   './index.html',
