@@ -1,0 +1,4334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F7B8A">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>COP 2210 Java Reference</title>
+<script id="refdata" type="application/json">{
+ "meta": {
+  "schemaVersion": "1.0",
+  "title": "COP 2210 Java Reference",
+  "subtitle": "Programming I · Final Exam Reference & Question Bank · FIU",
+  "course": "COP 2210 UHAC · Dr. Samira Zad · Summer 2026",
+  "renderNote": "Canonical source. HTML and PDF are generated FROM this file.",
+  "typeVocabulary": {
+   "concept": "A mechanism or idea.",
+   "syntax": "A concrete form, keyword, or method."
+  },
+  "questionNote": "Every quiz/review question is reproduced under its topic with the correct answer. Code-output answers were verified by compiling and running each snippet; where an answer key was present in the source it was treated as authoritative. Items marked FLAG are ambiguous or wrong in the source.",
+  "coverage": "Cumulative over the whole course (Modules 1-7): structure, data types, operators, I/O, methods, decisions (if/switch), loops, strings, arrays, ArrayList, classes/objects, Math/Random. NOTE: the syllabus also lists File I/O (Scanner/FileWriter/PrintWriter), but the project knowledge contains no file-I/O quiz, activity, or slide deck, so that topic is not represented here."
+ },
+ "topicAreas": [
+  {
+   "id": "keyfacts",
+   "name": "Key Facts & Cheat Sheet",
+   "glance": "The consolidated facts you look up fastest under time pressure: the eight primitive sizes, operator precedence, the trick for counting loop iterations, printf specifiers, casting rules, switch anatomy, and the array-vs-ArrayList method map. Everything here is repeated in full inside its own topic area — this is the one-screen version.",
+   "entries": [
+    {
+     "term": "Eight primitive types",
+     "type": "concept",
+     "essence": "Java has exactly eight primitive types; String is NOT one of them (it is a class).",
+     "detail": [
+      {
+       "label": "Sizes & defaults",
+       "columns": [
+        "Type",
+        "Bits",
+        "Holds",
+        "Default"
+       ],
+       "rows": [
+        [
+         "byte",
+         "8",
+         "whole -128..127",
+         "0"
+        ],
+        [
+         "short",
+         "16",
+         "whole -32768..32767",
+         "0"
+        ],
+        [
+         "int",
+         "32",
+         "whole numbers (the default)",
+         "0"
+        ],
+        [
+         "long",
+         "64",
+         "big whole numbers (suffix L)",
+         "0"
+        ],
+        [
+         "float",
+         "32",
+         "decimals (suffix f)",
+         "0.0"
+        ],
+        [
+         "double",
+         "64",
+         "decimals (the default)",
+         "0.0"
+        ],
+        [
+         "char",
+         "16",
+         "one character in single quotes",
+         "'\\u0000'"
+        ],
+        [
+         "boolean",
+         "-",
+         "true / false only",
+         "false"
+        ]
+       ]
+      }
+     ],
+     "related": [
+      "primitive types",
+      "int",
+      "double",
+      "char",
+      "boolean"
+     ]
+    },
+    {
+     "term": "Operator precedence",
+     "type": "concept",
+     "essence": "Multiplication, division, and modulus run before addition and subtraction; same tier goes left-to-right.",
+     "detail": [
+      {
+       "label": "Order",
+       "facts": [
+        [
+         "1. ( )",
+         "parentheses first"
+        ],
+        [
+         "2. * / %",
+         "same tier, left to right"
+        ],
+        [
+         "3. + -",
+         "same tier, left to right"
+        ],
+        [
+         "4. relational < > <= >=",
+         ""
+        ],
+        [
+         "5. == !=",
+         ""
+        ],
+        [
+         "6. &&  then  ||",
+         ""
+        ],
+        [
+         "7. =  +=  -=",
+         "assignment last"
+        ]
+       ]
+      },
+      {
+       "label": "Example",
+       "code": "2 + 3 * 4      // 14, not 20\n5 + 2 * 3 - 1  // 6+... -> 10"
+      }
+     ],
+     "related": [
+      "operator precedence",
+      "integer division & modulus"
+     ]
+    },
+    {
+     "term": "Counting loop iterations",
+     "type": "concept",
+     "essence": "For for(i=start; i<=end; i+=step): iterations = floor((end - start) / step) + 1 — but the safe method is to list the values i takes.",
+     "detail": [
+      {
+       "label": "Method",
+       "body": "Write out every value the counter takes until the test fails; count them. This never miscounts an off-by-one."
+      },
+      {
+       "label": "Worked",
+       "code": "for(int i=3; i<=10; i+=2)   // i = 3,5,7,9  -> 4 iterations (11 fails)\nfor(int i=1; i<8;  i+=2)   // i = 1,3,5,7  -> 4 iterations"
+      }
+     ],
+     "related": [
+      "for loop",
+      "counting iterations"
+     ]
+    },
+    {
+     "term": "printf format specifiers",
+     "type": "syntax",
+     "essence": "Placeholders fill left-to-right by position; %.2f is the one you need for money.",
+     "detail": [
+      {
+       "label": "Common specifiers",
+       "columns": [
+        "Spec",
+        "Meaning"
+       ],
+       "rows": [
+        [
+         "%d",
+         "integer"
+        ],
+        [
+         "%f",
+         "decimal (6 places by default)"
+        ],
+        [
+         "%.2f",
+         "decimal, exactly 2 places (rounds)"
+        ],
+        [
+         "%s",
+         "any value (String)"
+        ],
+        [
+         "%n",
+         "newline"
+        ],
+        [
+         "\\t",
+         "tab"
+        ]
+       ]
+      },
+      {
+       "label": "Money example",
+       "code": "System.out.printf(\"$%.2f%n\", 4.13859375);  // $4.14  (rounds)"
+      }
+     ],
+     "related": [
+      "printf format specifiers",
+      "System.out.print / println / printf"
+     ]
+    },
+    {
+     "term": "Casting rules",
+     "type": "concept",
+     "essence": "Widening (small to big) is automatic; narrowing (big to small) needs an explicit cast and truncates — it never rounds.",
+     "detail": [
+      {
+       "label": "Rules",
+       "facts": [
+        [
+         "Widening",
+         "int -> double: automatic, always safe"
+        ],
+        [
+         "Narrowing",
+         "double -> int: needs (int) cast, or it will not compile"
+        ],
+        [
+         "Truncation",
+         "(int) 3.99 is 3, (int) -9.99 is -9 — chops toward zero, no rounding"
+        ],
+        [
+         "Ranking",
+         "byte < short < int < long < float < double"
+        ]
+       ]
+      }
+     ],
+     "related": [
+      "widening & narrowing conversion",
+      "type conversion"
+     ]
+    },
+    {
+     "term": "switch anatomy",
+     "type": "syntax",
+     "essence": "switch tests one variable against case values; every case needs break or execution falls through into the next case.",
+     "detail": [
+      {
+       "label": "Form",
+       "code": "switch (n) {\n  case 1: System.out.println(\"Mon\"); break;\n  case 2: System.out.println(\"Tue\"); break;\n  default: System.out.println(\"?\");\n}"
+      },
+      {
+       "label": "Fall-through",
+       "body": "Forgetting break makes every case from the match onward run. default handles anything unmatched."
+      }
+     ],
+     "related": [
+      "switch statement",
+      "break"
+     ]
+    },
+    {
+     "term": "Array vs ArrayList methods",
+     "type": "concept",
+     "essence": "An array is fixed-size and uses length and [i]; an ArrayList resizes and uses size() and get/set/add/remove.",
+     "detail": [
+      {
+       "label": "Side by side",
+       "columns": [
+        "Task",
+        "Array",
+        "ArrayList"
+       ],
+       "rows": [
+        [
+         "size",
+         "arr.length  (no parentheses)",
+         "list.size()  (with parentheses)"
+        ],
+        [
+         "read",
+         "arr[i]",
+         "list.get(i)"
+        ],
+        [
+         "write",
+         "arr[i] = v",
+         "list.set(i, v)"
+        ],
+        [
+         "add",
+         "(cannot grow)",
+         "list.add(v) / list.add(i, v)"
+        ],
+        [
+         "remove",
+         "(cannot shrink)",
+         "list.remove(i)"
+        ],
+        [
+         "create",
+         "new int[5] or {1,2,3}",
+         "new ArrayList<Integer>()"
+        ]
+       ]
+      }
+     ],
+     "related": [
+      "arrays",
+      "ArrayList",
+      "ArrayList methods"
+     ]
+    },
+    {
+     "term": "Relational & logical operators",
+     "type": "syntax",
+     "essence": "Relational operators test a relationship and yield true/false; && needs both sides true, || needs at least one.",
+     "detail": [
+      {
+       "label": "Relational",
+       "facts": [
+        [
+         "==",
+         "equal (NOT the single = which assigns)"
+        ],
+        [
+         "!=",
+         "not equal"
+        ],
+        [
+         "<  >",
+         "less / greater than"
+        ],
+        [
+         "<=  >=",
+         "less/greater or equal"
+        ]
+       ]
+      },
+      {
+       "label": "Logical",
+       "facts": [
+        [
+         "&&  (AND)",
+         "true only if BOTH conditions are true"
+        ],
+        [
+         "||  (OR)",
+         "true if AT LEAST ONE condition is true; false only if both false"
+        ],
+        [
+         "!  (NOT)",
+         "flips true/false"
+        ]
+       ]
+      }
+     ],
+     "related": [
+      "relational operators",
+      "logical operators"
+     ]
+    }
+   ],
+   "questions": []
+  },
+  {
+   "id": "runtime",
+   "name": "Language, Compilation & Structure",
+   "glance": "A Java program is compiled once by javac into bytecode (.class), then run by the JVM with the java command. Source lives in a file named exactly after its public class. Comments are ignored by the compiler; statements end in semicolons; class and method bodies are bounded by curly braces. Java is case-sensitive.",
+   "entries": [
+    {
+     "term": "How Java runs",
+     "aliases": [
+      "compile",
+      "compilation",
+      "jvm",
+      "bytecode",
+      "javac",
+      "java command"
+     ],
+     "type": "concept",
+     "essence": "javac compiles your .java source into bytecode (.class); the JVM then executes that bytecode with the java command.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "javac (the compiler) turns Hello.java into Hello.class, which holds bytecode — not machine code. The JVM (Java Virtual Machine) loads that bytecode and executes it. Bytecode is platform-neutral, which is why Java is 'write once, run anywhere.'"
+      },
+      {
+       "label": "Which tool does what",
+       "facts": [
+        [
+         "javac Hello.java",
+         "compiles source -> Hello.class (needs the .java extension)"
+        ],
+        [
+         "java Hello",
+         "runs it (class name only, NO extension)"
+        ],
+        [
+         "JVM",
+         "executes bytecode; javadoc makes documentation"
+        ]
+       ]
+      },
+      {
+       "label": "Example",
+       "code": "javac Hello.java   # source -> Hello.class (bytecode)\njava Hello         # JVM loads bytecode and runs it"
+      }
+     ],
+     "related": [
+      "main method",
+      "class & method structure",
+      "bytecode"
+     ]
+    },
+    {
+     "term": "main method",
+     "aliases": [
+      "entry point",
+      "public static void main"
+     ],
+     "type": "syntax",
+     "essence": "The program's starting point — where the JVM begins execution.",
+     "detail": [
+      {
+       "label": "Form",
+       "code": "public static void main(String[] args) {\n    System.out.println(\"Hello!\");\n}"
+      },
+      {
+       "label": "Meaning",
+       "body": "public = callable from outside; static = no object needed to start; void = returns nothing; String[] args = command-line arguments."
+      }
+     ],
+     "related": [
+      "How Java runs",
+      "class & method structure"
+     ]
+    },
+    {
+     "term": "class & method structure",
+     "aliases": [
+      "class header",
+      "class body",
+      "method header",
+      "method body",
+      "braces"
+     ],
+     "type": "concept",
+     "essence": "A class header names the class; its body (in curly braces) holds methods; each method has a header then a body in its own braces.",
+     "detail": [
+      {
+       "label": "Anatomy",
+       "facts": [
+        [
+         "class header",
+         "public class Welcome  — declares the class name & access level"
+        ],
+        [
+         "class body",
+         "everything inside the class's { } braces"
+        ],
+        [
+         "method header",
+         "public static void main(String[] args) — name, return type, parameters"
+        ],
+        [
+         "method body",
+         "the code inside the method's { } braces, after the header"
+        ]
+       ]
+      },
+      {
+       "label": "Braces rule",
+       "body": "Every left brace { must have a matching right brace }. Braces delimit class and method bodies — they are not followed by semicolons."
+      }
+     ],
+     "related": [
+      "main method",
+      "filename rule",
+      "comments"
+     ]
+    },
+    {
+     "term": "filename rule",
+     "aliases": [
+      "file name",
+      "public class name",
+      "Temperature.java"
+     ],
+     "type": "concept",
+     "essence": "A .java file containing a public class must be named exactly after that class, matching case, with a .java extension.",
+     "detail": [
+      {
+       "label": "Rule",
+       "body": "public class Temperature must live in Temperature.java (not temperature.java, not Main.java). A .java file may contain at most one public class."
+      },
+      {
+       "label": "Why",
+       "body": "The compiler locates a public class by filename, so the names must match exactly. Java is case-sensitive, so Temperature and temperature are different."
+      }
+     ],
+     "related": [
+      "class & method structure",
+      "case sensitivity"
+     ]
+    },
+    {
+     "term": "case sensitivity",
+     "aliases": [
+      "case-sensitive",
+      "identifiers case"
+     ],
+     "type": "concept",
+     "essence": "Java treats uppercase and lowercase as different: count, Count, and COUNT are three distinct identifiers.",
+     "detail": [
+      {
+       "label": "Note",
+       "body": "Keywords are lowercase (public, static, void). Getting the case of a class, method, or variable name wrong is a 'cannot find symbol' error."
+      }
+     ],
+     "related": [
+      "filename rule",
+      "variable declaration"
+     ]
+    },
+    {
+     "term": "comments",
+     "aliases": [
+      "// comment",
+      "/* */",
+      "javadoc",
+      "/** */",
+      "single-line comment"
+     ],
+     "type": "syntax",
+     "essence": "Notes for humans that the compiler ignores entirely — three kinds: //, /* */, and /** */.",
+     "detail": [
+      {
+       "label": "The three kinds",
+       "facts": [
+        [
+         "//",
+         "single-line: everything after it on that line is ignored"
+        ],
+        [
+         "/* ... */",
+         "multi-line block comment"
+        ],
+        [
+         "/** ... */",
+         "documentation (Javadoc) comment; used to describe a class or method"
+        ]
+       ]
+      },
+      {
+       "label": "What the compiler does",
+       "body": "It ignores them completely — commented code never runs and never causes an error. A common use is disabling one line of code while testing another."
+      },
+      {
+       "label": "Example",
+       "code": "// grossPay = hours * payRate;   <- ignored, never runs"
+      }
+     ],
+     "related": [
+      "semicolons",
+      "class & method structure"
+     ]
+    },
+    {
+     "term": "semicolons",
+     "aliases": [
+      "statement terminator",
+      ";"
+     ],
+     "type": "syntax",
+     "essence": "Executable statements end with a semicolon; comments, class headers, and method headers do NOT.",
+     "detail": [
+      {
+       "label": "Ends with ;",
+       "body": "Statements: variable declarations, assignments, method calls like System.out.println(\"Hi\");"
+      },
+      {
+       "label": "Does NOT end with ;",
+       "body": "Comments, the class header, and the method header (they are followed by a { instead)."
+      }
+     ],
+     "related": [
+      "comments",
+      "class & method structure"
+     ]
+    },
+    {
+     "term": "System.out",
+     "aliases": [
+      "standard library",
+      "System class",
+      "out object"
+     ],
+     "type": "concept",
+     "essence": "System.out is the console output object from Java's standard library — the System class holds the out object among other members.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "System is a class in the standard Java library (java.lang, auto-imported). out is a member of it (a PrintStream) that writes to the console. You call print/println/printf on it."
+      }
+     ],
+     "related": [
+      "System.out.print / println / printf",
+      "How Java runs"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "What command-line tool compiles a .java source file into a .class file?",
+     "a": "javac",
+     "why": "javac is the compiler (source -> bytecode). java runs a program; javadoc makes documentation.",
+     "src": "Exam 1 Practice Q1"
+    },
+    {
+     "q": "Which statement correctly describes what the JVM does?",
+     "a": "It executes Java bytecode on the host machine.",
+     "why": "javac produces the bytecode; the JVM executes it.",
+     "src": "Exam 1 Practice Q3"
+    },
+    {
+     "q": "What file extension must all Java programs have?",
+     "a": ".java",
+     "src": "Quiz Review 1 Q2"
+    },
+    {
+     "q": "A .java file contains a public class. What must the filename be?",
+     "code": "public class Temperature {\n    public static void main(String[] args) { System.out.println(\"Hot!\"); }\n}",
+     "a": "Temperature.java",
+     "why": "The filename must match the public class name exactly, case-sensitively.",
+     "src": "Exam 1 Practice Q2/Q5; Quiz Review 1 Q4"
+    },
+    {
+     "q": "How many public classes can a single .java file contain?",
+     "a": "At most one.",
+     "src": "Quiz Review 1 Q14"
+    },
+    {
+     "q": "What happens to comments in a Java program?",
+     "a": "They are ignored by the compiler.",
+     "why": "Comments are notes for humans; they never compile or run.",
+     "src": "Quiz Review 1 Q3; Exam 1 Practice Q7"
+    },
+    {
+     "q": "What is the comment in this program?",
+     "code": "public class Simple\n// This is a simple Java program.\nSystem.out.println(\"Programming is great fun!\");",
+     "a": "// This is a simple Java program.",
+     "why": "// begins a single-line comment.",
+     "src": "Quiz Review 1 Q1"
+    },
+    {
+     "q": "Which is a valid Javadoc (documentation) comment?",
+     "options": [
+      "// comment",
+      "/* comment */",
+      "/** comment */",
+      "<!-- comment -->"
+     ],
+     "a": "/** comment */",
+     "why": "Javadoc opens with /** ; // is single-line, /* */ is a block comment.",
+     "src": "Exam 1 Practice Q6"
+    },
+    {
+     "q": "What is the rule for braces in Java?",
+     "a": "Every left brace { must have a matching right brace }.",
+     "src": "Quiz Review 1 Q5"
+    },
+    {
+     "q": "Which of the following is NOT terminated with a semicolon?",
+     "options": [
+      "Comments",
+      "Statements",
+      "Variable declarations",
+      "Method calls"
+     ],
+     "a": "Comments.",
+     "why": "Statements, declarations, and calls end with ; . Comments (and class/method headers) do not.",
+     "src": "Quiz Review 1 Q6; Exam 1 Practice Q9"
+    },
+    {
+     "q": "Which part of Java does System.out belong to?",
+     "a": "The standard Java library.",
+     "src": "Quiz Review 1 Q7"
+    },
+    {
+     "q": "What does the System class hold?",
+     "a": "The out object and other members.",
+     "src": "Quiz Review 1 Q9"
+    },
+    {
+     "q": "What is the difference between System.out.print and System.out.println?",
+     "a": "println adds a newline after printing; print does not.",
+     "src": "Quiz Review 1 Q8"
+    },
+    {
+     "q": "How is the class body recognized?",
+     "a": "It starts and ends with curly braces { }.",
+     "src": "Quiz Review 1 Q17"
+    },
+    {
+     "q": "How is the method body recognized?",
+     "a": "It starts and ends with curly braces { } after the method header.",
+     "src": "Quiz Review 1 Q18; Exam 1 Practice Q8"
+    },
+    {
+     "q": "In the code, what is Line 2 (public class ... {) known as?",
+     "a": "The class header.",
+     "src": "Quiz Review 1 Q19; Exam 1 Practice Q4"
+    },
+    {
+     "q": "What is true about Java's case sensitivity?",
+     "a": "Java is case-sensitive: identifiers that differ in case are treated as different.",
+     "src": "Quiz Review 1 Q15"
+    }
+   ]
+  },
+  {
+   "id": "types",
+   "name": "Variables, Data Types & Literals",
+   "glance": "Java is strongly typed: every variable must be given a type, which fixes what it can hold. Values written directly in code are literals — numeric, character ('A'), boolean (true/false), or String (\"hi\"). A whole-number literal defaults to int and a decimal to double. Local variables must be initialized before use, and assignment works right-to-left.",
+   "entries": [
+    {
+     "term": "variable declaration",
+     "aliases": [
+      "declare",
+      "initialize",
+      "initialization"
+     ],
+     "type": "syntax",
+     "essence": "Name a typed storage slot, optionally giving it a value: type name = value;",
+     "detail": [
+      {
+       "label": "Form",
+       "code": "int count = 0;\nString name = \"Roque\";\ndouble price = 2.65;"
+      },
+      {
+       "label": "Initialization",
+       "body": "A local variable must be assigned a value before it is used, or the code will not compile ('variable might not have been initialized'). It is good practice to give a starting value (0, 0.0, false, \"\")."
+      },
+      {
+       "label": "Strong typing",
+       "body": "Java requires a type on every variable so it knows how the value behaves. A variable of one type cannot silently hold another."
+      }
+     ],
+     "related": [
+      "primitive types",
+      "assignment operator",
+      "literals"
+     ]
+    },
+    {
+     "term": "primitive types",
+     "aliases": [
+      "primitives",
+      "byte",
+      "short",
+      "long",
+      "float",
+      "the eight types"
+     ],
+     "type": "concept",
+     "essence": "The eight built-in value types; String is a class, not a primitive.",
+     "detail": [
+      {
+       "label": "The eight",
+       "columns": [
+        "Type",
+        "Bits",
+        "Holds",
+        "Example"
+       ],
+       "rows": [
+        [
+         "byte",
+         "8",
+         "-128..127",
+         "byte b = 100;"
+        ],
+        [
+         "short",
+         "16",
+         "-32768..32767",
+         "short s = 500;"
+        ],
+        [
+         "int",
+         "32",
+         "whole numbers (default)",
+         "int n = 42;"
+        ],
+        [
+         "long",
+         "64",
+         "big whole numbers",
+         "long big = 8000000000L;"
+        ],
+        [
+         "float",
+         "32",
+         "decimals (~7 digits)",
+         "float f = 3.14f;"
+        ],
+        [
+         "double",
+         "64",
+         "decimals (default, ~15 digits)",
+         "double d = 9.81;"
+        ],
+        [
+         "char",
+         "16",
+         "one character",
+         "char c = 'A';"
+        ],
+        [
+         "boolean",
+         "-",
+         "true / false",
+         "boolean ok = true;"
+        ]
+       ]
+      },
+      {
+       "label": "Note",
+       "body": "String is NOT a primitive — it is a reference type (a class). The byte type is 8 bits."
+      }
+     ],
+     "related": [
+      "int",
+      "double",
+      "char",
+      "boolean",
+      "literals & suffixes"
+     ]
+    },
+    {
+     "term": "int",
+     "aliases": [
+      "integer",
+      "whole number"
+     ],
+     "type": "syntax",
+     "essence": "A 32-bit whole number — Java's default type for integer values.",
+     "detail": [
+      {
+       "label": "Use when",
+       "body": "Counting, indexing, whole-number math. Use double for decimals; use long if the value may exceed ~2.1 billion."
+      },
+      {
+       "label": "Example",
+       "code": "int count = 42;\nint sum = a + b;"
+      }
+     ],
+     "related": [
+      "primitive types",
+      "double"
+     ]
+    },
+    {
+     "term": "double",
+     "aliases": [
+      "floating point",
+      "decimal"
+     ],
+     "type": "syntax",
+     "essence": "A 64-bit floating-point number — Java's default type for decimals.",
+     "detail": [
+      {
+       "label": "Use when",
+       "body": "Prices, measurements, averages, anything with a fractional part. A tax rate 0.0675 or price 2.65 must be a double, not an int."
+      },
+      {
+       "label": "Example",
+       "code": "double price = 2.65;\ndouble avg = total / (double) n;"
+      }
+     ],
+     "related": [
+      "primitive types",
+      "int",
+      "widening & narrowing conversion"
+     ]
+    },
+    {
+     "term": "char",
+     "aliases": [
+      "character",
+      "single quote"
+     ],
+     "type": "syntax",
+     "essence": "A single character written in single quotes: char grade = 'A';",
+     "detail": [
+      {
+       "label": "char vs String",
+       "body": "'A' (single quotes) is a char — exactly one character. \"A\" (double quotes) is a String. char grade = \"A\"; does not compile."
+      }
+     ],
+     "related": [
+      "primitive types",
+      "String",
+      "literals"
+     ]
+    },
+    {
+     "term": "boolean",
+     "aliases": [
+      "true",
+      "false",
+      "boolean literal"
+     ],
+     "type": "syntax",
+     "essence": "Holds only true or false — the result of every relational or logical test.",
+     "detail": [
+      {
+       "label": "Note",
+       "body": "true and false are the only two boolean literals (lowercase keywords). \"true\" in double quotes is a String, not a boolean."
+      }
+     ],
+     "related": [
+      "primitive types",
+      "relational operators"
+     ]
+    },
+    {
+     "term": "String",
+     "aliases": [
+      "text",
+      "string literal"
+     ],
+     "type": "concept",
+     "essence": "A sequence of characters in double quotes — a reference type (class), not a primitive.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "A String holds text. The + operator joins strings (concatenation). It has methods like length(), charAt(), substring()."
+      },
+      {
+       "label": "Example",
+       "code": "String s = \"hello\";\nString greeting = s + \", world\";"
+      }
+     ],
+     "related": [
+      "primitive types",
+      "string length & charAt",
+      "concatenation"
+     ]
+    },
+    {
+     "term": "literals & suffixes",
+     "aliases": [
+      "literal",
+      "numeric literal",
+      "L suffix",
+      "f suffix",
+      "int default",
+      "double default"
+     ],
+     "type": "concept",
+     "essence": "A value written directly in code; a whole number defaults to int and a decimal to double unless a suffix says otherwise.",
+     "detail": [
+      {
+       "label": "The four literal kinds",
+       "facts": [
+        [
+         "numeric",
+         "123 or 3.14"
+        ],
+        [
+         "character",
+         "'A' (single quotes)"
+        ],
+        [
+         "boolean",
+         "true / false"
+        ],
+        [
+         "String",
+         "\"hello\" (double quotes)"
+        ]
+       ]
+      },
+      {
+       "label": "Defaults & suffixes",
+       "columns": [
+        "Literal",
+        "Type"
+       ],
+       "rows": [
+        [
+         "100",
+         "int"
+        ],
+        [
+         "8000000000L",
+         "long (needs L; 8000000000 alone is too big for int)"
+        ],
+        [
+         "3.14",
+         "double"
+        ],
+        [
+         "3.14f",
+         "float"
+        ]
+       ]
+      },
+      {
+       "label": "Why L is needed",
+       "body": "long big = 8000000000; fails because the literal is first read as an int (which overflows) before assignment. The L makes it a long literal from the start."
+      }
+     ],
+     "related": [
+      "primitive types",
+      "variable declaration"
+     ]
+    },
+    {
+     "term": "identifier rules",
+     "aliases": [
+      "valid identifier",
+      "variable naming",
+      "naming rules"
+     ],
+     "type": "concept",
+     "essence": "A name may use letters, digits, _ and $, but cannot start with a digit and cannot be a reserved keyword.",
+     "detail": [
+      {
+       "label": "Rules",
+       "facts": [
+        [
+         "Start",
+         "a letter, _ or $ — NOT a digit (4thQuarter is illegal)"
+        ],
+        [
+         "Body",
+         "letters, digits, _ , $ ; no spaces"
+        ],
+        [
+         "Case",
+         "case-sensitive: total and Total differ"
+        ],
+        [
+         "Convention",
+         "variables use camelCase: myVariable"
+        ]
+       ]
+      },
+      {
+       "label": "Valid / invalid",
+       "columns": [
+        "Name",
+        "Legal?"
+       ],
+       "rows": [
+        [
+         "myVariable",
+         "yes"
+        ],
+        [
+         "_salesTotal",
+         "yes"
+        ],
+        [
+         "$amount",
+         "yes"
+        ],
+        [
+         "4thQuarter",
+         "no — starts with a digit"
+        ]
+       ]
+      }
+     ],
+     "related": [
+      "variable declaration",
+      "final constant"
+     ]
+    },
+    {
+     "term": "final constant",
+     "aliases": [
+      "final",
+      "named constant",
+      "constant"
+     ],
+     "type": "syntax",
+     "essence": "final makes a variable a constant that can never be reassigned; convention names it ALL_CAPS.",
+     "detail": [
+      {
+       "label": "Form",
+       "code": "final double TAX_RATE = 0.0675;"
+      },
+      {
+       "label": "Note",
+       "body": "Java uses final (not 'const' or 'constant'). Trying to change a final variable is a compile error."
+      }
+     ],
+     "related": [
+      "variable declaration",
+      "literals & suffixes"
+     ]
+    },
+    {
+     "term": "assignment operator",
+     "aliases": [
+      "= operator",
+      "right to left"
+     ],
+     "type": "syntax",
+     "essence": "The single = takes the value on the RIGHT and stores it into the variable on the LEFT — it never tests for equality.",
+     "detail": [
+      {
+       "label": "Direction",
+       "body": "Right-to-left: num1 = 5; puts 5 into num1. It does not check whether they are equal — that is == (double equals). Assigning again replaces the old value."
+      },
+      {
+       "label": "Example",
+       "code": "int num1 = 5;   // num1 holds 5\nnum1 = 8;       // 5 is replaced; num1 now holds 8"
+      }
+     ],
+     "related": [
+      "variable declaration",
+      "relational operators"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "What is a variable in Java?",
+     "a": "A named storage location in the computer's memory.",
+     "src": "Quiz Review 1 Q10"
+    },
+    {
+     "q": "What does this line do?  int number = 10;",
+     "a": "It declares an integer variable named number and assigns it 10.",
+     "src": "Quiz Review 1 Q11/Q12/Q13"
+    },
+    {
+     "q": "Which of the following is NOT a valid Java identifier?",
+     "options": [
+      "_salesTotal",
+      "$amount",
+      "myVariable2",
+      "4thQuarter"
+     ],
+     "a": "4thQuarter",
+     "why": "An identifier cannot start with a digit.",
+     "src": "Exam 1 Practice Q10"
+    },
+    {
+     "q": "Which of the following is an example of correct Java variable naming?",
+     "options": [
+      "My_variable",
+      "MyVariable",
+      "MYVARIABLE",
+      "myVariable"
+     ],
+     "a": "myVariable",
+     "why": "Variables conventionally use camelCase.",
+     "src": "Exam II Q26"
+    },
+    {
+     "q": "In Java, what kind of literal is the value true?",
+     "a": "A boolean literal.",
+     "why": "true/false are the two boolean literals; \"true\" in quotes would be a String.",
+     "src": "Exam 1 Practice Q11"
+    },
+    {
+     "q": "Which of the following is a String literal?",
+     "options": [
+      "'Hello'",
+      "Hello",
+      "\"Hello\"",
+      "`Hello`"
+     ],
+     "a": "\"Hello\"",
+     "why": "Strings use double quotes; single quotes make a char.",
+     "src": "Exam 1 Practice Q15"
+    },
+    {
+     "q": "In which direction does the assignment operator = assign a value?",
+     "a": "Right to left — the right-side value is stored into the left-side variable.",
+     "src": "Exam 1 Practice Q12"
+    },
+    {
+     "q": "What happens when you compile and run this?",
+     "code": "int count;\nSystem.out.println(count);",
+     "a": "Compilation error — count was never initialized.",
+     "why": "Local variables must be assigned before use.",
+     "src": "Exam 1 Practice Q13"
+    },
+    {
+     "q": "What is the output?",
+     "code": "String name = \"Maria\";\nSystem.out.println(name);\nSystem.out.println(name);",
+     "a": "Maria printed on two separate lines.",
+     "why": "println prints the value (not the name, no quotes) and moves to a new line.",
+     "src": "Exam 1 Practice Q14"
+    },
+    {
+     "q": "Which of the following is NOT one of Java's eight primitive types?",
+     "options": [
+      "byte",
+      "String",
+      "boolean",
+      "char"
+     ],
+     "a": "String",
+     "why": "String is a class (reference type). The 8 primitives: byte, short, int, long, float, double, boolean, char.",
+     "src": "Exam 1 Practice Q16"
+    },
+    {
+     "q": "What is the key difference between int and double?",
+     "a": "double stores decimals; int stores only whole numbers.",
+     "src": "Exam 1 Practice Q17"
+    },
+    {
+     "q": "Which data type stores a single character?",
+     "options": [
+      "int",
+      "char",
+      "float",
+      "double"
+     ],
+     "a": "char",
+     "src": "Exam II Q24; Exam 1 Practice Q19"
+    },
+    {
+     "q": "Which data types can store decimal values?",
+     "options": [
+      "float and double",
+      "int and boolean",
+      "char and byte",
+      "long and int"
+     ],
+     "a": "float and double",
+     "src": "Exam II Q25"
+    },
+    {
+     "q": "Which data type correctly stores this value?  ___ TAX_RATE = 0.0675;",
+     "a": "double",
+     "why": "0.0675 is a decimal; double is the standard choice.",
+     "src": "Exam 1 Practice Q18"
+    },
+    {
+     "q": "What is the size of the byte data type in Java?",
+     "a": "8 bits",
+     "src": "Exam II Q23"
+    },
+    {
+     "q": "What problem does this declaration have?",
+     "code": "long bigNum = 8000000000;",
+     "a": "The literal 8000000000 needs an L suffix (8000000000L).",
+     "why": "An integer literal defaults to int, and 8000000000 overflows int before it is assigned.",
+     "src": "Exam 1 Practice Q20"
+    },
+    {
+     "q": "Which declaration correctly creates a constant?",
+     "options": [
+      "int SPEED = 299792458;",
+      "constant int SPEED = 299792458;",
+      "final int SPEED = 299792458;",
+      "static int SPEED = 299792458;"
+     ],
+     "a": "final int SPEED = 299792458;",
+     "why": "Java uses final for constants (not 'constant'/'const'); ALL_CAPS is convention.",
+     "src": "Exam 1 Practice Q31"
+    }
+   ]
+  },
+  {
+   "id": "operators",
+   "name": "Operators, Expressions & Conversion",
+   "glance": "Arithmetic follows precedence: * / % before + -, left to right. Integer division truncates (10/3 is 3) and % gives the remainder. Combined operators like += modify in place. With +, once a String appears the rest becomes concatenation. Widening to a bigger type is automatic; narrowing needs an explicit cast and truncates toward zero.",
+   "entries": [
+    {
+     "term": "integer division & modulus",
+     "aliases": [
+      "/",
+      "%",
+      "remainder",
+      "truncating division",
+      "modulo"
+     ],
+     "type": "concept",
+     "essence": "int / int truncates the fractional part (10/3 is 3); % gives the remainder (25 % 4 is 1).",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "When both operands are int, / discards the remainder entirely — 10/3 is 3, not 3.33. % returns that discarded remainder."
+      },
+      {
+       "label": "Common uses",
+       "body": "n % 2 == 0 tests even; n % 2 != 0 (or == 1) tests odd. If either operand is a double, the division keeps decimals."
+      },
+      {
+       "label": "Example",
+       "code": "10 / 3     // 3   (truncated)\n25 % 4     // 1   (remainder)\n7.0 / 2    // 3.5 (a double is involved)"
+      }
+     ],
+     "related": [
+      "operator precedence",
+      "binary numeric promotion"
+     ]
+    },
+    {
+     "term": "operator precedence",
+     "aliases": [
+      "order of operations",
+      "evaluation order"
+     ],
+     "type": "concept",
+     "essence": "* / % evaluate before + -, and equal-tier operators evaluate left to right.",
+     "detail": [
+      {
+       "label": "Example",
+       "code": "2 + 3 * 4        // 14  (* first)\n5 + 2 * 3 - 1    // 6+... = 10\n10 - 4 / 2 + 3   // 10-2+3 = 11"
+      }
+     ],
+     "related": [
+      "integer division & modulus",
+      "combined assignment"
+     ]
+    },
+    {
+     "term": "combined assignment",
+     "aliases": [
+      "+=",
+      "-=",
+      "*=",
+      "/=",
+      "%=",
+      "compound assignment"
+     ],
+     "type": "syntax",
+     "essence": "x += 5 is shorthand for x = x + 5; likewise -=, *=, /=, %= modify the variable in place.",
+     "detail": [
+      {
+       "label": "Example",
+       "code": "double price = 20.0;\nprice *= 1.5;   // 30.0\nprice -= 5.0;   // 25.0\n\nint n = 20;\nn %= 6;         // n = 2"
+      }
+     ],
+     "related": [
+      "integer division & modulus",
+      "assignment operator"
+     ]
+    },
+    {
+     "term": "string concatenation with +",
+     "aliases": [
+      "concatenation",
+      "+ operator",
+      "joining strings"
+     ],
+     "type": "concept",
+     "essence": "Once a String appears in a + chain, every following + joins text instead of adding numbers — and it evaluates left to right.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "\"Value: \" + 5 + 3 is \"Value: 53\" (both + are concatenation, left to right). But \"Value: \" + (5 + 3) is \"Value: 8\" because the parentheses add first."
+      },
+      {
+       "label": "Example",
+       "code": "\"Value: \" + 5 + 3     // \"Value: 53\"\n\"Value: \" + (5 + 3)   // \"Value: 8\"\n7 + \" and \" + 2       // \"7 and 2\""
+      }
+     ],
+     "related": [
+      "widening & narrowing conversion",
+      "System.out.print / println / printf"
+     ]
+    },
+    {
+     "term": "binary numeric promotion",
+     "aliases": [
+      "mixed-type arithmetic",
+      "int to double"
+     ],
+     "type": "concept",
+     "essence": "If either operand is a floating-point value, the other is promoted and the whole operation is done in floating point.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "7 / 2 is int arithmetic -> 3. 7.0 / 2 promotes the 2 to 2.0, so it is 3.5. To force decimal division of two ints, cast one: (double) total / n."
+      },
+      {
+       "label": "Example",
+       "code": "7 / 2            // 3\n7.0 / 2          // 3.5\n(double) 7 / 2   // 3.5"
+      }
+     ],
+     "related": [
+      "integer division & modulus",
+      "widening & narrowing conversion"
+     ]
+    },
+    {
+     "term": "widening & narrowing conversion",
+     "aliases": [
+      "casting",
+      "cast",
+      "type conversion",
+      "truncation",
+      "(int)"
+     ],
+     "type": "concept",
+     "essence": "Widening (small to big) is automatic; narrowing (big to small) needs an explicit cast and truncates toward zero — never rounds.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "double d = someInt; is automatic (widening). int x = (int) someDouble; needs the (int) because data could be lost. int x = 3.99; will NOT compile without the cast."
+      },
+      {
+       "label": "Truncation",
+       "body": "(int) 3.99 is 3 and (int) -9.99 is -9 — it chops the decimal, always toward zero. It does not round."
+      },
+      {
+       "label": "Example",
+       "code": "int a = 10;\ndouble b = a;         // widening, automatic\ndouble d = 3.99;\nint x = (int) d;      // narrowing, explicit -> 3"
+      }
+     ],
+     "related": [
+      "binary numeric promotion",
+      "primitive types",
+      "final constant"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "What is the result of  25 % 4 ?",
+     "a": "1",
+     "why": "25 = 6*4 + 1; % gives the remainder.",
+     "src": "Exam 1 Practice Q21"
+    },
+    {
+     "q": "What does this print?",
+     "code": "int x = 10, y = 3;\nSystem.out.println(x / y);",
+     "a": "3",
+     "why": "Both int -> integer division truncates 3.33 to 3.",
+     "src": "Exam 1 Practice Q22"
+    },
+    {
+     "q": "What is the value of result?",
+     "code": "int result = 5 + 2 * 3 - 1;",
+     "a": "10",
+     "why": "2*3=6 first, then 5+6-1 left to right.",
+     "src": "Exam 1 Practice Q23"
+    },
+    {
+     "q": "After this runs, what is price?",
+     "code": "double price = 20.0;\nprice *= 1.5;\nprice -= 5.0;",
+     "a": "25.0",
+     "why": "20*1.5=30, then 30-5=25.",
+     "src": "Exam 1 Practice Q24"
+    },
+    {
+     "q": "What is the value of n?",
+     "code": "int n = 20;\nn %= 6;",
+     "a": "2",
+     "why": "20 % 6 = 2 (20 = 3*6 + 2).",
+     "src": "Exam 1 Practice Q26"
+    },
+    {
+     "q": "Which expression correctly tests whether a number is even?",
+     "options": [
+      "num % 2 == 1",
+      "num / 2 == 0",
+      "num % 2 == 0",
+      "num % 2 != 0"
+     ],
+     "a": "num % 2 == 0",
+     "why": "Even means the remainder on division by 2 is zero.",
+     "src": "Exam 1 Practice Q27"
+    },
+    {
+     "q": "What does this print?",
+     "code": "int a = 7, b = 2;\nSystem.out.println(a + \" divided by \" + b + \" = \" + a / b);",
+     "a": "7 divided by 2 = 3",
+     "why": "a/b is integer division (3); the + around strings concatenate.",
+     "src": "Exam 1 Practice Q25"
+    },
+    {
+     "q": "What are the two lines of output?",
+     "code": "int x = 5;\nSystem.out.println(\"Value: \" + x + 3);\nSystem.out.println(\"Value: \" + (x + 3));",
+     "a": "Line 1: Value: 53   Line 2: Value: 8",
+     "why": "Left to right, \"Value: \"+5 is a String so +3 concatenates -> 53. Parentheses add first -> 8.",
+     "src": "Exam 1 Practice Q38"
+    },
+    {
+     "q": "Which assignment compiles WITHOUT an explicit cast?",
+     "options": [
+      "int x = 3.99;",
+      "byte b = 200;",
+      "double d = 150;",
+      "int i = 9.0;"
+     ],
+     "a": "double d = 150;",
+     "why": "int->double is widening (automatic). The others narrow and need a cast.",
+     "src": "Exam 1 Practice Q28"
+    },
+    {
+     "q": "What value is stored in x?",
+     "code": "double pi = 3.14159;\nint x = (int) pi;",
+     "a": "3",
+     "why": "The cast truncates toward zero — it does not round.",
+     "src": "Exam 1 Practice Q29"
+    },
+    {
+     "q": "Will this compile?",
+     "code": "double salary = 75000.50;\nint rounded = salary;",
+     "a": "No — narrowing double->int requires an explicit (int) cast.",
+     "src": "Exam 1 Practice Q30"
+    }
+   ]
+  },
+  {
+   "id": "io",
+   "name": "Console I/O & Formatting",
+   "glance": "print writes with no newline; println adds one. printf fills a template: placeholders match arguments by position, and %.2f is how you show money to two decimals. Scanner reads keyboard input (System.in) and must be imported from java.util; nextInt/nextDouble read one token, and a leftover newline can trip up a following nextLine.",
+   "entries": [
+    {
+     "term": "System.out.print / println / printf",
+     "aliases": [
+      "print",
+      "println",
+      "printf",
+      "output"
+     ],
+     "type": "syntax",
+     "essence": "print outputs with no newline; println adds a newline after; printf fills a format template with values.",
+     "detail": [
+      {
+       "label": "Difference",
+       "body": "println adds a line terminator after printing; print does not. Consecutive print calls stay on one line until a println (or \\n) breaks it."
+      },
+      {
+       "label": "Example",
+       "code": "System.out.print(\"One \");\nSystem.out.print(\"Two \");\nSystem.out.println(\"Three\");   // line 1: One Two Three\nSystem.out.println(\"Four\");    // line 2: Four"
+      }
+     ],
+     "related": [
+      "printf format specifiers",
+      "string concatenation with +"
+     ]
+    },
+    {
+     "term": "printf format specifiers",
+     "aliases": [
+      "%d",
+      "%s",
+      "%f",
+      "%.2f",
+      "%n",
+      "format string",
+      "printf"
+     ],
+     "type": "syntax",
+     "essence": "Placeholders are filled left-to-right by position; %.2f prints a decimal to exactly two places (rounding).",
+     "detail": [
+      {
+       "label": "Specifiers",
+       "columns": [
+        "Spec",
+        "Expects",
+        "Note"
+       ],
+       "rows": [
+        [
+         "%d",
+         "integer",
+         "whole numbers"
+        ],
+        [
+         "%f",
+         "decimal",
+         "6 places unless given precision"
+        ],
+        [
+         "%.2f",
+         "decimal",
+         "exactly 2 places, rounds"
+        ],
+        [
+         "%s",
+         "any",
+         "calls toString()"
+        ],
+        [
+         "%n",
+         "-",
+         "platform newline"
+        ],
+        [
+         "\\t",
+         "-",
+         "tab"
+        ]
+       ]
+      },
+      {
+       "label": "Money",
+       "body": "For $61.3125 -> $61.31 and $4.13859375 -> $4.14, use %.2f (it rounds). %d would fail on a decimal; %f shows too many places."
+      },
+      {
+       "label": "Example",
+       "code": "System.out.printf(\"SUBTOTAL: $%.2f%n\", 61.3125);  // $61.31"
+      }
+     ],
+     "related": [
+      "System.out.print / println / printf",
+      "string concatenation with +"
+     ]
+    },
+    {
+     "term": "Scanner",
+     "aliases": [
+      "java.util.Scanner",
+      "reading input",
+      "nextInt",
+      "nextDouble",
+      "keyboard",
+      "System.in"
+     ],
+     "type": "syntax",
+     "essence": "Reads keyboard input; requires import java.util.Scanner; and is built on System.in.",
+     "detail": [
+      {
+       "label": "Setup",
+       "body": "System.in is the standard input stream (the keyboard). Scanner must be imported — without import java.util.Scanner; the code will not compile."
+      },
+      {
+       "label": "Read methods",
+       "facts": [
+        [
+         "nextInt()",
+         "reads a whole number"
+        ],
+        [
+         "nextDouble()",
+         "reads a decimal (use for a price like 3.50)"
+        ],
+        [
+         "next()",
+         "reads one word"
+        ],
+        [
+         "nextLine()",
+         "reads the rest of the line"
+        ]
+       ]
+      },
+      {
+       "label": "Example",
+       "code": "import java.util.Scanner;\nScanner keyboard = new Scanner(System.in);\nint age = keyboard.nextInt();\ndouble price = keyboard.nextDouble();"
+      }
+     ],
+     "related": [
+      "System.out.print / println / printf",
+      "String.format"
+     ]
+    },
+    {
+     "term": "String.format",
+     "aliases": [
+      "format",
+      "formatted string"
+     ],
+     "type": "syntax",
+     "essence": "Builds a formatted String with the same placeholders as printf, instead of printing it directly.",
+     "detail": [
+      {
+       "label": "Use when",
+       "body": "You want the formatted text as a value (to store or reuse). Homework 1 uses it / printf to show money to two decimals."
+      },
+      {
+       "label": "Example",
+       "code": "String line = String.format(\"$%.2f\", 65.45109375);  // \"$65.45\""
+      }
+     ],
+     "related": [
+      "printf format specifiers"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "What is missing from this program?",
+     "code": "public class ReadInput {\n    public static void main(String[] args) {\n        Scanner keyboard = new Scanner(System.in);\n        int age = keyboard.nextInt();\n    }\n}",
+     "a": "The import statement  import java.util.Scanner;",
+     "src": "Exam 1 Practice Q32"
+    },
+    {
+     "q": "What does System.in represent in the Scanner constructor?",
+     "a": "The standard input stream (the keyboard).",
+     "src": "Exam 1 Practice Q33"
+    },
+    {
+     "q": "To read the price of gas (a decimal), which Scanner method should be used?",
+     "options": [
+      "nextLine()",
+      "next()",
+      "nextInt()",
+      "nextDouble()"
+     ],
+     "a": "nextDouble()",
+     "why": "A price like 3.50 is a decimal; nextInt() only reads whole numbers.",
+     "src": "Exam 1 Practice Q34"
+    },
+    {
+     "q": "What is the output?",
+     "code": "System.out.print(\"One \");\nSystem.out.print(\"Two \");\nSystem.out.println(\"Three\");\nSystem.out.println(\"Four\");",
+     "a": "Line 1: One Two Three   Line 2: Four",
+     "why": "print stays on the line; the first println breaks it before Four.",
+     "src": "Exam 1 Practice Q35"
+    },
+    {
+     "q": "subtotal = 61.3125. Which printf prints  SUBTOTAL: $61.31 ?",
+     "options": [
+      "%f",
+      "%d",
+      "%.2f",
+      "%s"
+     ],
+     "a": "System.out.printf(\"SUBTOTAL: $%.2f%n\", subtotal);",
+     "why": "%.2f gives exactly two decimals (and rounds).",
+     "src": "Exam 1 Practice Q36; Homework 1"
+    },
+    {
+     "q": "What does this print?",
+     "code": "double tax = 4.13859375;\nSystem.out.printf(\"TAX: $%.2f%n\", tax);",
+     "a": "TAX: $4.14",
+     "why": "%.2f rounds the third decimal (8) up. Verified by compiling.",
+     "src": "Exam 1 Practice Q37; Homework 1"
+    },
+    {
+     "q": "Homework 1 requires money shown to exactly two decimals. How?",
+     "a": "Use formatted output: %.2f with printf or String.format.",
+     "why": "%.2f rounds and keeps trailing zeros (5.00, not 5).",
+     "src": "Homework 1: Grocery Store Receipt"
+    }
+   ]
+  },
+  {
+   "id": "methods",
+   "name": "Methods & Parameters",
+   "glance": "A method is a named block you call by name. Its header states a return type (void means it returns nothing) and its parameters — the values passed in. To count how many times a method prints, trace each call through its if/else-if chain: an if/else-if runs at most one branch per call. Variables declared inside a method or loop are out of scope outside it.",
+   "entries": [
+    {
+     "term": "method definition",
+     "aliases": [
+      "method",
+      "void",
+      "return type",
+      "define method"
+     ],
+     "type": "syntax",
+     "essence": "A named block with a header (access, return type, name, parameters) and a body in braces.",
+     "detail": [
+      {
+       "label": "Form",
+       "code": "public static void ageChecker(int age) {\n    // does something, returns nothing (void)\n}\n\npublic static int square(int n) {\n    return n * n;   // returns an int\n}"
+      },
+      {
+       "label": "void vs return",
+       "body": "void = returns no value (it just acts, e.g. prints). A non-void method must return a value of its declared type."
+      }
+     ],
+     "related": [
+      "parameters & arguments",
+      "variable scope"
+     ]
+    },
+    {
+     "term": "parameters & arguments",
+     "aliases": [
+      "parameter",
+      "argument",
+      "parameter passing"
+     ],
+     "type": "concept",
+     "essence": "A parameter is the variable in the method header; an argument is the actual value you pass when calling.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "temperatureChecker(double temperature) declares parameter temperature. Calling temperatureChecker(22.5) passes 22.5 as the argument, matched by position."
+      },
+      {
+       "label": "Example",
+       "code": "temperatureChecker(22.5);   // 22.5 is the argument\n// void temperatureChecker(double temperature) { ... }  <- parameter"
+      }
+     ],
+     "related": [
+      "method definition",
+      "counting method calls"
+     ]
+    },
+    {
+     "term": "counting method calls",
+     "aliases": [
+      "how many times println",
+      "count printlns",
+      "method call count"
+     ],
+     "type": "concept",
+     "essence": "To count how many times a method prints, trace each call: an if / else-if chain fires at most ONE branch per call, and none if all conditions fail.",
+     "detail": [
+      {
+       "label": "Method",
+       "body": "For each call, walk the if/else-if in order; the first true branch prints and the rest are skipped. If no branch is true, nothing prints for that call. Add up across all calls."
+      },
+      {
+       "label": "Worked",
+       "code": "// displayTemperatureWarning(45) -> first branch true  -> prints\n// displayTemperatureWarning(15) -> second branch true -> prints\n// displayTemperatureWarning(75) -> no branch true      -> prints nothing\n// total: 2 printlns"
+      }
+     ],
+     "related": [
+      "if / else-if",
+      "method definition"
+     ]
+    },
+    {
+     "term": "variable scope",
+     "aliases": [
+      "scope",
+      "out of scope",
+      "local variable"
+     ],
+     "type": "concept",
+     "essence": "A variable exists only inside the braces where it is declared; outside those braces it is out of scope and cannot be used.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "A variable declared inside a loop or if block cannot be read after the block ends — referencing it gives 'cannot find symbol.' This is why counters and sums are declared OUTSIDE the loop (see Loops)."
+      }
+     ],
+     "related": [
+      "counter pattern",
+      "accumulator pattern",
+      "method definition"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "How many times will println execute?",
+     "code": "printDiscount(6);  printDiscount(15);  printDiscount(30);\n// prints in an if/else-if by range: (0,10], (10,20], (20,50]",
+     "a": "3",
+     "why": "Each call lands in exactly one branch: 6, 15, 30 each print once.",
+     "src": "Exam 2 Practice Study Guide Q11"
+    },
+    {
+     "q": "How many times will println execute?",
+     "code": "displayTemperatureWarning(45);\ndisplayTemperatureWarning(15);\ndisplayTemperatureWarning(75);\n// if (30<=t<=50) print; else if (10<=t<30) print;",
+     "a": "2",
+     "why": "45 -> first branch; 15 -> second branch; 75 -> no branch (nothing). Verified.",
+     "src": "Exam 2 Practice Study Guide Q18; Class Activity 12"
+    },
+    {
+     "q": "How many times will println execute?",
+     "code": "printShippingCharge(14);  printShippingCharge(5);  printShippingCharge(30);\n// (0,10]->print; (10,15]->print; (15,20]->print",
+     "a": "2",
+     "why": "14 -> (10,15]; 5 -> (0,10]; 30 -> no branch. Verified by compiling.",
+     "src": "Exam II Q4"
+    },
+    {
+     "q": "Write a method ageCategoryChecker(int age) that prints a category: 0-12 Child, 13-17 Teenager, 18-59 Adult, 60-100 Senior Citizen, else Invalid age range.",
+     "a": "public static void ageCategoryChecker(int age) {\n    String category;\n    if (age >= 0 && age < 13) category = \"Child\";\n    else if (age >= 13 && age < 18) category = \"Teenager\";\n    else if (age >= 18 && age < 60) category = \"Adult\";\n    else if (age >= 60 && age <= 100) category = \"Senior Citizen\";\n    else category = \"Invalid age range\";\n    System.out.println(category);\n}",
+     "why": "Ordered if/else-if; the else catches out-of-range values.",
+     "src": "Class Activity 12; Exam 2 Practice FR1"
+    },
+    {
+     "q": "Write a method temperatureChecker(double temperature) that prints: <0 Freezing, 0-14.99 Cold, 15-29.99 Warm, >=30 Hot, else Unknown.",
+     "a": "public static void temperatureChecker(double temperature) {\n    String condition;\n    if (temperature < 0) condition = \"Freezing\";\n    else if (temperature < 15) condition = \"Cold\";\n    else if (temperature < 30) condition = \"Warm\";\n    else if (temperature >= 30) condition = \"Hot\";\n    else condition = \"Unknown\";\n    System.out.println(condition);\n}",
+     "why": "The four ranges cover all doubles, so the final else is effectively unreachable (kept per spec).",
+     "src": "Exam 2 written problems; Loops.pptx activity"
+    }
+   ]
+  },
+  {
+   "id": "decisions",
+   "name": "Decisions: if, switch & Boolean Logic",
+   "glance": "Relational operators (==, !=, <, >, <=, >=) yield true/false. Logical && needs both true; || needs at least one. if/else-if picks one branch; order matters for ranges. The ternary ?: is a one-line if-else that yields a value. switch tests one variable against case values and needs break, or it falls through; default catches the rest.",
+   "entries": [
+    {
+     "term": "relational operators",
+     "aliases": [
+      "==",
+      "!=",
+      "<",
+      ">",
+      "comparison",
+      "== vs ="
+     ],
+     "type": "syntax",
+     "essence": "Six operators that test a relationship and produce true or false; == compares, = assigns.",
+     "detail": [
+      {
+       "label": "The six",
+       "facts": [
+        [
+         "==",
+         "equal to (a TEST — not the single = which assigns)"
+        ],
+        [
+         "!=",
+         "not equal to"
+        ],
+        [
+         "<  >",
+         "less than / greater than"
+        ],
+        [
+         "<=  >=",
+         "less/greater than or equal to"
+        ]
+       ]
+      },
+      {
+       "label": "Classic mistake",
+       "body": "Using one = (assignment) where you meant == (comparison). == checks whether two values are equal; = stores a value."
+      }
+     ],
+     "related": [
+      "logical operators",
+      "if / else-if"
+     ]
+    },
+    {
+     "term": "logical operators",
+     "aliases": [
+      "&&",
+      "||",
+      "!",
+      "and",
+      "or",
+      "not",
+      "truth table"
+     ],
+     "type": "syntax",
+     "essence": "&& (AND) is true only if both sides are true; || (OR) is true if at least one is true; ! flips a boolean.",
+     "detail": [
+      {
+       "label": "Truth",
+       "columns": [
+        "Expression",
+        "True when"
+       ],
+       "rows": [
+        [
+         "a && b",
+         "BOTH a and b are true"
+        ],
+        [
+         "a || b",
+         "at least one is true (false only if both false)"
+        ],
+        [
+         "!a",
+         "a is false"
+        ]
+       ]
+      },
+      {
+       "label": "Range pattern",
+       "body": "Test a range with &&: (x >= 20 && x <= 40). Note: 'both must be true' describes && — it is FALSE as a description of || (a common true/false trap)."
+      }
+     ],
+     "related": [
+      "relational operators",
+      "if / else-if"
+     ]
+    },
+    {
+     "term": "if / else-if",
+     "aliases": [
+      "if",
+      "else",
+      "else if",
+      "if statement",
+      "nested if"
+     ],
+     "type": "syntax",
+     "essence": "if runs a block when its condition is true; else-if chains alternatives; only the first true branch runs.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "Conditions are checked top-to-bottom; the first true branch runs and the rest are skipped. else (no condition) catches everything else. One statement needs no braces; two or more require { }."
+      },
+      {
+       "label": "Order matters",
+       "body": "For ranges, check bounds in order so branches stay mutually exclusive. Nested if = an if inside another if, e.g. testing age for vote/drink/drive privileges."
+      },
+      {
+       "label": "Example",
+       "code": "if (input < 20) {\n    score = 70;\n} else if (input <= 40) {\n    score = 60;\n} else {\n    score = 50;\n}"
+      }
+     ],
+     "related": [
+      "relational operators",
+      "logical operators",
+      "ternary operator",
+      "switch statement"
+     ]
+    },
+    {
+     "term": "ternary operator",
+     "aliases": [
+      "?:",
+      "conditional operator",
+      "question mark colon"
+     ],
+     "type": "syntax",
+     "essence": "A one-line if-else that yields a value: condition ? valueIfTrue : valueIfFalse.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "If the condition is true the expression is the part after ?, otherwise the part after :. Useful for a short assignment; not a replacement for full if-else."
+      },
+      {
+       "label": "Example",
+       "code": "int result = (n % 2 == 0) ? 10 : 20;  // even -> 10, odd -> 20"
+      }
+     ],
+     "related": [
+      "if / else-if"
+     ]
+    },
+    {
+     "term": "switch statement",
+     "aliases": [
+      "switch",
+      "case",
+      "break",
+      "default",
+      "switch-case"
+     ],
+     "type": "syntax",
+     "essence": "Tests one variable against case values; each case needs break or execution falls through into the next.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "switch(day) jumps to the matching case, runs it, and break exits. Without break, every case from the match onward runs (fall-through). default handles any value that matches no case."
+      },
+      {
+       "label": "Use when",
+       "body": "Choosing among many fixed values of one variable (day 1-7, a menu choice, a letter grade) — cleaner than a long if/else-if chain."
+      },
+      {
+       "label": "Example",
+       "code": "switch (n) {\n  case 1:  System.out.println(\"Monday\");  break;\n  case 2:  System.out.println(\"Tuesday\"); break;\n  default: System.out.println(\"Invalid\");\n}"
+      }
+     ],
+     "related": [
+      "if / else-if",
+      "loops"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "Match each description to its loop structure.",
+     "a": "Runs at least once -> do-while; runs only after a condition is met -> while; runs a predetermined number of times -> for.",
+     "src": "Exam 2 Practice Study Guide Q1; Class Activity 12; Exam II Q17"
+    },
+    {
+     "q": "True/False: '|| combines two conditions where BOTH must be true for the whole expression to be true.'",
+     "a": "False.",
+     "why": "That describes && (AND). || (OR) needs only one side true.",
+     "src": "Exam 2 Practice Study Guide Q2; Exam II Q18"
+    },
+    {
+     "q": "True/False: In a for loop, the increment/decrement runs after each iteration of the body.",
+     "a": "True.",
+     "src": "Exam 2 Practice Study Guide Q4"
+    },
+    {
+     "q": "for loops are ___-test; while loops are ___-test; do-while loops are ___-test.",
+     "a": "for: pre ; while: pre ; do-while: post.",
+     "src": "Exam II Q5"
+    },
+    {
+     "q": "True/False: do-while loops are the best choice when the number of iterations is predetermined.",
+     "a": "False.",
+     "why": "A predetermined count suits a for loop; do-while is for run-at-least-once.",
+     "src": "Exam II Q6"
+    },
+    {
+     "q": "When do you use a for loop (best answer)?",
+     "options": [
+      "When the loop repeats a predetermined number of times",
+      "When validating user input",
+      "Any time you could use a while loop",
+      "When the loop should execute at least once"
+     ],
+     "a": "When the loop repeats a predetermined number of times.",
+     "src": "Exam II Q13"
+    },
+    {
+     "q": "What is the output?",
+     "code": "int x = 8;\nif (x > 5) System.out.println(\"A\");\nelse System.out.println(\"B\");",
+     "a": "A",
+     "why": "8 > 5 is true.",
+     "src": "Exam II Q27"
+    },
+    {
+     "q": "Which operator checks whether two values are equal?",
+     "options": [
+      ">=",
+      "=",
+      "==",
+      "!="
+     ],
+     "a": "==",
+     "why": "= assigns; == compares.",
+     "src": "Exam II Q28"
+    },
+    {
+     "q": "If the keyboard input is 30, what is score?",
+     "code": "int score = 90;\nint input = 30;\nif (input < 20) score = 70;\nelse if (input >= 20 && input <= 40) score = 60;\nelse score = 50;\nscore = score + 10;",
+     "a": "70",
+     "why": "30 falls in [20,40] -> 60, then +10 = 70. Verified.",
+     "src": "Final Review 1 Q5"
+    },
+    {
+     "q": "If the keyboard input is 18, what is counter?",
+     "code": "int counter = 15;\nint input = 18;\nif (input <= 10) counter = 10;\nelse counter = 20;\ncounter = counter + 1;",
+     "a": "21",
+     "why": "18 is not <=10 -> else 20, then +1. Verified.",
+     "src": "Exam II Q1"
+    },
+    {
+     "q": "If the keyboard input is 15, what is counter?",
+     "code": "int counter = 40;\nint input = 15;\nif (input < 10) counter = 20;\nelse counter = 50;\ncounter = counter - 5;",
+     "a": "45",
+     "why": "15 is not <10 -> else 50, then -5.",
+     "src": "Exam 2 Practice Study Guide Q9; Class Activity 12"
+    },
+    {
+     "q": "If the keyboard input is 25, what is score?",
+     "code": "int score = 30;\nint input = 25;\nif (input < 20) score = 20;\nelse score = 25;\nscore = score + 5;",
+     "a": "30",
+     "why": "25 is not <20 -> else 25, then +5.",
+     "src": "Exam 2 Practice Study Guide Q17; Exam II Q22"
+    },
+    {
+     "q": "What is the value of score if input is 45?",
+     "code": "int score = 100;\nif (input < 20) score = 60;\nelse if (input <= 40) score = 70;\nelse score = 80;\nscore += 10;",
+     "a": "90",
+     "why": "45 hits the final else (80), then +10. Verified.",
+     "src": "Final Exam Review 2 Q9"
+    },
+    {
+     "q": "To generate a random int in [0,10), is  rand.nextInt(9)  correct?",
+     "a": "False — use rand.nextInt(10).",
+     "why": "nextInt(9) gives 0..8; nextInt(10) gives 0..9 (0 inclusive, 10 exclusive).",
+     "src": "Exam 2 Practice Study Guide Q3; Class Activity 12"
+    },
+    {
+     "q": "Write discountCategory(int price): 0-49 No Discount, 50-99 10%, 100-199 20%, 200-500 30%, else Invalid Price (use if-else).",
+     "a": "if (price >= 0 && price < 50) System.out.println(\"No Discount\");\nelse if (price < 100) System.out.println(\"10% Discount\");\nelse if (price < 200) System.out.println(\"20% Discount\");\nelse if (price <= 500) System.out.println(\"30% Discount\");\nelse System.out.println(\"Invalid Price\");",
+     "src": "Exam 2 Prep (Class Activity 13) Part 1"
+    },
+    {
+     "q": "Write weatherCondition(double temperature): <5 Very Cold, 5-14.99 Cold, 15-24.99 Moderate, >=25 Hot.",
+     "a": "if (temperature < 5) ... \"Very Cold\";\nelse if (temperature < 15) ... \"Cold\";\nelse if (temperature < 25) ... \"Moderate\";\nelse ... \"Hot\";",
+     "src": "Exam 2 Prep (Class Activity 13) Part 3"
+    },
+    {
+     "q": "Write a switch-case that maps 1-7 to a day of the week, else 'Invalid day number'.",
+     "a": "switch (n) {\n  case 1: System.out.println(\"Sunday\"); break;\n  case 2: System.out.println(\"Monday\"); break;\n  // ... cases 3-7 ...\n  default: System.out.println(\"Invalid day number\");\n}",
+     "why": "Each case needs break, or it falls through into the next.",
+     "src": "Module 5 Programming Assignment (PA4) Problem 4"
+    },
+    {
+     "q": "Write a switch-case calculator for +, -, *, / on two numbers; handle divide-by-zero and invalid operator.",
+     "a": "switch (op) {\n  case '+': result = a + b; break;\n  case '-': result = a - b; break;\n  case '*': result = a * b; break;\n  case '/': if (b == 0) { System.out.println(\"Cannot divide by zero!\"); }\n            else result = a / b; break;\n  default: System.out.println(\"Invalid operator\");\n}",
+     "src": "PA4 Problem 5; Exam 2 written problems Q4"
+    },
+    {
+     "q": "Write a switch that prints STOP/SLOW DOWN/GO for red/yellow/green, else 'Invalid input'.",
+     "a": "switch (color) {\n  case \"red\": System.out.println(\"STOP\"); break;\n  case \"yellow\": System.out.println(\"SLOW DOWN\"); break;\n  case \"green\": System.out.println(\"GO\"); break;\n  default: System.out.println(\"Invalid input\");\n}",
+     "why": "switch works on Strings (Java 7+).",
+     "src": "PA4 Problem 6"
+    }
+   ]
+  },
+  {
+   "id": "loops",
+   "name": "Loops & Iteration",
+   "glance": "Three loops repeat code. for is a pretest counter loop with init; test; update on one line. while is a pretest loop; do-while is a post-test loop that always runs at least once (ideal for input validation). Watch two traps: modifying the counter inside the body changes the count, and a stray semicolon right after the header makes an empty loop. Counters and sums must be declared outside the loop.",
+   "entries": [
+    {
+     "term": "for loop",
+     "aliases": [
+      "for",
+      "counter loop",
+      "initialization test update"
+     ],
+     "type": "syntax",
+     "essence": "A pretest counting loop with three parts on one line: for(init; test; update).",
+     "detail": [
+      {
+       "label": "Anatomy",
+       "facts": [
+        [
+         "init",
+         "int i = 0 — runs once at the start"
+        ],
+        [
+         "test",
+         "i < 10 — checked BEFORE each pass; loop ends when false"
+        ],
+        [
+         "update",
+         "i++ or i += 2 — runs AFTER each pass"
+        ]
+       ]
+      },
+      {
+       "label": "Braces & semicolons",
+       "body": "Parts are separated by semicolons (not commas). Without braces the loop controls only the next one line. NEVER put a semicolon right after for(...) — it makes an empty loop body."
+      },
+      {
+       "label": "Example",
+       "code": "for (int i = 1; i <= 5; i++) {\n    System.out.print(i + \" \");   // 1 2 3 4 5\n}"
+      }
+     ],
+     "related": [
+      "counting iterations",
+      "while loop",
+      "counter-mutation trap"
+     ]
+    },
+    {
+     "term": "counting iterations",
+     "aliases": [
+      "how many times",
+      "number of iterations",
+      "loop count"
+     ],
+     "type": "concept",
+     "essence": "List the values the counter takes until the test fails, then count them — the reliable way to avoid off-by-one.",
+     "detail": [
+      {
+       "label": "Method",
+       "body": "Do not guess a formula; write out each value. for(i=3;i<=10;i+=2): 3,5,7,9 (11 fails) = 4 times. for(i=1;i<8;i+=2): 1,3,5,7 = 4 times."
+      },
+      {
+       "label": "Fill-the-blank",
+       "body": "To loop N times from a start, find the last value visited and set the test just past it. To visit 0..4 (five values), use i < 5. To loop 6 times from i=2 by 1, stop before 8: i < 8."
+      }
+     ],
+     "related": [
+      "for loop",
+      "fill-the-blank loop"
+     ]
+    },
+    {
+     "term": "counter-mutation trap",
+     "aliases": [
+      "modifying counter",
+      "x += inside loop",
+      "i changed in body"
+     ],
+     "type": "concept",
+     "essence": "Changing the loop counter inside the body (on top of the update) makes it jump — trace it value by value.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "Each pass the body runs first, THEN the header update. If the body also changes the counter, both changes apply. for(x=5;x<=20;x++){ x+=4; print x; } prints 9,14,19,24 — the body adds 4, then x++ adds 1."
+      },
+      {
+       "label": "Example",
+       "code": "for (int x = 5; x <= 20; x++) {\n    x += 4;\n    System.out.print(x + \" \");   // 9 14 19 24\n}"
+      }
+     ],
+     "related": [
+      "for loop",
+      "counting iterations"
+     ]
+    },
+    {
+     "term": "fill-the-blank loop",
+     "aliases": [
+      "fill in the blank",
+      "complete the for loop",
+      "what should XXXX be"
+     ],
+     "type": "concept",
+     "essence": "Given a target output like 0 3 6 ... 24, read off start, step, and inclusive end, then write for(int j=start; j<=end; j+=step).",
+     "detail": [
+      {
+       "label": "Method",
+       "body": "start = first number; step = difference between numbers; use j <= end to include the last value (j < end+1 also works). 0 3 6 9 ... 24 -> for(int i=0; i<=24; i+=3)."
+      },
+      {
+       "label": "Example",
+       "code": "// target: 5 9 13 17 21 25 29\nfor (int j = 5; j <= 29; j += 4) { System.out.print(j + \"\\t\"); }"
+      }
+     ],
+     "related": [
+      "counting iterations",
+      "for loop"
+     ]
+    },
+    {
+     "term": "while loop",
+     "aliases": [
+      "while",
+      "pretest loop"
+     ],
+     "type": "syntax",
+     "essence": "A pretest loop: it checks the condition BEFORE each pass, so it may run zero times.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "while(condition){ ... } repeats while the condition is true. Something in the body must eventually make it false, or it loops forever (infinite loop). A value that already fails the test makes the loop run zero times and fall straight through."
+      },
+      {
+       "label": "Example",
+       "code": "int count = 0;\nwhile (count < 100) {\n    System.out.println(\"Welcome to Java!\");\n    count++;   // without this: infinite loop\n}"
+      }
+     ],
+     "related": [
+      "for loop",
+      "do-while loop"
+     ]
+    },
+    {
+     "term": "do-while loop",
+     "aliases": [
+      "do while",
+      "post-test loop",
+      "input validation"
+     ],
+     "type": "syntax",
+     "essence": "A post-test loop: it runs the body once, THEN checks the condition — so it always runs at least once.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "do { ... } while(condition); — the semicolon after the condition is required. Because it runs before testing, it is the natural choice for input validation: prompt, read, and repeat while the input is invalid."
+      },
+      {
+       "label": "Validation pattern",
+       "body": "To keep prompting until a valid value: loop WHILE the value is wrong. 'stop at 7' -> while(userInput != 7). 'want < 20' -> while(enteredValue >= 20). 'want > 10' -> while(userInput <= 10)."
+      },
+      {
+       "label": "Example",
+       "code": "int month;\ndo {\n    System.out.print(\"Enter 1-12: \");\n    month = sc.nextInt();\n} while (month < 1 || month > 12);"
+      }
+     ],
+     "related": [
+      "while loop",
+      "logical operators"
+     ]
+    },
+    {
+     "term": "which loop to use",
+     "aliases": [
+      "choose loop",
+      "pretest posttest",
+      "best loop"
+     ],
+     "type": "concept",
+     "essence": "for when the count is known; while for a pretest that may run zero times; do-while when the body must run at least once.",
+     "detail": [
+      {
+       "label": "Match",
+       "facts": [
+        [
+         "for",
+         "a set/predetermined number of iterations (a counter)"
+        ],
+        [
+         "while",
+         "pretest — may run zero times; good general condition loop"
+        ],
+        [
+         "do-while",
+         "post-test — runs at least once; ideal for input validation"
+        ]
+       ]
+      },
+      {
+       "label": "Test type",
+       "body": "for and while are PRE-test loops (condition checked before the body). do-while is a POST-test loop (checked after). do-while is NOT for a predetermined count."
+      }
+     ],
+     "related": [
+      "for loop",
+      "while loop",
+      "do-while loop"
+     ]
+    },
+    {
+     "term": "counter pattern",
+     "aliases": [
+      "counter",
+      "count occurrences",
+      "tally"
+     ],
+     "type": "concept",
+     "essence": "To count how often something happens in a loop, declare the counter OUTSIDE the loop and increment it inside.",
+     "detail": [
+      {
+       "label": "Why outside",
+       "body": "Declaring it inside the loop resets it to 0 every pass (so it never accumulates) and leaves it out of scope to print afterward. Declare once before the loop."
+      },
+      {
+       "label": "Example",
+       "code": "int rCount = 0;                 // OUTSIDE\nfor (int i = 0; i < word.length(); i++)\n    if (word.charAt(i) == 'r') rCount++;"
+      }
+     ],
+     "related": [
+      "accumulator pattern",
+      "variable scope",
+      "nested loops"
+     ]
+    },
+    {
+     "term": "accumulator pattern",
+     "aliases": [
+      "sum",
+      "total",
+      "running total",
+      "average"
+     ],
+     "type": "concept",
+     "essence": "To sum values in a loop, declare the total OUTSIDE the loop and add to it inside; divide by the count for an average.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "sum starts at 0 outside the loop; each pass does sum += value. For an average, cast to double: (double) total / count, so integer division does not truncate it."
+      },
+      {
+       "label": "Example",
+       "code": "int total = 0;\nfor (int i = 0; i < n; i++) total += input.nextInt();\ndouble average = (double) total / n;"
+      }
+     ],
+     "related": [
+      "counter pattern",
+      "nested loops",
+      "integer division & modulus"
+     ]
+    },
+    {
+     "term": "nested loops",
+     "aliases": [
+      "nested loop",
+      "loop inside loop",
+      "inner outer loop"
+     ],
+     "type": "concept",
+     "essence": "A loop inside another; the inner loop runs all its passes for each single pass of the outer loop.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "Outer runs R times, inner runs C times each -> R*C total. The outer index usually picks a row and the inner a column (a rectangle/grid of output, or reading several values per item)."
+      },
+      {
+       "label": "Example",
+       "code": "for (int i = 0; i < 4; i++) {      // 4 rows\n    for (int j = 1; j < 3; j++)    // 2 x's each\n        System.out.print(\"x\");\n    System.out.println();\n}   // prints a 4-row, 2-wide block"
+      }
+     ],
+     "related": [
+      "counter pattern",
+      "accumulator pattern",
+      "2D arrays"
+     ]
+    },
+    {
+     "term": "increment & decrement",
+     "aliases": [
+      "++",
+      "--",
+      "pre-increment",
+      "post-increment"
+     ],
+     "type": "syntax",
+     "essence": "i++ adds one and i-- subtracts one; pre (++i) changes before the value is used, post (i++) uses the value then changes it.",
+     "detail": [
+      {
+       "label": "Pre vs post",
+       "body": "int r = ++n; increments n first, so r gets the new value. int r = n++; gives r the old value, then increments n. As a loop update, i++ and ++i behave identically."
+      }
+     ],
+     "related": [
+      "for loop",
+      "combined assignment"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "How many times will this loop iterate?",
+     "code": "for (int i = 3; i <= 10; i += 2) { ... }",
+     "a": "4",
+     "why": "i = 3, 5, 7, 9 (11 fails). Verified.",
+     "src": "Final Review 1 Q3"
+    },
+    {
+     "q": "How many times will this loop run?",
+     "code": "for (int i = 1; i < 8; i += 2) { ... }",
+     "a": "4",
+     "why": "i = 1, 3, 5, 7. Verified.",
+     "src": "Final Exam Review 2 Q5"
+    },
+    {
+     "q": "What is the output?",
+     "code": "for (int x = 5; x <= 20; x++) {\n    x += 4;\n    System.out.print(x + \" \");\n}",
+     "a": "9 14 19 24",
+     "why": "Body adds 4, then x++ adds 1 each pass. Verified.",
+     "src": "Final Review 1 Q2; Class Activity Final Review (key)"
+    },
+    {
+     "q": "What is the output?",
+     "code": "for (int y = 2; y < 15; y++) {\n    y += 2;\n    System.out.print(y + \"\\t\");\n}",
+     "a": "4 7 10 13 16",
+     "src": "Exam 2 Practice Study Guide Q14; Class Activity 12"
+    },
+    {
+     "q": "What is the output?",
+     "code": "for (int x = 5; x <= 20; x++) {\n    x += 3;\n    System.out.print(x + \"\\t\");\n}",
+     "a": "8 12 16 20",
+     "src": "Exam 2 Practice Study Guide Q22"
+    },
+    {
+     "q": "What is the output?",
+     "code": "for (int y = -4; y <= 12; y++) {\n    y += 2;\n    System.out.print(y + \"\\t\");\n}",
+     "a": "-2 1 4 7 10 13",
+     "src": "Exam 2 Practice Study Guide Q26; Class Activity 12"
+    },
+    {
+     "q": "What is the output?",
+     "code": "for (int m = -3; m <= 10; m++) {\n    m += 2;\n    System.out.print(m + \"\\t\");\n}",
+     "a": "-1 2 5 8 11",
+     "why": "Verified by compiling.",
+     "src": "Exam II Q12"
+    },
+    {
+     "q": "What is the output?",
+     "code": "for (int z = 7; z <= 25; z++) {\n    z += 5;\n    System.out.print(z + \" \");\n}",
+     "a": "12 18 24 30",
+     "why": "Verified by compiling.",
+     "src": "Exam II Q16"
+    },
+    {
+     "q": "What is the output?",
+     "code": "for (int m = -3; m <= 6; m += 3)\n    System.out.printf(\"%d \", m);",
+     "a": "-3 0 3 6",
+     "src": "Exam II Q3"
+    },
+    {
+     "q": "Fill the blank so the output is  0 1 2 3 4 .",
+     "code": "for (int k = 0; k < ___; k++) System.out.print(k + \"\\t\");",
+     "a": "5",
+     "why": "k < 5 visits 0..4.",
+     "src": "Exam II Q2"
+    },
+    {
+     "q": "Fill the condition so the loop runs 6 times, starting at i = 2 (i increments by 1).",
+     "code": "for (i = 2; _____; ++i) { ... }",
+     "a": "i < 8",
+     "why": "i = 2,3,4,5,6,7 is six values; stop before 8.",
+     "src": "Final Review 1 Q3-goal; Class Activity Final Review (key)"
+    },
+    {
+     "q": "Goal: loop 99 times. Fill the blank.",
+     "code": "for (i = 0; _____; ++i) { ... }",
+     "a": "i < 99",
+     "why": "i = 0..98 is 99 iterations.",
+     "src": "Exam II Q11"
+    },
+    {
+     "q": "Which condition ensures exactly 5 iterations, starting from i = 4?",
+     "code": "for (int i = 4; ___; i++) { ... }",
+     "a": "i < 9",
+     "why": "i = 4,5,6,7,8 is five values.",
+     "src": "Final Exam Review 2 Q7"
+    },
+    {
+     "q": "What are the values of i for each iteration?",
+     "code": "for (i = 0; i < 6; ++i) { ... }",
+     "a": "0, 1, 2, 3, 4, 5",
+     "src": "Exam II Q14"
+    },
+    {
+     "q": "What is the output?",
+     "code": "for (int x = 1; x <= 10; x += 3) System.out.print(x + \" \");",
+     "a": "1 4 7 10",
+     "src": "Final Exam Review 2 Q6"
+    },
+    {
+     "q": "Fill the blank so output is  -2 1 4 7 10 13 16 19 .",
+     "code": "for (XXXX) System.out.print(j + \"\\t\");",
+     "a": "int j = -2; j < 20; j += 3",
+     "src": "Exam II Q15"
+    },
+    {
+     "q": "Fill the blank so output is  0 3 6 9 12 15 18 21 24 .",
+     "code": "for (XXXX) System.out.print(i + \"\\t\");",
+     "a": "int i = 0; i <= 24; i += 3",
+     "src": "Exam II Q21; Exam 2 Practice Study Guide Q16"
+    },
+    {
+     "q": "Fill the blank so output is  5 9 13 17 21 25 29 .",
+     "code": "for (XXXX) System.out.print(j + \"\\t\");",
+     "a": "int j = 5; j <= 29; j += 4",
+     "src": "Exam 2 Practice Study Guide Q10"
+    },
+    {
+     "q": "Fill the blank so output is  3 7 11 15 19 23 27 .  (also asked for 3 6 9...30 -> j+=3, and 0 5 10...25 -> j+=5, and -5 -2 1 4 7 10 -> start -5, j+=3)",
+     "a": "int j = 3; j <= 27; j += 4  (same pattern: start = first value, step = difference, use <= endpoint).",
+     "why": "These fill-the-blank items all share one method — read start, step, inclusive end.",
+     "src": "Exam 2 Practice Study Guide Q15/Q23/Q24/Q25 (grouped)"
+    },
+    {
+     "q": "Fill both blanks so output is  1 -3 9 -27 81 .",
+     "code": "for (int i = 1; i < ___; i *= ___) System.out.print(i + \" \");",
+     "a": "The intended fill is i < 82 and i *= -3.",
+     "flag": "Flagged: tracing i<82, i*=-3 actually prints 1 -3 9 -27 81 -243 (an extra -243, since -243 < 82 is true). The stated condition does not cleanly stop at 81 — a flaw in the source question. Verified by compiling.",
+     "src": "Exam II Q10"
+    },
+    {
+     "q": "What is the value of count after this runs?",
+     "code": "int count = 0;\nfor (int i = 0; i < 5; i++) count += 2;",
+     "a": "10",
+     "why": "5 iterations, +2 each: 2,4,6,8,10.",
+     "src": "Exam 2 Practice Study Guide Q6; Exam II Q20; Class Activity 12"
+    },
+    {
+     "q": "How many times is 'Hello' printed?",
+     "code": "int i = 0;\nwhile (i < 7) { System.out.println(\"Hello\"); i++; }",
+     "a": "7",
+     "why": "i = 0..6.",
+     "src": "Exam 2 Practice Study Guide Q7; Class Activity 12"
+    },
+    {
+     "q": "What are the dimensions (rows x columns) of the shape printed?",
+     "code": "for (int i = 0; i < 4; i++) {\n    for (int j = 1; j < 3; j++) System.out.print(\"x\");\n    System.out.println();\n}",
+     "a": "Height 4, Width 2 (4 rows of 2 x's).",
+     "why": "Outer runs 4 times (rows), inner 2 (columns).",
+     "src": "Exam 2 Practice Study Guide Q8; Class Activity 12"
+    },
+    {
+     "q": "do-while: keep prompting until the user enters 7. What is the while condition?",
+     "a": "while (userInput != 7);",
+     "why": "Loop WHILE the value is not 7; stop when it equals 7.",
+     "src": "Exam 2 Practice Study Guide Q5; Exam II Q19"
+    },
+    {
+     "q": "do-while: keep prompting until the user enters a value less than 20. Condition?",
+     "a": "while (enteredValue >= 20);",
+     "why": "Repeat while it is still >= 20 (wrong).",
+     "src": "Exam 2 Practice Study Guide Q13; Class Activity 12"
+    },
+    {
+     "q": "do-while: keep prompting until the user enters a value greater than 10. Condition?",
+     "a": "while (userInput <= 10);",
+     "why": "Repeat while it is still <= 10.",
+     "src": "Exam 2 Practice Study Guide Q21; Class Activity 12"
+    },
+    {
+     "q": "do-while: repeatedly prompt for a value less than 5 if the user enters the wrong value. Condition?",
+     "options": [
+      "(!(userInput <= 5))",
+      "(userInput > 5)",
+      "(userInput >= 5)",
+      "(userInput != 5)"
+     ],
+     "a": "(userInput >= 5)",
+     "why": "Wrong = not less than 5, i.e. >= 5; loop while wrong.",
+     "src": "Exam II Q9"
+    },
+    {
+     "q": "while (number < 10): which initial value prints 'Loop has ended' right away?",
+     "options": [
+      "8",
+      "9",
+      "12",
+      "3"
+     ],
+     "a": "12",
+     "why": "Only a value >= 10 skips the loop immediately.",
+     "src": "Exam 2 Practice Study Guide Q12"
+    },
+    {
+     "q": "while (num < 5): which initial value prints 'Loop exited successfully' right away?",
+     "a": "5",
+     "why": "5 is not < 5, so the loop is skipped.",
+     "src": "Exam 2 Practice Study Guide Q19"
+    },
+    {
+     "q": "while (count >= 10): which initial value prints 'Exited the loop' right away?",
+     "a": "9 (any value < 10).",
+     "src": "Exam 2 Practice Study Guide Q20"
+    },
+    {
+     "q": "while (userInput <= 0): which value makes 'The while loop has finished' print?",
+     "options": [
+      "-1",
+      "no value will work",
+      "1",
+      "0"
+     ],
+     "a": "1",
+     "why": "A value > 0 fails the condition, so the loop is skipped.",
+     "src": "Exam II Q7"
+    },
+    {
+     "q": "Predict the output when i = 3 (student Olivia) and inputs are 12 18 20 10.",
+     "code": "// nested loop sums 4 daily amounts, then averages\naverage = (double) total / 4;",
+     "a": "Olivia's average spending: $15.0",
+     "why": "total = 60, 60/4 = 15.0. Verified.",
+     "src": "Final Review 1 Q15"
+    },
+    {
+     "q": "Write a do-while that sums entered numbers that are multiples of 5, stopping at -1; print the sum.",
+     "a": "do {\n    userInput = sc.nextInt();\n    if (userInput % 5 == 0) sum += userInput;\n} while (userInput != -1);\nSystem.out.println(\"Final sum: \" + sum);",
+     "why": "do-while prompts at least once before checking the sentinel.",
+     "src": "Exam 2 Practice FR2; Class Activity 12"
+    },
+    {
+     "q": "Write a do-while that adds even numbers until the user enters 5, then prints totalSum.",
+     "a": "do {\n    number = sc.nextInt();\n    if (number % 2 == 0) totalSum += number;\n} while (number != 5);",
+     "src": "Loops.pptx activity; Exam 2 written problems Q6"
+    }
+   ]
+  },
+  {
+   "id": "strings",
+   "name": "Strings & Characters",
+   "glance": "A String is text in double quotes. length() gives its size; charAt(i) reads the character at an index (starting at 0); substring, indexOf, and compareTo (alphabetical order) round out the toolkit. Two exam-favorite patterns: extracting one character from each string in an array, and scanning an array to find the longest or shortest string.",
+   "entries": [
+    {
+     "term": "string length & charAt",
+     "aliases": [
+      "length()",
+      "charAt",
+      "character at index",
+      "index"
+     ],
+     "type": "syntax",
+     "essence": "s.length() gives the number of characters; s.charAt(i) reads the character at index i (0-based).",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "Indexes run 0 to length()-1. \"Blue\".charAt(1) is 'l'. Note length() has parentheses (a String method), unlike an array's length field."
+      },
+      {
+       "label": "Example",
+       "code": "String s = \"Blue\";\ns.length();     // 4\ns.charAt(0);    // 'B'\ns.charAt(1);    // 'l'"
+      }
+     ],
+     "related": [
+      "char-extraction pattern",
+      "substring",
+      "arrays"
+     ]
+    },
+    {
+     "term": "substring",
+     "aliases": [
+      "substring()",
+      "slice"
+     ],
+     "type": "syntax",
+     "essence": "s.substring(a, b) returns the characters from index a up to but NOT including index b.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "The end index is exclusive. To grab the single character at index i as a String: s.substring(i, i+1)."
+      },
+      {
+       "label": "Example",
+       "code": "\"repaid\".substring(0, 3);   // \"rep\""
+      }
+     ],
+     "related": [
+      "string length & charAt",
+      "indexOf"
+     ]
+    },
+    {
+     "term": "indexOf & compareTo",
+     "aliases": [
+      "indexOf",
+      "compareTo",
+      "alphabetical",
+      "find character"
+     ],
+     "type": "syntax",
+     "essence": "indexOf finds where a character/substring first occurs (or -1); compareTo orders strings alphabetically.",
+     "detail": [
+      {
+       "label": "indexOf",
+       "body": "phrase.indexOf(\"w\") returns the first position of \"w\", or -1 if absent — used to validate a search letter is present."
+      },
+      {
+       "label": "compareTo",
+       "body": "a.compareTo(b) is negative if a comes before b alphabetically, 0 if equal, positive if after. Used to pick the alphabetically-first of equal-length strings."
+      }
+     ],
+     "related": [
+      "substring",
+      "longest / shortest string"
+     ]
+    },
+    {
+     "term": "char-extraction pattern",
+     "aliases": [
+      "charAt loop",
+      "one character from each",
+      "build string from chars"
+     ],
+     "type": "concept",
+     "essence": "Loop over an array of strings taking the same index from each with charAt, concatenating the result.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "For index 1 of {\"Red\",\"Blue\",\"Green\",\"Yellow\",\"Orange\",\"Purple\"} you take charAt(1) of each: e,l,r,e,r,u -> \"elreru\". Remember 0-based indexing."
+      },
+      {
+       "label": "Example",
+       "code": "String result = \"\";\nfor (int i = 0; i < colors.length; i++)\n    result += colors[i].charAt(1);"
+      }
+     ],
+     "related": [
+      "string length & charAt",
+      "arrays"
+     ]
+    },
+    {
+     "term": "longest / shortest string",
+     "aliases": [
+      "find longest",
+      "find shortest",
+      "max length string"
+     ],
+     "type": "concept",
+     "essence": "Track a best-so-far string and its length; update only on a strictly longer (or shorter) one — so the first winner keeps ties.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "Start with element 0 as the best. Compare each with > (longest) or < (shortest). Because the test is strict, an equal-length later string does NOT replace the current one — the earliest winner stays unless a tie-breaker (compareTo) is added."
+      },
+      {
+       "label": "Example",
+       "code": "String longest = arr[0];\nint maxLen = arr[0].length();\nfor (String s : arr)\n    if (s.length() > maxLen) { maxLen = s.length(); longest = s; }"
+      }
+     ],
+     "related": [
+      "char-extraction pattern",
+      "enhanced for loop",
+      "indexOf & compareTo"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "What is the output? (user enters index 1)",
+     "code": "String[] colors = {\"Red\",\"Blue\",\"Green\",\"Yellow\",\"Orange\",\"Purple\"};\nfor (int i = 0; i < colors.length; i++) result += colors[i].charAt(1);",
+     "a": "elreru",
+     "why": "charAt(1) of each: e,l,r,e,r,u. Verified.",
+     "src": "Final Review 1 Q8"
+    },
+    {
+     "q": "What is the output? (index 1)",
+     "code": "String[] cities = {\"Miami\",\"Boston\",\"Dallas\",\"Austin\",\"Denver\",\"Seattle\"};\n// result += cities[i].charAt(1)",
+     "a": "ioauee",
+     "src": "Class Activity 17 Q15"
+    },
+    {
+     "q": "What is the output? (index 3)",
+     "code": "String[] fruits = {\"Apple\",\"Banana\",\"Cherry\",\"Mango\",\"Peach\",\"Grapes\"};\n// result += fruits[i].charAt(3)",
+     "a": "largcp",
+     "src": "Class Activity 17 Q16"
+    },
+    {
+     "q": "What is the output? (index 1)",
+     "code": "String[] animals = {\"Tiger\",\"Lion\",\"Elephant\",\"Giraffe\",\"Zebra\"};\n// result += animals[i].charAt(1)",
+     "a": "iilie",
+     "src": "Class Activity 17 Q17"
+    },
+    {
+     "q": "What is the output? (index 2)",
+     "code": "String[] colors = {\"Red\",\"Blue\",\"Green\",\"Yellow\",\"Purple\"};\n// result += colors[i].charAt(2)",
+     "a": "duelr",
+     "src": "Class Activity 17 Q18"
+    },
+    {
+     "q": "What is the output? (index 1)",
+     "code": "String[] words = {\"Hello\",\"World\",\"Java\",\"Coding\",\"Arrays\"};\n// result += words[i].charAt(1)",
+     "a": "eoaor",
+     "src": "Class Activity 17 Q19"
+    },
+    {
+     "q": "What is the output of the longest-fruit scan?",
+     "code": "String[] fruits = {\"apple\",\"banana\",\"cherry\",\"kiwi\",\"mango\"};\n// keep the strictly-longer string",
+     "a": "banana 6",
+     "why": "banana (6) is first to reach the max; cherry (also 6) does not replace it (strict >).",
+     "src": "Final Review 1 Q7"
+    },
+    {
+     "q": "Longest animal name?",
+     "code": "String[] animals = {\"cat\",\"elephant\",\"dog\",\"giraffe\",\"lion\"};",
+     "a": "elephant 8",
+     "src": "Final Review 1 Q13; Class Activity 15 Q5"
+    },
+    {
+     "q": "Longest word?",
+     "code": "String[] words = {\"apple\",\"banana\",\"grape\",\"kiwi\",\"orange\"};",
+     "a": "banana 6",
+     "src": "Class Activity 15 Q6"
+    },
+    {
+     "q": "SHORTEST animal name (test uses <)?",
+     "code": "String[] animals = {\"cat\",\"elephant\",\"dog\",\"giraffe\",\"lion\"};",
+     "a": "cat 3",
+     "why": "cat starts as best (3); no strictly shorter string appears.",
+     "src": "Class Activity 17 Q7"
+    },
+    {
+     "q": "Longest country name?",
+     "code": "String[] countries = {\"Japan\",\"Brazil\",\"USA\",\"Australia\",\"India\"};",
+     "a": "Australia 9",
+     "src": "Class Activity 17 Q8"
+    },
+    {
+     "q": "Longest color name?",
+     "code": "String[] colors = {\"red\",\"blue\",\"yellow\",\"green\",\"purple\"};",
+     "a": "yellow 6",
+     "why": "yellow (6) comes before purple (6); strict > keeps the first.",
+     "src": "Class Activity 17 Q9"
+    },
+    {
+     "q": "With a tie-breaker (same length -> alphabetically first via compareTo), what prints?",
+     "code": "String[] animals = {\"cat\",\"elephant\",\"dog\",\"giraffe\",\"lion\",\"dolphin\",\"aardvark\"};",
+     "a": "aardvark 8",
+     "why": "elephant and aardvark are both length 8; compareTo picks aardvark (earlier alphabetically). Verified.",
+     "src": "Final Review 1 Q14"
+    },
+    {
+     "q": "Print the mirror of a phrase up to the first occurrence of a chosen letter and back. Approach?",
+     "a": "mirrorIndex = phrase.indexOf(mirrorPoint); loop i = 0..mirrorIndex printing charAt(i); then loop i = mirrorIndex-1 down to 0 printing charAt(i). Validate with a do-while while indexOf < 0.",
+     "src": "Exam 2 written problems Q3"
+    }
+   ]
+  },
+  {
+   "id": "arrays",
+   "name": "Arrays",
+   "glance": "An array is a fixed-size, ordered collection of same-type values reached through one name and an index. Indexes run 0 to length-1; going past the end throws ArrayIndexOutOfBoundsException. length is a field (no parentheses). A for loop populates or traverses it; the enhanced for reads it. Mutation-in-place loops that read a neighbor (arr[i] = arr[i+1]...) are a recurring exam pattern — trace them cell by cell.",
+   "entries": [
+    {
+     "term": "arrays",
+     "aliases": [
+      "array",
+      "one dimensional array",
+      "declare array",
+      "new array"
+     ],
+     "type": "concept",
+     "essence": "A fixed-size, ordered collection of values of the same type, accessed through one name and an index.",
+     "detail": [
+      {
+       "label": "Declare & create",
+       "code": "int[] numbers = new int[5];        // 5 slots, all 0\nint[] nums = {10, 20, 30, 40, 50}; // literal\nString[] names = {\"Sam\", \"Alex\"};"
+      },
+      {
+       "label": "Defaults",
+       "body": "new int[5] fills with 0 (numbers), false (boolean), or null (objects/String). Size is fixed at creation and cannot change."
+      },
+      {
+       "label": "Correct initializer",
+       "body": "int[] numbers = new int[6]; is the valid 'six default ints' form. int numbers = new int[6]; (missing []) and int numbers = [6]; are wrong."
+      }
+     ],
+     "related": [
+      "array length & indexing",
+      "array traversal",
+      "2D arrays"
+     ]
+    },
+    {
+     "term": "array length & indexing",
+     "aliases": [
+      "length",
+      "index",
+      "arr[i]",
+      "ArrayIndexOutOfBounds",
+      "out of bounds"
+     ],
+     "type": "concept",
+     "essence": "arr.length is the count; valid indexes are 0 to length-1; an index equal to length throws ArrayIndexOutOfBoundsException.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "numbers.length (a FIELD, no parentheses) is how many slots exist. First element numbers[0], last numbers[numbers.length-1]. Accessing numbers[numbers.length] is out of bounds."
+      },
+      {
+       "label": "Update",
+       "body": "Assign with the index: numbers[0] = 9; replaces the first element."
+      },
+      {
+       "label": "Example",
+       "code": "int[] n = {1,2,3,4,5,6,7,8};\nn.length;               // 8\nn[0];                   // 1\nn[n.length - 1];        // 8\nn[n.length];            // ArrayIndexOutOfBoundsException"
+      }
+     ],
+     "related": [
+      "arrays",
+      "array traversal",
+      "array mutation loops"
+     ]
+    },
+    {
+     "term": "array traversal",
+     "aliases": [
+      "loop through array",
+      "populate array",
+      "traverse"
+     ],
+     "type": "syntax",
+     "essence": "Use for(int i=0; i<arr.length; i++) to read or fill each element by index.",
+     "detail": [
+      {
+       "label": "Populate",
+       "code": "for (int i = 0; i < numbers.length; i++) {\n    System.out.println(\"Enter a number\");\n    numbers[i] = keyboard.nextInt();\n}"
+      },
+      {
+       "label": "Traverse",
+       "body": "i < arr.length (strictly less than) visits every valid index exactly once. Using <= would run off the end."
+      }
+     ],
+     "related": [
+      "array length & indexing",
+      "enhanced for loop",
+      "array mutation loops"
+     ]
+    },
+    {
+     "term": "enhanced for loop",
+     "aliases": [
+      "for-each",
+      "enhanced for",
+      "for each element"
+     ],
+     "type": "syntax",
+     "essence": "for (Type x : arr) visits each element in order without an index — read-only convenience.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "x takes each element's value in turn. Great for scanning (sum, max, longest string). You cannot assign back into the array through x, and you have no index."
+      },
+      {
+       "label": "Example",
+       "code": "for (String name : animals)\n    System.out.println(name);"
+      }
+     ],
+     "related": [
+      "array traversal",
+      "longest / shortest string"
+     ]
+    },
+    {
+     "term": "array mutation loops",
+     "aliases": [
+      "shift array",
+      "arr[i]=arr[i+1]",
+      "in-place modify",
+      "neighbor assignment"
+     ],
+     "type": "concept",
+     "essence": "Loops that overwrite each slot from a neighbor change the array as they go — always trace cell by cell, using updated values.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "In arr[i] = arr[i+1] * 2, each pass uses the CURRENT (already possibly changed) contents. Earlier writes affect later reads. Work left to right, updating the array after every step."
+      },
+      {
+       "label": "Worked",
+       "code": "int[] nums = {6, 2, 5, 1, 9};\nfor (int i = 0; i < 4; i++) nums[i] = nums[i+1] * 2;\n// i0: nums[0]=2*2=4 -> {4,2,5,1,9}\n// i1: nums[1]=5*2=10 -> {4,10,5,1,9}\n// i2: nums[2]=1*2=2  -> {4,10,2,1,9}\n// i3: nums[3]=9*2=18 -> {4,10,2,18,9}"
+      }
+     ],
+     "related": [
+      "array traversal",
+      "array length & indexing"
+     ]
+    },
+    {
+     "term": "array algorithms",
+     "aliases": [
+      "max",
+      "min",
+      "sum",
+      "average",
+      "most frequent",
+      "count"
+     ],
+     "type": "concept",
+     "essence": "Common scans: track a running max/min, accumulate a sum (then divide for average), or tally counts.",
+     "detail": [
+      {
+       "label": "Max / min",
+       "body": "Assume arr[0] is the best, then compare each element and update on a larger (max) or smaller (min) one."
+      },
+      {
+       "label": "Sum / average",
+       "body": "Accumulate total in a variable declared before the loop; average = (double) total / arr.length."
+      },
+      {
+       "label": "Reference vs copy",
+       "body": "int[] b = a; makes b point at the SAME array — changing b[1] changes a[1]. To truly copy, loop and assign each element into a new array."
+      }
+     ],
+     "related": [
+      "accumulator pattern",
+      "2D arrays"
+     ]
+    },
+    {
+     "term": "2D arrays",
+     "aliases": [
+      "two dimensional",
+      "matrix",
+      "int[][]",
+      "grid",
+      "nested array"
+     ],
+     "type": "syntax",
+     "essence": "An array of arrays — a grid addressed by [row][column], traversed with nested loops.",
+     "detail": [
+      {
+       "label": "Create",
+       "code": "int[][] matrix = {{1,2,3},{4,5,6},{7,8,9}};"
+      },
+      {
+       "label": "Traverse",
+       "code": "for (int r = 0; r < matrix.length; r++)\n    for (int c = 0; c < matrix[r].length; c++)\n        System.out.print(matrix[r][c] + \" \");"
+      }
+     ],
+     "related": [
+      "nested loops",
+      "array traversal"
+     ]
+    },
+    {
+     "term": "Arrays.sort",
+     "aliases": [
+      "sort array",
+      "Arrays.sort",
+      "ascending"
+     ],
+     "type": "syntax",
+     "essence": "Arrays.sort(arr) sorts an array ascending in place; needs import java.util.Arrays;.",
+     "detail": [
+      {
+       "label": "Example",
+       "code": "import java.util.Arrays;\nArrays.sort(numbers);   // ascending order"
+      }
+     ],
+     "related": [
+      "arrays",
+      "array algorithms"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "Which correctly initializes an array of 6 integers with default values?",
+     "options": [
+      "int[] numbers = {1,2,3,4,5,6};",
+      "int numbers = new int[6];",
+      "int[] numbers = new int[6];",
+      "int numbers = [6];"
+     ],
+     "a": "int[] numbers = new int[6];",
+     "why": "Correct syntax; fills with 0s. The literal form is not 'default values'.",
+     "src": "Class Activity 17 Q20"
+    },
+    {
+     "q": "What happens when you access an array element with index equal to the array's length?",
+     "a": "It throws an ArrayIndexOutOfBoundsException.",
+     "why": "Valid indexes are 0..length-1.",
+     "src": "Class Activity 17 Q21"
+    },
+    {
+     "q": "Output of the loop (y = {10,20,30,40,50,60}) printing y[i]+y[i+2], i=0..3?",
+     "a": "40 60 80 100",
+     "why": "10+30, 20+40, 30+50, 40+60. Verified.",
+     "src": "Class Activity 17 Q1"
+    },
+    {
+     "q": "Output (c = {8,16,24,32,40,48}) printing c[i-1]+c[i], i=1..4?",
+     "a": "24 40 56 72",
+     "src": "Class Activity 17 Q2"
+    },
+    {
+     "q": "Output (nums = {2,4,7,11,16}) printing nums[i]-nums[i-2], i=2..4?",
+     "a": "5 7 9",
+     "src": "Final Review 1 Q11"
+    },
+    {
+     "q": "Output (z = {5,15,25,35,45}) printing z[j]+z[j+1], j=0..3?",
+     "a": "20 40 60 80",
+     "src": "Final Review 1 Q4"
+    },
+    {
+     "q": "Output (a = {10,20,30,40,50}) printing a[i+1], i=0..2?",
+     "a": "20 30 40",
+     "src": "Final Exam Review 2 Q8"
+    },
+    {
+     "q": "Array after: nums={2,4,6,8,10}; for(i=1;i<4;i++) nums[i]=nums[i-1]+2;",
+     "a": "{2, 4, 6, 8, 10}",
+     "why": "Each new value equals the (already updated) previous +2, reproducing the sequence. Verified.",
+     "src": "Class Activity 17 Q3"
+    },
+    {
+     "q": "Array after: values={3,6,9,12,15}; for(i=2;i<5;i++) values[i-1]=values[i]-1;",
+     "a": "{3, 8, 11, 14, 15}",
+     "why": "Verified by compiling.",
+     "src": "Class Activity 17 Q4"
+    },
+    {
+     "q": "Array after: arr={7,14,21,28,35}; for(i=1;i<4;i++) arr[i+1]=arr[i]+5;",
+     "a": "{7, 14, 19, 24, 29}",
+     "why": "Each write feeds the next read. Verified.",
+     "src": "Class Activity 17 Q5"
+    },
+    {
+     "q": "Array after: data={8,16,24,32,40}; for(i=0;i<3;i++) data[i+1]=data[i]*2;",
+     "a": "{8, 16, 32, 64, 40}",
+     "why": "Verified by compiling.",
+     "src": "Class Activity 17 Q6"
+    },
+    {
+     "q": "Array after: values={7,12,5,9,14}; for(i=2;i<5;i++) values[i-2]=values[i]+3;",
+     "a": "{8, 12, 17, 9, 14}",
+     "why": "Verified.",
+     "src": "Final Review 1 Q9"
+    },
+    {
+     "q": "Array after: nums={6,2,5,1,9}; for(i=0;i<4;i++) nums[i]=nums[i+1]*2;",
+     "a": "{4, 10, 2, 18, 9}",
+     "why": "Verified by compiling.",
+     "src": "Final Review 1 Q16"
+    },
+    {
+     "q": "Array after: nums={1,2,3,4}; for(i=1;i<4;i++) nums[i-1]=nums[i]+2;",
+     "a": "{4, 5, 6, 4}",
+     "why": "Verified.",
+     "src": "Final Exam Review 2 Q10"
+    },
+    {
+     "q": "Array after: y={5,2,9,4,6}; for(i=0;i<3;i++) y[i]=y[i+1]-2;",
+     "a": "{0, 7, 2, 4, 6}",
+     "why": "Answer key + verified.",
+     "src": "Class Activity 15 Q8"
+    },
+    {
+     "q": "Array after: z={12,3,7,8,15}; for(i=0;i<4;i++) z[i]=z[i+1]*2;",
+     "a": "{6, 14, 16, 30, 15}",
+     "why": "Answer key + verified.",
+     "src": "Class Activity 15 Q9"
+    },
+    {
+     "q": "Array after: a={10,15,3,25,4}; for(i=0;i<3;i++) a[i]=a[i+1]-3;",
+     "a": "{12, 0, 22, 25, 4}",
+     "why": "Answer key + verified.",
+     "src": "Class Activity 15 Q10"
+    },
+    {
+     "q": "Output (y={1,3,5,7,9}) printing y[i]-y[i-1], i=2..4?",
+     "a": "2 2 (i.e. '2 2' — 5-3=2, 7-5=2, 9-7=2 -> 2 2 2)",
+     "why": "Answer: 2 2 2.",
+     "src": "Class Activity 15 Q1"
+    },
+    {
+     "q": "Output (a={10,20,30,40}) printing a[i]-a[i+1], i=0..2?",
+     "a": "-10 -10 -10",
+     "src": "Class Activity 15 Q2"
+    },
+    {
+     "q": "Output (z={12,18,24,30,36}) printing z[i]-z[i-1], i=1..3?",
+     "a": "6 6 6",
+     "src": "Class Activity 15 Q3"
+    },
+    {
+     "q": "Output (b={7,14,21,28,35}) printing b[i+1]-b[i], i=0..3?",
+     "a": "7 7 7 7",
+     "src": "Class Activity 15 Q4"
+    },
+    {
+     "q": "Reference vs copy: int[] a={2,4,6}; int[] b=a; b[1]=100; print a and b?",
+     "a": "Both print {2, 100, 6}.",
+     "why": "b = a makes b point at the SAME array; to truly copy, loop and assign each element into a new array.",
+     "src": "Class Activity 17 Task 4"
+    },
+    {
+     "q": "Spot the bug: int[] values=new int[10]; for(int i=1;i<=10;i++) values[i]=i*2;",
+     "a": "ArrayIndexOutOfBoundsException — valid indexes are 0..9, but the loop writes values[10].",
+     "why": "Off-by-one: start at 0 and use i < 10 (or i < values.length).",
+     "src": "Class Activity 17 Task 2"
+    },
+    {
+     "q": "Array Questions set: declare an int array initialized to {10,20,30,40,50}; access the 3rd element; modify the 2nd to 50; loop-print; find max/min; length; sum; sort.",
+     "a": "int[] a = {10,20,30,40,50};  // a[2] is the 3rd (30); a[1] = 50; for(i<a.length) print a[i]; track max/min; a.length; sum += a[i]; Arrays.sort(a).",
+     "why": "Core array operations bundled; index is 0-based, length is a field.",
+     "src": "Array Questions (Samira Zad) 1-8"
+    },
+    {
+     "q": "Initialize and traverse a 3x3 2D array, printing rows.",
+     "code": "int[][] matrix = {{1,2,3},{4,5,6},{7,8,9}};",
+     "a": "for(int r=0;r<matrix.length;r++){ for(int c=0;c<matrix[r].length;c++) System.out.print(matrix[r][c]+\" \"); System.out.println(); }",
+     "src": "Class Activity 17 Task 5"
+    },
+    {
+     "q": "Write countOccurrences(int[] arr, int searchNum) returning how many times searchNum appears.",
+     "a": "int count = 0;\nfor (int v : arr) if (v == searchNum) count++;\nreturn count;",
+     "src": "Class Activity 15 (coding)"
+    }
+   ]
+  },
+  {
+   "id": "arraylist",
+   "name": "ArrayList & Collections",
+   "glance": "An ArrayList is a resizable array of objects: import java.util.ArrayList and give a type in angle brackets. Because it holds objects, numbers use wrapper types (Integer, Double). Size is size() (with parentheses, unlike an array's length). Core methods: add, add(index,value), get, set, remove(index), contains, clear. Collections.sort orders it.",
+   "entries": [
+    {
+     "term": "ArrayList",
+     "aliases": [
+      "array list",
+      "resizable array",
+      "generics",
+      "wrapper type"
+     ],
+     "type": "concept",
+     "essence": "A resizable list of objects; declared with a type in angle brackets and imported from java.util.",
+     "detail": [
+      {
+       "label": "Create",
+       "code": "import java.util.ArrayList;\nArrayList<String> names = new ArrayList<String>();\nArrayList<Integer> nums = new ArrayList<>();"
+      },
+      {
+       "label": "Wrapper types",
+       "body": "An ArrayList holds objects, not primitives, so use Integer for int and Double for double: ArrayList<Integer>, ArrayList<Double>. It grows and shrinks as you add/remove — unlike a fixed array."
+      }
+     ],
+     "related": [
+      "ArrayList methods",
+      "array vs ArrayList",
+      "Collections.sort"
+     ]
+    },
+    {
+     "term": "ArrayList methods",
+     "aliases": [
+      "add",
+      "get",
+      "set",
+      "remove",
+      "size",
+      "contains",
+      "clear",
+      "add index"
+     ],
+     "type": "syntax",
+     "essence": "add appends, add(i,v) inserts, get reads, set replaces, remove(i) deletes, size() counts, contains checks, clear empties.",
+     "detail": [
+      {
+       "label": "The methods",
+       "columns": [
+        "Method",
+        "Does"
+       ],
+       "rows": [
+        [
+         "list.add(v)",
+         "append v to the end"
+        ],
+        [
+         "list.add(i, v)",
+         "insert v at index i (shifts the rest right)"
+        ],
+        [
+         "list.get(i)",
+         "return the element at index i"
+        ],
+        [
+         "list.set(i, v)",
+         "replace the element at index i (does NOT insert)"
+        ],
+        [
+         "list.remove(i)",
+         "remove the element at index i (shifts the rest left)"
+        ],
+        [
+         "list.size()",
+         "number of elements (has parentheses)"
+        ],
+        [
+         "list.contains(v)",
+         "true if v is in the list"
+        ],
+        [
+         "list.clear()",
+         "remove all elements"
+        ]
+       ]
+      },
+      {
+       "label": "set vs add",
+       "body": "set(i, v) overwrites what is already at i; add(i, v) inserts and pushes others over. To change carrots (index 2) to broccoli: list.set(2, \"broccoli\")."
+      },
+      {
+       "label": "Example",
+       "code": "ArrayList<Integer> a = new ArrayList<>();\na.add(5); a.add(10); a.add(15);\na.remove(1);        // deletes 10 -> [5, 15]\na.get(1);           // 15"
+      }
+     ],
+     "related": [
+      "ArrayList",
+      "array vs ArrayList",
+      "Collections.sort"
+     ]
+    },
+    {
+     "term": "array vs ArrayList",
+     "aliases": [
+      "difference array arraylist",
+      "length vs size"
+     ],
+     "type": "concept",
+     "essence": "An array is fixed-size with [i] and length; an ArrayList resizes and uses get/set/add/remove with size().",
+     "detail": [
+      {
+       "label": "Compare",
+       "columns": [
+        "",
+        "Array",
+        "ArrayList"
+       ],
+       "rows": [
+        [
+         "size",
+         "length (field)",
+         "size() (method)"
+        ],
+        [
+         "read",
+         "arr[i]",
+         "list.get(i)"
+        ],
+        [
+         "write",
+         "arr[i]=v",
+         "list.set(i,v)"
+        ],
+        [
+         "grow/shrink",
+         "no (fixed)",
+         "yes (add/remove)"
+        ],
+        [
+         "holds",
+         "primitives or objects",
+         "objects only (wrappers)"
+        ]
+       ]
+      }
+     ],
+     "related": [
+      "ArrayList methods",
+      "arrays"
+     ]
+    },
+    {
+     "term": "Collections.sort",
+     "aliases": [
+      "sort arraylist",
+      "Collections",
+      "order list"
+     ],
+     "type": "syntax",
+     "essence": "Collections.sort(list) sorts an ArrayList ascending (numbers) or alphabetically (strings), in place.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "Needs import java.util.Collections;. Sorts in place, so the list itself is reordered."
+      },
+      {
+       "label": "Chained example",
+       "code": "// [4,8,2,10,6] -> remove(2)->[4,8,10,6] -> add(1,12)->[4,12,8,10,6]\n// sort -> [4,6,8,10,12] -> set(3, get(3)+1) -> [4,6,8,11,12]"
+      }
+     ],
+     "related": [
+      "ArrayList methods",
+      "array algorithms"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "What is printed?",
+     "code": "ArrayList<Integer> numbers = new ArrayList<>();\nfor (int i = 0; i < 10; i += 2) numbers.add(i * 2);\nSystem.out.println(numbers.get(3));",
+     "a": "12",
+     "why": "List = [0,4,8,12,16]; index 3 is 12. Verified.",
+     "src": "Final Review 1 Q6; Class Activity Final Review (key)"
+    },
+    {
+     "q": "What is printed?",
+     "code": "ArrayList<Integer> values = new ArrayList<>();\nfor (int i = 1; i <= 9; i += 2) values.add(i);\nSystem.out.println(values.get(3));",
+     "a": "7",
+     "why": "List = [1,3,5,7,9]; index 3 is 7.",
+     "src": "Final Review 1 Q12"
+    },
+    {
+     "q": "Code to change 'carrots' (index 2) to 'broccoli' in the list?",
+     "a": "shoppingList.set(2, \"broccoli\");",
+     "why": "set replaces at an index; add(2,...) would insert instead.",
+     "src": "Final Review 1 Q10"
+    },
+    {
+     "q": "Which line returns the number of items in an ArrayList named cities?",
+     "options": [
+      "cities.length",
+      "cities.size",
+      "cities.size()",
+      "cities.count()"
+     ],
+     "a": "cities.size()",
+     "why": "ArrayList uses size() (with parentheses); length is for arrays.",
+     "src": "Final Review 1 Q17"
+    },
+    {
+     "q": "Which line retrieves the second element of an ArrayList?",
+     "options": [
+      "animals.get(0)",
+      "animals.get(2)",
+      "animals[1]",
+      "animals.get(1)"
+     ],
+     "a": "animals.get(1)",
+     "why": "0-based; the second element is index 1. ArrayList uses get(), not [].",
+     "src": "Final Exam Review 2 Q1"
+    },
+    {
+     "q": "What does  cities.remove(2);  do?",
+     "a": "Removes the element at index 2.",
+     "src": "Final Exam Review 2 Q2"
+    },
+    {
+     "q": "Which method checks if 'Paris' is in an ArrayList named cities?",
+     "options": [
+      "cities.has(\"Paris\")",
+      "cities.contains(\"Paris\")",
+      "cities.exists(\"Paris\")",
+      "cities.find(\"Paris\")"
+     ],
+     "a": "cities.contains(\"Paris\")",
+     "src": "Final Exam Review 2 Q3"
+    },
+    {
+     "q": "Which method removes all elements from an ArrayList?",
+     "options": [
+      "clearAll()",
+      "clear()",
+      "removeAll()",
+      "deleteAll()"
+     ],
+     "a": "clear()",
+     "src": "Final Exam Review 2 Q4"
+    },
+    {
+     "q": "What is printed?",
+     "code": "ArrayList<Integer> list = new ArrayList<>();\nfor (int i = 1; i <= 5; i++) list.add(i * 3);\nSystem.out.println(list.get(3));",
+     "a": "12",
+     "why": "List = [3,6,9,12,15]; index 3 is 12.",
+     "src": "Class Activity 16 Q1"
+    },
+    {
+     "q": "What is printed?",
+     "code": "ArrayList<String> colors = ... add Red, Green, Blue, Yellow;\nSystem.out.println(colors.get(1));",
+     "a": "Green",
+     "src": "Class Activity 16 Q2"
+    },
+    {
+     "q": "What is printed?",
+     "code": "ArrayList<Integer> numbers = ...;\nfor (int i = 10; i >= 2; i -= 2) numbers.add(i);\nSystem.out.println(numbers.get(2));",
+     "a": "6",
+     "why": "List = [10,8,6,4,2]; index 2 is 6.",
+     "src": "Class Activity 16 Q3"
+    },
+    {
+     "q": "What is printed?",
+     "code": "days: Monday, Tuesday, Wednesday; days.set(1, \"Friday\");\nSystem.out.println(days.get(1));",
+     "a": "Friday",
+     "why": "set overwrites index 1.",
+     "src": "Class Activity 16 Q4"
+    },
+    {
+     "q": "What is printed?",
+     "code": "ArrayList<Integer> nums = ...;\nfor (int i = 0; i < 6; i++) nums.add(i * i);\nSystem.out.println(nums.get(4));",
+     "a": "16",
+     "why": "List = [0,1,4,9,16,25]; index 4 is 16.",
+     "src": "Class Activity 16 Q5"
+    },
+    {
+     "q": "What is printed?",
+     "code": "values: 5, 10, 15; values.remove(1);\nSystem.out.println(values.get(1));",
+     "a": "15",
+     "why": "remove(1) deletes 10 -> [5,15]; index 1 is now 15.",
+     "src": "Class Activity 16 Q6"
+    },
+    {
+     "q": "What is printed?",
+     "code": "codes: X, Y, Z;\nfor (int i = 0; i < codes.size(); i++) System.out.print(codes.get(i) + \" \");",
+     "a": "X Y Z",
+     "src": "Class Activity 16 Q7"
+    },
+    {
+     "q": "What is printed?",
+     "code": "numbers = [4,8,2,10,6];\nnumbers.remove(2);\nnumbers.add(1, 12);\nCollections.sort(numbers);\nnumbers.set(3, numbers.get(3) + 1);\nSystem.out.println(numbers);",
+     "a": "[4, 6, 8, 11, 12]",
+     "why": "remove(2)->[4,8,10,6]; add(1,12)->[4,12,8,10,6]; sort->[4,6,8,10,12]; set(3,10+1)->[4,6,8,11,12]. Verified.",
+     "src": "Class Activity 16 Q8"
+    },
+    {
+     "q": "What is printed?",
+     "code": "ArrayList<Integer> numbers = ...;\nfor (int index = 1; index < 10; index += 2) numbers.add(index * 2);\nSystem.out.println(numbers.get(3));",
+     "a": "14",
+     "why": "List = [2,6,10,14,18]; index 3 is 14. Verified.",
+     "src": "Class Activity 17 Q10"
+    },
+    {
+     "q": "What is printed?",
+     "code": "for (int i = 2; i <= 10; i += 3) values.add(i * 3);\nSystem.out.println(values.get(1));",
+     "a": "15",
+     "why": "i=2,5,8 -> [6,15,24]; index 1 is 15.",
+     "src": "Class Activity 17 Q11"
+    },
+    {
+     "q": "What is printed?",
+     "code": "ArrayList<Double> prices = ...;\nfor (int i = 1; i < 8; i += 2) prices.add(i * 2.5);\nSystem.out.println(prices.get(2));",
+     "a": "12.5",
+     "why": "i=1,3,5,7 -> [2.5,7.5,12.5,17.5]; index 2 is 12.5.",
+     "src": "Class Activity 17 Q12"
+    },
+    {
+     "q": "What is printed?",
+     "code": "for (int i = 1; i <= 5; i++) squares.add(i * i);\nSystem.out.println(squares.get(3));",
+     "a": "16",
+     "why": "[1,4,9,16,25]; index 3 is 16.",
+     "src": "Class Activity 17 Q13"
+    },
+    {
+     "q": "What is printed?",
+     "code": "for (int i = 0; i < 6; i++) sequence.add(i * 4);\nSystem.out.println(sequence.get(4));",
+     "a": "16",
+     "why": "[0,4,8,12,16,20]; index 4 is 16.",
+     "src": "Class Activity 17 Q14"
+    },
+    {
+     "q": "StudentRosterManager: add Alice,Bob,Charlie,Diana,Evan; insert Grace at index 2; update Bob to Ben; remove Diana; print all; print count; check contains Alice. Which methods?",
+     "a": "add(name); add(2,\"Grace\"); set(indexOfBob,\"Ben\"); remove(\"Diana\"); loop get(i)/size(); size(); contains(\"Alice\").",
+     "src": "Class Activity 16 (coding)"
+    }
+   ]
+  },
+  {
+   "id": "classes",
+   "name": "Objects & Classes",
+   "glance": "A class is a blueprint with instance variables (data) and methods (behavior); an object is one instance made with new. A driver class holds main and uses domain classes (Item, CartItem, CoffeeOrder). Getters/setters read and write private fields. UML diagrams list a class's fields and method signatures — reading one and writing the matching method is a final-review skill.",
+   "entries": [
+    {
+     "term": "class & object",
+     "aliases": [
+      "class",
+      "object",
+      "instance",
+      "new",
+      "instance variable"
+     ],
+     "type": "concept",
+     "essence": "A class defines fields (instance variables) and methods; an object is a specific instance created with new.",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "class Item { String name; double price; } is a blueprint. Item x = new Item(); makes one object. Each object has its own copy of the instance variables. Fields are often private, reached through getters/setters."
+      },
+      {
+       "label": "Driver vs domain",
+       "body": "A domain class (Item, CoffeeOrder) models a thing; a driver class (Store, CoffeeShop) holds main and uses it — creating objects, calling methods, running the menu loop."
+      }
+     ],
+     "related": [
+      "methods & getters",
+      "UML to code",
+      "array/list of objects"
+     ]
+    },
+    {
+     "term": "methods & getters",
+     "aliases": [
+      "getter",
+      "setter",
+      "instance method",
+      "getPrice",
+      "getQuantity"
+     ],
+     "type": "syntax",
+     "essence": "Instance methods act on an object's fields; getters return a field, setters assign one.",
+     "detail": [
+      {
+       "label": "Example",
+       "code": "public double getPrice() { return price; }\npublic void setPrice(double p) { price = p; }"
+      },
+      {
+       "label": "Calling",
+       "body": "On an object: product.getPrice(). A method that computes over the object's data (e.g. cost = price * quantity) returns the result to the caller."
+      }
+     ],
+     "related": [
+      "class & object",
+      "UML to code"
+     ]
+    },
+    {
+     "term": "UML to code",
+     "aliases": [
+      "UML",
+      "diagram",
+      "calculateTotalCost",
+      "write the method"
+     ],
+     "type": "concept",
+     "essence": "A UML box lists a class's fields and method signatures; translating one into working code is a common final-review task.",
+     "detail": [
+      {
+       "label": "Pattern",
+       "body": "Read the return type and parameters from the signature, then loop over the data. e.g. calculateTotalCost() loops the cart, multiplies each product's getPrice() by getQuantity(), adds to a total, and returns the double total."
+      },
+      {
+       "label": "Example",
+       "code": "public double calculateTotalCost() {\n    double total = 0;\n    for (Product p : cart)\n        total += p.getPrice() * p.getQuantity();\n    return total;\n}"
+      }
+     ],
+     "related": [
+      "methods & getters",
+      "array/list of objects"
+     ]
+    },
+    {
+     "term": "array/list of objects",
+     "aliases": [
+      "array of objects",
+      "ArrayList of objects",
+      "Book array",
+      "createLibrary"
+     ],
+     "type": "concept",
+     "essence": "You can store objects in an array or ArrayList and build each element inside a loop, often with a nested loop for its inner data.",
+     "detail": [
+      {
+       "label": "Pattern",
+       "body": "createLibrary(): make Book[5], loop to build each Book (prompt title/author, then a NESTED loop to read its ratings into an ArrayList<Double>), place it in the array, return the array."
+      },
+      {
+       "label": "Note",
+       "body": "This combines arrays, ArrayList, objects, loops, and Scanner — the capstone pattern of the course's programming assignments (Shopping Cart, Coffee Shop)."
+      }
+     ],
+     "related": [
+      "class & object",
+      "nested loops",
+      "ArrayList"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "Given a UML diagram, write calculateTotalCost() in ShoppingCart returning the total cost of all products (use getPrice() and getQuantity()).",
+     "a": "public double calculateTotalCost() {\n    double total = 0;\n    for (Product p : cart)\n        total += p.getPrice() * p.getQuantity();\n    return total;\n}",
+     "why": "Loop the cart, multiply price by quantity per item, accumulate, return.",
+     "src": "Class Activity Final Review Practice Q4"
+    },
+    {
+     "q": "Write createLibrary() returning a Book[5]: for each book prompt title/author, ask how many ratings, use a nested loop to read each rating into an ArrayList<Double>, build the Book, store it, return the array.",
+     "a": "Book[] library = new Book[5];\nfor (int i = 0; i < 5; i++) {\n    // read title, author, count\n    ArrayList<Double> reviews = new ArrayList<>();\n    for (int j = 0; j < count; j++) reviews.add(sc.nextDouble());\n    library[i] = new Book(title, author, reviews);\n}\nreturn library;",
+     "why": "Combines arrays of objects, a nested loop, ArrayList, and Scanner.",
+     "src": "Class Activity Final Review Practice Q5"
+    },
+    {
+     "q": "Shopping Cart assignment: which classes and ArrayList are required?",
+     "a": "Item (name, price) and CartItem (item, quantity) domain classes, plus a Store driver with main; store the cart in an ArrayList<CartItem> and use add/remove/set/clear.",
+     "src": "Programming Assignment 6"
+    },
+    {
+     "q": "Coffee Shop assignment: what structures does it exercise?",
+     "a": "A CoffeeOrder domain class with private fields + getters/setters + a cost method; a CoffeeShop driver using a switch for the menu and while loops for input validation and repeat-order.",
+     "src": "Programming Assignment 5"
+    }
+   ]
+  },
+  {
+   "id": "mathrandom",
+   "name": "Math & Random",
+   "glance": "The Math class has static helpers: Math.sqrt and Math.pow (both return double), Math.abs, Math.round, Math.min/max. The Random class makes random numbers: new Random() then rand.nextInt(n) gives 0 up to n-1 (n exclusive) — so nextInt(10) is 0..9.",
+   "entries": [
+    {
+     "term": "Math class",
+     "aliases": [
+      "Math.pow",
+      "Math.sqrt",
+      "Math.abs",
+      "Math.round",
+      "Math.min",
+      "Math.max"
+     ],
+     "type": "syntax",
+     "essence": "Static numeric helpers; Math.sqrt and Math.pow both return double.",
+     "detail": [
+      {
+       "label": "Common methods",
+       "columns": [
+        "Call",
+        "Returns",
+        "Note"
+       ],
+       "rows": [
+        [
+         "Math.pow(a,b)",
+         "double",
+         "a to the power b; pow(2,10) is 1024.0"
+        ],
+        [
+         "Math.sqrt(x)",
+         "double",
+         "square root; sqrt(25) is 5.0"
+        ],
+        [
+         "Math.abs(x)",
+         "same type",
+         "absolute value"
+        ],
+        [
+         "Math.round(x)",
+         "long/int",
+         "nearest whole number"
+        ],
+        [
+         "Math.min/max(a,b)",
+         "the smaller/larger",
+         ""
+        ]
+       ]
+      },
+      {
+       "label": "Example",
+       "code": "double r = Math.sqrt(num);\ndouble p = Math.pow(base, exponent);"
+      }
+     ],
+     "related": [
+      "Random class",
+      "double"
+     ]
+    },
+    {
+     "term": "Random class",
+     "aliases": [
+      "Random",
+      "nextInt",
+      "random number"
+     ],
+     "type": "syntax",
+     "essence": "new Random() then rand.nextInt(n) returns a random int from 0 to n-1 (n is exclusive).",
+     "detail": [
+      {
+       "label": "Mechanism",
+       "body": "rand.nextInt(10) gives 0..9 (0 inclusive, 10 exclusive). For 0 through 10 exclusive you need nextInt(10), not nextInt(9). Needs import java.util.Random;."
+      },
+      {
+       "label": "Example",
+       "code": "import java.util.Random;\nRandom rand = new Random();\nint r = rand.nextInt(10);   // 0..9"
+      }
+     ],
+     "related": [
+      "Math class"
+     ]
+    }
+   ],
+   "questions": [
+    {
+     "q": "To generate a random integer in [0,10), what do you write?",
+     "a": "Random rand = new Random(); rand.nextInt(10);",
+     "why": "nextInt(10) yields 0..9 (10 exclusive). nextInt(9) would only reach 8.",
+     "src": "Exam 2 Practice Study Guide Q3; Class Activity 12"
+    },
+    {
+     "q": "In a calculator, which Math methods compute a square root and a power?",
+     "a": "Math.sqrt(num) and Math.pow(base, exponent) — both return double.",
+     "src": "Exam 2 written problems Q4 (Math calculator)"
+    },
+    {
+     "q": "Problem 1 (PA4): read an integer; if negative print 'Invalid number', else print its square root. Which call?",
+     "a": "Math.sqrt(number)  (returns a double, e.g. sqrt(25) is 5.0).",
+     "src": "Module 5 Programming Assignment Problem 1"
+    }
+   ]
+  }
+ ]
+}</script>
+<style>
+:root{
+  --bg:#F4F6F8; --surface:#FFFFFF; --surface-2:#EBEEF2; --border:#DFE3E9;
+  --ink:#171A21; --ink-2:#565E6B; --ink-3:#8B93A0;
+  --accent:#0F7B8A; --accent-ink:#0B5E6A; --accent-soft:#D7EBEE; --accent-line:#8FCBD3;
+  --q:#8A5A0F; --q-ink:#7A4E0B; --q-soft:#F6E9CF; --q-line:#E0C48C;
+  --good:#1E7A46; --good-soft:#DBF0E2;
+  --mark:#FCE8A6;
+  --shadow:0 1px 2px rgba(20,30,45,.06), 0 6px 20px rgba(20,30,45,.05);
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,"Cascadia Code","Roboto Mono",monospace;
+  --maxw:820px;
+}
+html[data-theme="dark"]{
+  --bg:#0F1216; --surface:#171B21; --surface-2:#1E232B; --border:#2A303A;
+  --ink:#E7EAEF; --ink-2:#A4ACB8; --ink-3:#727B88;
+  --accent:#33AEBD; --accent-ink:#7FD3DD; --accent-soft:#16323A; --accent-line:#26525C;
+  --q:#E0B36A; --q-ink:#EBCB8E; --q-soft:#2E2413; --q-line:#5A481F;
+  --good:#7FD3A0; --good-soft:#16301F;
+  --mark:#5A4C1E;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg); color:var(--ink); font-family:var(--font-sans);
+  font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  padding-bottom:env(safe-area-inset-bottom);}
+a{color:var(--accent-ink); text-decoration:none}
+mark{background:var(--mark); color:inherit; border-radius:2px; padding:0 .5px}
+
+/* top bar */
+.top{position:sticky; top:0; z-index:40;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:saturate(1.4) blur(10px); -webkit-backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid var(--border); padding:calc(env(safe-area-inset-top) + 10px) 16px 10px;}
+.top-inner{max-width:var(--maxw); margin:0 auto; display:flex; flex-direction:column; gap:10px}
+.brand{display:flex; align-items:center; justify-content:space-between; gap:12px}
+.wordmark{display:flex; flex-direction:column; line-height:1.15; min-width:0}
+.wordmark .n{font-family:var(--font-mono); font-weight:600; font-size:16px; letter-spacing:-.2px}
+.wordmark .n b{color:var(--accent-ink); font-weight:700}
+.wordmark .s{font-size:11px; color:var(--ink-3); letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.iconbtn{appearance:none; border:1px solid var(--border); background:var(--surface); color:var(--ink-2);
+  width:38px; height:38px; border-radius:10px; display:grid; place-items:center; cursor:pointer;
+  flex:0 0 auto; transition:border-color .15s, color .15s;}
+.iconbtn:hover{color:var(--ink); border-color:var(--accent-line)}
+.iconbtn svg{width:18px; height:18px; display:block}
+.tools{display:flex; gap:8px}
+
+/* search */
+.searchwrap{position:relative}
+.searchbar{display:flex; align-items:center; gap:9px; background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:0 12px; height:46px; box-shadow:var(--shadow); transition:border-color .15s, box-shadow .15s;}
+.searchbar:focus-within{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.searchbar svg{width:18px; height:18px; color:var(--ink-3); flex:0 0 auto}
+.searchbar input{border:0; outline:0; background:transparent; color:var(--ink);
+  font-family:var(--font-sans); font-size:16px; width:100%; height:100%;}
+.searchbar input::placeholder{color:var(--ink-3)}
+.searchbar .kbd{font-family:var(--font-mono); font-size:11px; color:var(--ink-3);
+  border:1px solid var(--border); border-radius:6px; padding:2px 6px; flex:0 0 auto;}
+.clearbtn{appearance:none;border:0;background:transparent;color:var(--ink-3);cursor:pointer;padding:4px;display:none}
+.clearbtn svg{width:16px;height:16px}
+.searchbar.has-q .clearbtn{display:block}
+.searchbar.has-q .kbd{display:none}
+.results{position:absolute; left:0; right:0; top:calc(100% + 8px); z-index:50;
+  background:var(--surface); border:1px solid var(--border); border-radius:14px;
+  box-shadow:var(--shadow); overflow:hidden; display:none; max-height:70vh; overflow-y:auto;}
+.results.open{display:block}
+.result{display:block; width:100%; text-align:left; appearance:none; border:0; background:transparent;
+  padding:11px 14px; cursor:pointer; border-bottom:1px solid var(--border);}
+.result:last-child{border-bottom:0}
+.result:hover,.result.active{background:var(--surface-2)}
+.result .r-top{display:flex; align-items:center; gap:8px}
+.result .r-term{font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--ink)}
+.result .r-ess{font-size:12.5px; color:var(--ink-2); margin-top:3px; line-height:1.45;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.result .r-hint{padding:11px 14px; font-size:12.5px; color:var(--ink-3)}
+
+/* filters */
+.filters{display:flex; gap:7px; overflow-x:auto; padding:2px 2px 1px; margin:-2px; scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{appearance:none; white-space:nowrap; cursor:pointer; flex:0 0 auto;
+  border:1px solid var(--border); background:var(--surface); color:var(--ink-2);
+  font-family:var(--font-mono); font-size:12px; font-weight:500; letter-spacing:.2px;
+  padding:6px 11px; border-radius:999px; transition:.15s; display:flex; align-items:center; gap:6px;}
+.chip:hover{color:var(--ink); border-color:var(--accent-line)}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff}
+.chip .dot{width:7px;height:7px;border-radius:50%}
+.chip .dot.concept{background:var(--accent)} .chip .dot.syntax{background:var(--ink-3)} .chip .dot.question{background:var(--q)}
+html[data-theme] .chip[aria-pressed="true"] .dot{background:rgba(255,255,255,.9)}
+
+.topicnav{display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; margin:0 -2px; padding:1px 2px}
+.topicnav::-webkit-scrollbar{display:none}
+.topicnav a{flex:0 0 auto; white-space:nowrap; font-family:var(--font-mono); font-size:12px; font-weight:500; color:var(--ink-3);
+  padding:5px 9px; border-radius:7px; border-bottom:2px solid transparent; text-decoration:none; transition:color .15s}
+.topicnav a:hover{color:var(--ink-2)}
+.topicnav a.active{color:var(--accent-ink); border-bottom-color:var(--accent)}
+
+main{max-width:var(--maxw); margin:0 auto; padding:18px 16px 90px}
+.area{margin-bottom:36px; scroll-margin-top:210px}
+.area-head{display:flex; align-items:baseline; gap:10px; margin:0 2px 12px}
+.eyebrow{font-family:var(--font-mono); font-size:10.5px; font-weight:600; letter-spacing:1.4px; text-transform:uppercase; color:var(--accent-ink)}
+.area-title{font-size:21px; font-weight:680; letter-spacing:-.3px; margin:0}
+.area-count{font-family:var(--font-mono); font-size:11px; color:var(--ink-3); margin-left:auto; text-align:right}
+.glance{background:var(--accent-soft); border:1px solid var(--accent-line); border-radius:12px; padding:13px 15px; margin-bottom:16px;}
+.glance .eyebrow{color:var(--accent-ink); display:block; margin-bottom:5px}
+.glance p{margin:0; font-size:14px; line-height:1.6; color:var(--ink)}
+
+/* entry card */
+.card{background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  margin-bottom:11px; overflow:hidden; box-shadow:var(--shadow); scroll-margin-top:210px; transition:border-color .18s;}
+.card.flash{border-color:var(--accent); animation:flash 1.4s ease}
+@keyframes flash{0%{box-shadow:0 0 0 3px var(--accent-soft)}100%{box-shadow:var(--shadow)}}
+.card-head{appearance:none; width:100%; text-align:left; border:0; background:transparent; cursor:pointer; padding:13px 15px; display:block; color:inherit;}
+.card-row{display:flex; align-items:center; gap:8px}
+.badge{font-family:var(--font-mono); font-size:9.5px; font-weight:700; letter-spacing:.6px; text-transform:uppercase;
+  padding:2.5px 6px; border-radius:5px; flex:0 0 auto; line-height:1;}
+.badge.concept{background:var(--accent-soft); color:var(--accent-ink)}
+.badge.syntax{background:var(--surface-2); color:var(--ink-2)}
+.badge.question{background:var(--q-soft); color:var(--q-ink)}
+.term{font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--ink); letter-spacing:-.2px; min-width:0; word-break:break-word}
+.chev{margin-left:auto; color:var(--ink-3); flex:0 0 auto; transition:transform .2s}
+.chev svg{width:18px;height:18px;display:block}
+.card[open] .chev{transform:rotate(90deg)}
+.essence{margin:7px 0 0; font-size:14.5px; line-height:1.5; color:var(--ink-2)}
+.card[open] .essence{color:var(--ink)}
+.detail{display:none; padding:2px 15px 15px 17px; border-left:2px solid var(--accent-line); margin:0 0 0 13px}
+.card[open] .detail{display:block}
+.field{margin-top:13px}
+.field .flabel{font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; color:var(--ink-3); margin-bottom:4px}
+.field .fbody{font-size:14px; line-height:1.6; color:var(--ink)}
+.field .fbody code{font-family:var(--font-mono); font-size:12.5px; background:var(--surface-2); padding:1px 5px; border-radius:5px}
+pre{margin:6px 0 0; background:var(--surface-2); border:1px solid var(--border); border-radius:9px; padding:11px 12px; overflow-x:auto; position:relative}
+pre code{font-family:var(--font-mono); font-size:12.5px; line-height:1.55; color:var(--ink); white-space:pre}
+.copybtn{position:absolute; top:7px; right:7px; appearance:none; cursor:pointer; border:1px solid var(--border);
+  background:var(--surface); color:var(--ink-3); font-family:var(--font-mono); font-size:10px; letter-spacing:.4px;
+  padding:3px 7px; border-radius:6px; opacity:.65; transition:.15s;}
+.copybtn:hover{opacity:1; color:var(--ink)}
+.tablewrap{margin-top:6px; overflow-x:auto; border:1px solid var(--border); border-radius:9px; -webkit-overflow-scrolling:touch}
+table.ref{border-collapse:collapse; width:100%; font-size:12.5px}
+table.ref th,table.ref td{text-align:left; padding:7px 11px; border-bottom:1px solid var(--border); white-space:nowrap}
+table.ref thead th{font-family:var(--font-mono); font-size:9.5px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--ink-3); background:var(--surface-2)}
+table.ref tbody tr:last-child td{border-bottom:0}
+table.ref td{color:var(--ink-2)}
+table.ref td:first-child{font-family:var(--font-mono); font-weight:600; color:var(--ink)}
+@media (max-width:560px){
+  .tablewrap{border:0; overflow:visible}
+  table.ref{font-size:13px}
+  table.ref thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+  table.ref, table.ref tbody, table.ref tr, table.ref td{display:block; width:100%}
+  table.ref tr{border:1px solid var(--border); border-radius:9px; background:var(--surface); padding:9px 11px; margin-bottom:8px}
+  table.ref td{border:0; padding:0}
+  table.ref td:first-child{padding-bottom:6px; margin-bottom:6px; border-bottom:1px solid var(--border); font-size:14px; white-space:normal}
+  table.ref td:not(:first-child){display:grid; grid-template-columns:6.5em 1fr; gap:10px; padding:2px 0}
+  table.ref td:not(:first-child)::before{content:attr(data-label); font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:.4px; text-transform:uppercase; color:var(--ink-3); align-self:center}
+}
+.facts{display:grid; grid-template-columns:minmax(0,max-content) 1fr; column-gap:14px; row-gap:6px; margin-top:6px}
+.facts dt{font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--ink); white-space:nowrap; line-height:1.5}
+.facts dd{font-size:14px; line-height:1.45; color:var(--ink-2)}
+@media (max-width:480px){ .facts{grid-template-columns:1fr; row-gap:2px} .facts dt{margin-top:6px} .facts dt:first-of-type{margin-top:0} }
+
+/* questions */
+.qhead{display:flex; align-items:center; gap:9px; margin:22px 2px 10px; padding-top:6px}
+.qhead .qh-title{font-family:var(--font-mono); font-size:12.5px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--q-ink)}
+.qhead .qh-line{flex:1; height:1px; background:var(--q-line)}
+.qhead .qh-count{font-family:var(--font-mono); font-size:11px; color:var(--ink-3)}
+.qcard{background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--q-line);
+  border-radius:10px; margin-bottom:9px; padding:12px 14px; box-shadow:var(--shadow); scroll-margin-top:210px; transition:border-color .18s}
+.qcard.flash{border-color:var(--q); animation:qflash 1.4s ease}
+@keyframes qflash{0%{box-shadow:0 0 0 3px var(--q-soft)}100%{box-shadow:var(--shadow)}}
+.q-q{font-size:14.5px; line-height:1.55; color:var(--ink); font-weight:600}
+.q-code{margin-top:8px}
+.q-opts{list-style:none; margin:8px 0 0; padding:0; display:flex; flex-direction:column; gap:4px}
+.q-opts li{font-size:13px; color:var(--ink-2); font-family:var(--font-mono); padding:3px 8px; border:1px solid var(--border); border-radius:6px}
+.q-ans{margin-top:9px; background:var(--good-soft); border:1px solid var(--good); border-radius:8px; padding:8px 11px}
+.q-ans .lbl{font-family:var(--font-mono); font-size:9.5px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:var(--good); display:block; margin-bottom:3px}
+.q-ans .val{font-size:13.5px; line-height:1.5; color:var(--ink); font-weight:600; white-space:pre-wrap; font-family:var(--font-sans)}
+.q-ans .val.mono{font-family:var(--font-mono); font-size:12.5px; font-weight:500}
+.q-why{margin-top:7px; font-size:12.5px; line-height:1.5; color:var(--ink-2)}
+.q-why b{color:var(--ink-3); font-family:var(--font-mono); font-size:10px; letter-spacing:.5px; text-transform:uppercase; font-weight:700; margin-right:4px}
+.q-flag{margin-top:7px; font-size:12.5px; line-height:1.5; color:var(--q-ink); background:var(--q-soft); border:1px solid var(--q-line); border-radius:7px; padding:7px 10px}
+.q-flag b{font-family:var(--font-mono); font-size:10px; letter-spacing:.5px; text-transform:uppercase; margin-right:4px}
+.q-src{margin-top:7px; font-family:var(--font-mono); font-size:10.5px; color:var(--ink-3)}
+
+.foot{display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin-top:14px; padding-top:12px; border-top:1px solid var(--border)}
+.related{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+.related .rl{font-family:var(--font-mono); font-size:10px; letter-spacing:.4px; color:var(--ink-3); text-transform:uppercase; margin-right:2px}
+.rel{appearance:none; cursor:pointer; border:1px solid var(--border); background:var(--surface-2); color:var(--ink-2);
+  font-family:var(--font-mono); font-size:11px; padding:3px 8px; border-radius:999px; transition:.15s}
+.rel:hover{color:var(--accent-ink); border-color:var(--accent-line)}
+.empty{text-align:center; color:var(--ink-3); padding:50px 20px; font-size:14px}
+.ttop{position:fixed; right:16px; bottom:calc(16px + env(safe-area-inset-bottom)); z-index:30;
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--border); background:var(--surface);
+  color:var(--ink-2); display:none; place-items:center; cursor:pointer; box-shadow:var(--shadow)}
+.ttop.show{display:grid}
+.ttop svg{width:20px;height:20px}
+.pagenote{max-width:var(--maxw); margin:0 auto; padding:0 16px; font-size:11.5px; color:var(--ink-3); line-height:1.5}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="wordmark"><span class="n" id="wm"></span><span class="s" id="ws"></span></div>
+      <div class="tools">
+        <button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode">
+          <svg id="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+          <svg id="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="searchwrap">
+      <div class="searchbar" id="sbar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="q" type="search" inputmode="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search concepts, syntax, or questions…" aria-label="Search the reference">
+        <span class="kbd">/</span>
+        <button class="clearbtn" id="clearBtn" aria-label="Clear search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="results" id="results" role="listbox"></div>
+    </div>
+    <div class="filters" id="filters">
+      <button class="chip" data-f="all" aria-pressed="true">All</button>
+      <button class="chip" data-f="concept" aria-pressed="false"><span class="dot concept"></span>Concept</button>
+      <button class="chip" data-f="syntax" aria-pressed="false"><span class="dot syntax"></span>Syntax</button>
+      <button class="chip" data-f="question" aria-pressed="false"><span class="dot question"></span>Questions</button>
+    </div>
+    <nav class="topicnav" id="topicnav" aria-label="Topic areas"></nav>
+  </div>
+</header>
+<main id="main"></main>
+<div class="pagenote" id="pagenote"></div>
+<button class="ttop" id="toTop" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById('refdata').textContent);
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+$('#wm').innerHTML = 'COP2210<b>Ref</b>';
+$('#ws').textContent = DATA.meta.subtitle || '';
+
+const slug = t => String(t).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+const ALL=[];   // entries
+const ALLQ=[];  // questions
+DATA.topicAreas.forEach(area=>{
+  (area.entries||[]).forEach(e=> ALL.push({...e, areaId:area.id, areaName:area.name}));
+  (area.questions||[]).forEach((q,i)=> ALLQ.push({...q, areaId:area.id, areaName:area.name, qid:'q-'+area.id+'-'+i}));
+});
+
+function iconChev(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';}
+function tableHTML(f){
+  const head='<thead><tr>'+f.columns.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead>';
+  const body='<tbody>'+(f.rows||[]).map(r=>'<tr>'+r.map((c,i)=>'<td'+(i?' data-label="'+esc(f.columns[i])+'"':'')+'>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody>';
+  return '<div class="tablewrap"><table class="ref">'+head+body+'</table></div>';
+}
+function fieldHTML(f){
+  if(f.columns) return '<div class="field"><div class="flabel">'+esc(f.label)+'</div>'+tableHTML(f)+'</div>';
+  if(f.facts){ const rows=f.facts.map(p=>'<dt>'+esc(p[0])+'</dt><dd>'+esc(p[1])+'</dd>').join('');
+    return '<div class="field"><div class="flabel">'+esc(f.label)+'</div><dl class="facts">'+rows+'</dl></div>'; }
+  if(f.code!==undefined) return '<div class="field"><div class="flabel">'+esc(f.label)+'</div><pre><button class="copybtn" type="button">copy</button><code>'+esc(f.code)+'</code></pre></div>';
+  return '<div class="field"><div class="flabel">'+esc(f.label)+'</div><div class="fbody">'+esc(f.body)+'</div></div>';
+}
+function entryHTML(e){
+  const id=slug(e.term);
+  const details=(e.detail||[]).map(fieldHTML).join('');
+  let related='';
+  if(e.related&&e.related.length) related='<span class="related"><span class="rl">See also</span>'+
+    e.related.map(r=>'<button class="rel" type="button" data-jump="'+esc(slug(r))+'">'+esc(r)+'</button>').join('')+'</span>';
+  const foot=related?'<div class="foot">'+related+'</div>':'';
+  return '<div class="card" id="'+id+'" data-kind="entry" data-type="'+e.type+'" data-term="'+esc(e.term.toLowerCase())+'">'+
+    '<button class="card-head" type="button" aria-expanded="false"><span class="card-row">'+
+    '<span class="badge '+e.type+'">'+e.type+'</span><span class="term">'+esc(e.term)+'</span>'+
+    '<span class="chev">'+iconChev()+'</span></span><p class="essence">'+esc(e.essence)+'</p></button>'+
+    '<div class="detail">'+details+foot+'</div></div>';
+}
+function questionHTML(q,i,areaId){
+  const id='q-'+areaId+'-'+i;
+  let code=q.code?'<div class="q-code"><pre><button class="copybtn" type="button">copy</button><code>'+esc(q.code)+'</code></pre></div>':'';
+  let opts=q.options?'<ul class="q-opts">'+q.options.map(o=>'<li>'+esc(o)+'</li>').join('')+'</ul>':'';
+  const mono = /[{}();]|System\.|for ?\(|while ?\(|\bint\b|\bdouble\b|\breturn\b|\.get\(|\.add\(|\.set\(/.test(q.a) && q.a.length>16;
+  let ans='<div class="q-ans"><span class="lbl">Answer</span><span class="val'+(mono?' mono':'')+'">'+esc(q.a)+'</span></div>';
+  let why=q.why?'<div class="q-why"><b>Why</b>'+esc(q.why)+'</div>':'';
+  let flag=q.flag?'<div class="q-flag"><b>Flag</b>'+esc(q.flag)+'</div>':'';
+  let src=q.src?'<div class="q-src">'+esc(q.src)+'</div>':'';
+  return '<div class="qcard" id="'+id+'" data-kind="question"><div class="q-q">'+esc(q.q)+'</div>'+code+opts+ans+why+flag+src+'</div>';
+}
+function areaHTML(area){
+  const entries=(area.entries||[]).map(entryHTML).join('');
+  const qs=(area.questions||[]);
+  const qblock = qs.length? '<div class="qhead"><span class="qh-title">Questions</span><span class="qh-line"></span><span class="qh-count">'+qs.length+'</span></div>'+
+    qs.map((q,i)=>questionHTML(q,i,area.id)).join('') : '';
+  const counts=[]; if((area.entries||[]).length)counts.push((area.entries||[]).length+' entries'); if(qs.length)counts.push(qs.length+' Q');
+  return '<section class="area" id="area-'+area.id+'"><div class="area-head"><h2 class="area-title">'+esc(area.name)+'</h2>'+
+    '<span class="area-count">'+counts.join(' · ')+'</span></div>'+
+    '<div class="glance"><span class="eyebrow">At a glance</span><p>'+esc(area.glance)+'</p></div>'+
+    entries+qblock+'</section>';
+}
+$('#main').innerHTML = DATA.topicAreas.map(areaHTML).join('') + '<div class="empty" id="noRes" style="display:none">Nothing matches this filter.</div>';
+$('#topicnav').innerHTML = DATA.topicAreas.map(a=>'<a href="#area-'+a.id+'" data-nav="area-'+a.id+'">'+esc(a.name)+'</a>').join('');
+$('#pagenote').textContent = (DATA.meta.questionNote||'') + '  ' + (DATA.meta.coverage||'');
+
+/* expand / copy / jump */
+$('#main').addEventListener('click', e=>{
+  const head=e.target.closest('.card-head');
+  if(head){ const card=head.closest('.card'); const open=card.hasAttribute('open');
+    if(open){card.removeAttribute('open'); head.setAttribute('aria-expanded','false');}
+    else{card.setAttribute('open',''); head.setAttribute('aria-expanded','true');} return; }
+  const copy=e.target.closest('.copybtn');
+  if(copy){ const code=copy.parentElement.querySelector('code').textContent;
+    navigator.clipboard?.writeText(code).then(()=>{const t=copy.textContent;copy.textContent='copied';setTimeout(()=>copy.textContent=t,1200);}).catch(()=>{}); return; }
+  const jump=e.target.closest('[data-jump]'); if(jump) jumpTo(jump.getAttribute('data-jump'));
+});
+function jumpTo(id){
+  const el=document.getElementById(id); if(!el) return;
+  clearSearch(); setFilter('all');
+  if(el.classList.contains('card') && !el.hasAttribute('open')){ el.setAttribute('open',''); el.querySelector('.card-head').setAttribute('aria-expanded','true'); }
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+}
+
+/* filters */
+let filter='all';
+function setFilter(f){ filter=f; $$('.chip').forEach(c=>c.setAttribute('aria-pressed', c.dataset.f===f?'true':'false')); applyFilter(); }
+function applyFilter(){
+  let anyVisible=false;
+  DATA.topicAreas.forEach(area=>{
+    const sec=document.getElementById('area-'+area.id); let shown=0;
+    sec.querySelectorAll('.card').forEach(card=>{ const ok=(filter==='all')||(filter!=='question'&&card.dataset.type===filter); card.style.display=ok?'':'none'; if(ok)shown++; });
+    const showQ = (filter==='all'||filter==='question');
+    sec.querySelectorAll('.qcard').forEach(qc=>{ qc.style.display=showQ?'':'none'; if(showQ)shown++; });
+    const qh=sec.querySelector('.qhead'); if(qh) qh.style.display=showQ?'':'none';
+    sec.style.display=shown?'':'none'; if(shown)anyVisible=true;
+  });
+  $('#noRes').style.display=anyVisible?'none':'block';
+}
+$('#filters').addEventListener('click', e=>{const c=e.target.closest('.chip'); if(c) setFilter(c.dataset.f);});
+
+/* search: entries + questions */
+const qEl=$('#q'), sbar=$('#sbar'), resBox=$('#results'), clearBtn=$('#clearBtn');
+function subseq(q,t){let i=0;for(const ch of t){if(ch===q[i])i++;if(i===q.length)return true;}return q.length===0;}
+function bodyText(e){ let s=e.essence+' '; (e.detail||[]).forEach(f=>{s+=(f.label||'')+' '+(f.body||'')+' '+(f.code||'')+' '; if(f.rows)f.rows.forEach(r=>s+=r.join(' ')+' '); if(f.facts)f.facts.forEach(p=>s+=p.join(' ')+' ');}); return s.toLowerCase(); }
+function scoreE(e,q){ const term=e.term.toLowerCase(), al=(e.aliases||[]).map(a=>a.toLowerCase()), ess=e.essence.toLowerCase(), body=bodyText(e); let s=0;
+  if(term===q)s+=1000; else if(term.startsWith(q))s+=620; else if(term.includes(q))s+=420; else if(subseq(q,term))s+=140;
+  for(const a of al){ if(a===q)s+=520; else if(a.startsWith(q))s+=300; else if(a.includes(q))s+=200; }
+  if(ess.includes(q))s+=120; if(body.includes(q))s+=55; return s; }
+function scoreQ(q,term){ const hay=(q.q+' '+(q.a||'')+' '+(q.code||'')+' '+(q.why||'')+' '+(q.src||'')).toLowerCase(); let s=0; if(hay.includes(term))s+=200; if(q.q.toLowerCase().includes(term))s+=120; return s; }
+function hl(text,q){ const t=esc(text); if(!q)return t; const i=text.toLowerCase().indexOf(q); if(i<0)return t; return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length)); }
+let activeIdx=-1, curResults=[];
+function runSearch(){
+  const raw=qEl.value.trim(), q=raw.toLowerCase(); sbar.classList.toggle('has-q', raw.length>0);
+  if(!q){ resBox.classList.remove('open'); resBox.innerHTML=''; curResults=[]; return; }
+  const eHits=ALL.map(e=>({kind:'e',o:e,s:scoreE(e,q)})).filter(x=>x.s>0);
+  const qHits=ALLQ.map(o=>({kind:'q',o,s:scoreQ(o,q)})).filter(x=>x.s>0);
+  const scored=eHits.concat(qHits).sort((a,b)=>b.s-a.s).slice(0,12);
+  curResults=scored; activeIdx=-1;
+  if(!scored.length){ resBox.innerHTML='<div class="r-hint">No matches. Try a shorter term.</div>'; resBox.classList.add('open'); return; }
+  resBox.innerHTML=scored.map((x,i)=>{
+    if(x.kind==='e'){ const e=x.o; return '<button class="result" role="option" data-i="'+i+'" data-jump="'+esc(slug(e.term))+'">'+
+      '<span class="r-top"><span class="badge '+e.type+'">'+e.type+'</span><span class="r-term">'+hl(e.term,q)+'</span></span>'+
+      '<span class="r-ess">'+hl(e.essence,q)+'</span></button>'; }
+    const o=x.o; return '<button class="result" role="option" data-i="'+i+'" data-jump="'+esc(o.qid)+'">'+
+      '<span class="r-top"><span class="badge question">Q · '+esc(o.areaName)+'</span></span>'+
+      '<span class="r-ess">'+hl(o.q,q)+'</span></button>';
+  }).join('');
+  resBox.classList.add('open');
+}
+resBox.addEventListener('click',e=>{const r=e.target.closest('.result'); if(r) jumpTo(r.dataset.jump);});
+qEl.addEventListener('input', runSearch);
+function clearSearch(){ qEl.value=''; sbar.classList.remove('has-q'); resBox.classList.remove('open'); resBox.innerHTML=''; curResults=[]; }
+clearBtn.addEventListener('click',()=>{clearSearch(); qEl.focus();});
+qEl.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){clearSearch(); qEl.blur();}
+  else if(e.key==='Enter'){ if(curResults.length){ const pick=activeIdx>=0?activeIdx:0; jumpTo(curResults[pick].kind==='e'?slug(curResults[pick].o.term):curResults[pick].o.qid); } }
+  else if(e.key==='ArrowDown'||e.key==='ArrowUp'){ e.preventDefault(); if(!curResults.length)return;
+    activeIdx=(activeIdx+(e.key==='ArrowDown'?1:-1)+curResults.length)%curResults.length;
+    $$('.result').forEach((el,i)=>el.classList.toggle('active',i===activeIdx)); $$('.result')[activeIdx]?.scrollIntoView({block:'nearest'}); }
+});
+document.addEventListener('keydown',e=>{ if(e.key==='/' && document.activeElement!==qEl && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){ e.preventDefault(); qEl.focus(); } });
+document.addEventListener('click',e=>{ if(!e.target.closest('.searchwrap')) resBox.classList.remove('open'); });
+
+/* scrollspy */
+const navLinks=$$('#topicnav a');
+const areaEls=DATA.topicAreas.map(a=>document.getElementById('area-'+a.id));
+let activeArea=null;
+function setActiveNav(id){ if(id===activeArea)return; activeArea=id;
+  navLinks.forEach(a=>{ const on=a.dataset.nav===id; a.classList.toggle('active',on);
+    if(on){ const nav=$('#topicnav'); nav.scrollTo({left:a.offsetLeft - nav.clientWidth/2 + a.offsetWidth/2, behavior:'smooth'}); } }); }
+function updateSpy(){ const probe=($('.top').offsetHeight||0)+20; let current=null;
+  areaEls.forEach(el=>{ if(el && el.style.display!=='none' && el.getBoundingClientRect().top - probe<=0) current=el.id; });
+  if(!current){ const first=areaEls.find(el=>el && el.style.display!=='none'); if(first)current=first.id; }
+  if(current) setActiveNav(current); }
+let spyTick=false;
+addEventListener('scroll',()=>{ if(spyTick)return; spyTick=true; requestAnimationFrame(()=>{updateSpy(); spyTick=false;}); },{passive:true});
+$('#topicnav').addEventListener('click',e=>{ const a=e.target.closest('a'); if(a) setActiveNav(a.dataset.nav); });
+updateSpy();
+
+/* theme */
+const root=document.documentElement, themeBtn=$('#themeBtn'), moon=$('#ic-moon'), sun=$('#ic-sun');
+function applyTheme(t){ root.setAttribute('data-theme',t); const dark=t==='dark'; moon.style.display=dark?'none':'block'; sun.style.display=dark?'block':'none'; try{localStorage.setItem('fiuref-theme',t);}catch(_){} }
+(function(){ let t='light'; try{t=localStorage.getItem('fiuref-theme')||'light';}catch(_){} applyTheme(t); })();
+themeBtn.addEventListener('click',()=>applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark'));
+
+/* back to top */
+const toTop=$('#toTop');
+addEventListener('scroll',()=>{ toTop.classList.toggle('show', scrollY>600); }, {passive:true});
+toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+
+/* register service worker (subfolder-scoped) */
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js').catch(()=>{}); }); }
+</script>
+</body>
+</html>
